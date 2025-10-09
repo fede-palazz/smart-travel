@@ -1,0 +1,46 @@
+<div class="max-w-20rem shadow-2 overflow-hidden border-round-md">
+  <p-card
+    [header]="package.name"
+    [subheader]="
+      package.destination.city + ' (' + package.destination.country.name + ')'
+    "
+    styleClass="w-full"
+  >
+    <ng-template pTemplate="header">
+      <div class="relative">
+        <img [src]="package.mainPicture" [alt]="package.name" />
+        <p-tag
+          [value]="package.status"
+          [severity]="getSeverity(package)"
+          class="absolute"
+          [style.left.px]="6"
+          [style.top.px]="6"
+        />
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="content">
+      <div
+        [style]="{ height: '70px' }"
+        class="clamp-4"
+        [pTooltip]="package.description"
+        tooltipPosition="top"
+        showDelay="500"
+      >
+        {{ package.description }}
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+      <div class="mt-1 w-full text-right">
+        <p-button
+          icon="pi pi-search-plus"
+          label="View details"
+          severity="primary"
+          outlined="true"
+          (onClick)="handleViewDetails()"
+        />
+      </div>
+    </ng-template>
+  </p-card>
+</div>

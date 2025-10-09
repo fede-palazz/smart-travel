@@ -1,0 +1,9 @@
+<smt-activity-view
+  [params$]="activityParams$"
+  (onSelectActivity)="handleSelectActivity($event)"
+>
+  <smt-activity-tab
+    [params]="(activityParams$ | async)?.searchParams"
+    (onSearch)="handleActivitySearch($event)"
+  />
+</smt-activity-view>

@@ -1,0 +1,170 @@
+extend type Query {
+    getOrders(page: Int, size: Int, sort: String, order: String, filters: OrderFilter): OrderPage!
+    getOrderById(id: ID!): Order!
+}
+
+extend type Mutation {
+    createOrder(partialOrderReq: PartialOrderReq!): PaymentUrl!
+    createAgencyOrder(partialAgencyOrderReq: PartialAgencyOrderReq!): PaymentUrl!
+}
+
+###########
+## Model ##
+###########
+
+type Order {
+    id: ID!
+    customerInfo: UserSummary!
+    createdAt: String!
+    type: String!
+    items: OrderItems!
+    payment: Payment!
+    agencyPackageId: String
+}
+
+##########
+## DTOs ##
+##########
+
+input PartialOrderReq {
+    departureFlight: PartialFlightOrderInput
+    returnFlight: PartialFlightOrderInput
+    accommodation: PartialAccommodationOrderInput
+    activities: [PartialActivityOrderInput!]
+}
+
+input PartialFlightOrderInput {
+    flightId: String!
+    quantity: Int!
+}
+
+input PartialAccommodationOrderInput {
+    accommodationId: String!
+    rooms: [RoomInput!]!
+    startDate: String!
+    endDate: String!
+}
+
+input PartialActivityOrderInput {
+    activityId: String!
+    date: String!
+    quantity: Int!
+}
+
+input PartialAgencyOrderReq {
+    agencyPackageId: String!
+}
+
+######################
+## Paging / Filters ##
+######################
+
+type OrderPage {
+    totalPages: Int!
+    totalElements: Int!
+    currentPage: Int!
+    elementsInPage: Int!
+    content: [Order!]!
+}
+
+input OrderFilter {
+    orderId: String
+    customerId: String
+    customerName: String   # Either firstname or surname or both
+    minAmount: Float
+    maxAmount: Float
+    status: String
+    type: String
+}
+
+##################
+## Shared Types ##
+##################
+
+type Payment {
+    status: String!
+    paidAt: String
+    amount: Price!
+}
+
+type OrderItems {
+    departureFlight: FlightOrder
+    returnFlight: FlightOrder
+    accommodation: AccommodationOrder
+    activities: [ActivityOrder!]
+}
+
+type FlightOrder {
+    flightId: String!
+    code: String!
+    quantity: Int!
+    airline: String!
+    airlineLogo: String!
+    from: FlightDestination!
+    to: FlightDestination!
+    departureTime: String!
+    arrivalTime: String!
+    price: Price!
+}
+
+input FlightOrderInput {
+    flightId: String!
+    code: String!
+    quantity: Int!
+    airline: String!
+    airlineLogo: String!
+    from: FlightDestinationInput!
+    to: FlightDestinationInput!
+    departureTime: String!
+    arrivalTime: String!
+    price: PriceInput!
+}
+
+type AccommodationOrder {
+    accommodationId: String!
+    name: String!
+    type: String!
+    mainPicture: String!
+    rooms: [Room!]!
+    startDate: String!
+    endDate: String!
+}
+
+input AccommodationOrderInput {
+    accommodationId: String!
+    name: String!
+    type: String!
+    mainPicture: String!
+    rooms: [RoomInput!]!
+    startDate: String!
+    endDate: String!
+}
+
+type ActivityOrder {
+    activityId: String!
+    name: String!
+    type: String!
+    mainPicture: String!
+    date: String!
+    price: Price!
+    startTime: String!
+    endTime: String!
+    quantity: Int!
+}
+
+input ActivityOrderInput {
+    activityId: String!
+    name: String!
+    type: String!
+    mainPicture: String!
+    date: String!
+    price: PriceInput!
+    startTime: String!
+    endTime: String!
+    quantity: Int!
+}
+
+type PaymentUrl {
+    redirectURL: String!
+}
+

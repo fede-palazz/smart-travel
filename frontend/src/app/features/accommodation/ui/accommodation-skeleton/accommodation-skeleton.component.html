@@ -1,0 +1,18 @@
+@for (_ of replicaArray; track _) {
+  <div class="border-round border-1 surface-border p-1 mb-2 surface-card">
+    <div class="grid align-items-center">
+      <div class="col">
+        <p-skeleton width="10rem" height="8rem" />
+      </div>
+      <div class="col-5 text-left">
+        <p-skeleton width="5rem" styleClass="mb-2" />
+        <p-skeleton width="10rem" styleClass="mb-2" />
+        <p-skeleton width="8rem" height=".5rem" />
+      </div>
+      <div class="col text-right">
+        <p-skeleton width="5rem" styleClass="mb-2" />
+        <p-skeleton width="10rem" styleClass="mb-2" />
+      </div>
+    </div>
+  </div>
+}

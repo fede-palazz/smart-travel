@@ -1,0 +1,16 @@
+<p-carousel
+  [value]="destinations"
+  [numVisible]="6"
+  [numScroll]="1"
+  [circular]="false"
+  [responsiveOptions]="responsiveOptions"
+>
+  <ng-template let-dest pTemplate="item">
+    <div class="mr-3 mb-1">
+      <smt-destination
+        [dest]="dest"
+        (onViewDestination)="handleViewDestination($event)"
+      />
+    </div>
+  </ng-template>
+</p-carousel>

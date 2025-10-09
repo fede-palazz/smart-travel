@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <artifactId>common</artifactId>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <annotationProcessorPaths>
+            <path>
+              <artifactId>lombok</artifactId>
+              <groupId>org.projectlombok</groupId>
+              <version>${org.projectlombok.version}</version>
+            </path>
+          </annotationProcessorPaths>
+          <parameters>true</parameters>
+          <source>23</source>
+          <target>23</target>
+        </configuration>
+        <version>${compiler-plugin.version}</version>
+      </plugin>
+    </plugins>
+  </build>
+  <dependencies>
+    <!-- https://mvnrepository.com/artifact/jakarta.validation/jakarta.validation-api -->
+    <dependency>
+      <artifactId>jakarta.validation-api</artifactId>
+      <groupId>jakarta.validation</groupId>
+      <version>3.1.1</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator -->
+    <dependency>
+      <artifactId>hibernate-validator</artifactId>
+      <groupId>org.hibernate.validator</groupId>
+      <version>9.0.1.Final</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.mongodb/bson -->
+    <dependency>
+      <artifactId>bson</artifactId>
+      <groupId>org.mongodb</groupId>
+      <version>2.3</version>
+    </dependency>
+    <dependency>
+      <artifactId>lombok</artifactId>
+      <groupId>org.projectlombok</groupId>
+      <scope>provided</scope>
+      <version>${org.projectlombok.version}</version>
+    </dependency>
+    <dependency>
+      <artifactId>jackson-annotations</artifactId>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <version>2.18.3</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+    </dependency>
+  </dependencies>
+  <description>Shared models module for Smart Travel</description>
+  <groupId>com.certimetergroup.smart_travel</groupId>
+  <modelVersion>4.0.0</modelVersion>
+  <name>common</name>
+
+  <parent>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <groupId>org.springframework.boot</groupId>
+    <relativePath/>
+    <version>3.4.5</version>
+  </parent>
+
+  <properties>
+    <compiler-plugin.version>3.14.0</compiler-plugin.version>
+    <java.version>21</java.version>
+    <maven.compiler.release>21</maven.compiler.release>
+    <org.projectlombok.version>1.18.38</org.projectlombok.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <version>1.0.0</version>
+</project>

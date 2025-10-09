@@ -1,0 +1,867 @@
+[
+  {
+    "_id": {
+      "$oid": "681c6a9c5988c9688c4e3c78"
+    },
+    "address": "5 Rue de l'Échelle, 75001 Paris, France",
+    "checkInTime": "14:00",
+    "checkOutTime": "11:00",
+    "contacts": {
+      "email": "contact@lutetia-hotel.fr",
+      "phone": "+33 3456782385",
+      "website": "https://lutetia-hotel.fr"
+    },
+    "coordinates": {
+      "lat": 48.8506,
+      "lng": 2.3476
+    },
+    "description": "The Lutetia Hotel is an elegant and historic hotel in the heart of Paris, blending classic charm with modern luxury.",
+    "destination": {
+      "city": "Paris",
+      "coordinates": {
+        "lat": 48.8566,
+        "lng": 2.3522
+      },
+      "country": {
+        "code": "FR",
+        "name": "France"
+      },
+      "region": "Île-de-France",
+      "timezone": "Europe/Paris",
+      "destinationId": {
+        "$oid": "68187dec1e54584b07f2f804"
+      }
+    },
+    "details": "Located just steps from the Louvre and Palais Royal, Lutetia Hotel features beautifully restored interiors, a renowned brasserie, a luxury spa, and exceptional service.",
+    "distanceToCenterKm": 0.75,
+    "languages": [
+      "English",
+      "French",
+      "Spanish",
+      "German"
+    ],
+    "mainPicture": "https://images.unsplash.com/photo-1706879184552-f282cb5c7c12?q=80&w=2137&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "name": "Lutetia Hotel",
+    "pictures": [],
+    "policies": {
+      "cancellation": "Free cancellation up to 48 hours before check-in.",
+      "payment": "Cash, credit cards, PayPal",
+      "pets": "Pets are not allowed."
+    },
+    "reviewsSummary": {
+      "avgRating": 0,
+      "totalCount": {
+        "$numberLong": "0"
+      }
+    },
+    "rooms": [
+      {
+        "amenities": [
+          "Air conditioning",
+          "Smart TV",
+          "Room service",
+          "Minibar",
+          "Private bathroom"
+        ],
+        "bedTypes": [
+          "single"
+        ],
+        "capacity": 1,
+        "name": "Classic Room",
+        "pictures": [
+          "https://images.unsplash.com/photo-1613977257363-707ba9348220",
+          "https://images.unsplash.com/photo-1560347876-aeef00ee58a1"
+        ],
+        "pricePerNight": {
+          "currency": "EUR",
+          "value": 50
+        },
+        "quantity": 2,
+        "type": "single"
+      },
+      {
+        "amenities": [
+          "Air conditioning",
+          "TV",
+          "Mini bar"
+        ],
+        "capacity": 2,
+        "name": "Deluxe Double Room",
+        "pictures": [
+          "https://images.unsplash.com/photo-1613977257363-707ba9348220",
+          "https://images.unsplash.com/photo-1560347876-aeef00ee58a1"
+        ],
+        "pricePerNight": {
+          "currency": "EUR",
+          "value": 100
+        },
+        "quantity": 1,
+        "type": "double"
+      }
+    ],
+    "services": [
+      "parking",
+      "Wi-Fi",
+      "breakfast"
+    ],
+    "type": "hotel"
+  },
+  {
+    "_id": {
+      "$oid": "6846ab16746baa6313378891"
+    },
+    "address": "14 Rue de Clignancourt, 75018 Paris, France",
+    "checkInTime": "15:00",
+    "checkOutTime": "11:00",
+    "contacts": {
+      "email": "info@montmartresuites.fr",
+      "phone": "+33 149875102",
+      "website": "https://montmartresuites.fr"
+    },
+    "coordinates": {
+      "lat": 48.8867,
+      "lng": 2.3431
+    },
+    "description": "Charming apartments with a view of Sacré-Cœur, ideal for couples or solo travelers.",
+    "destination": {
+      "city": "Paris",
+      "coordinates": {
+        "lat": 48.8566,
+        "lng": 2.3522
+      },
+      "country": {
+        "code": "FR",
+        "name": "France"
+      },
+      "destinationId": {
+        "$oid": "68187dec1e54584b07f2f804"
+      },
+      "region": "Île-de-France",
+      "timezone": "Europe/Paris"
+    },
+    "details": "Each suite is fully equipped with modern amenities, just a short walk from Montmartre's vibrant cafés.",
+    "distanceToCenterKm": 3.41,
+    "languages": [
+      "English",
+      "French"
+    ],
+    "mainPicture": "https://images.unsplash.com/photo-1723465308831-29da05e011f3?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8aG90ZWwlMjBmcm9udHxlbnwwfDB8MHx8fDI%3D",
+    "name": "Montmartre Suites",
+    "pictures": [],
+    "policies": {
+      "cancellation": "Free cancellation up to 72 hours before arrival.",
+      "payment": "Credit card only",
+      "pets": "Pets allowed on request."
+    },
+    "reviewsSummary": {
+      "avgRating": 0,
+      "totalCount": {
+        "$numberLong": "0"
+      }
+    },
+    "rooms": [
+      {
+        "amenities": [
+          "Kitchenette",
+          "Wi-Fi",
+          "Balcony",
+          "Flat-screen TV"
+        ],
+        "bedTypes": [
+          "double"
+        ],
+        "capacity": 2,
+        "name": "Studio Suite",
+        "pictures": [
+          "https://images.unsplash.com/photo-1590490350333-6025f16b7fbb"
+        ],
+        "pricePerNight": {
+          "currency": "EUR",
+          "value": 85
+        },
+        "quantity": 5,
+        "type": "studio"
+      }
+    ],
+    "services": [
+      "Wi-Fi",
+      "self check-in",
+      "kitchenette"
+    ],
+    "type": "apartment"
+  },
+  {
+    "_id": {
+      "$oid": "6846ab78746baa6313378892"
+    },
+    "address": "3 Quai de la Tournelle, 75005 Paris, France",
+    "checkInTime": "13:00",
+    "checkOutTime": "10:00",
+    "contacts": {
+      "email": "hello@seineriverhostel.fr",
+      "phone": "+33 170123456",
+      "website": "https://seineriverhostel.fr"
+    },
+    "coordinates": {
+      "lat": 48.8498,
+      "lng": 2.351
+    },
+    "description": "A vibrant and affordable hotel overlooking the Seine, close to Notre-Dame.",
+    "destination": {
+      "city": "Paris",
+      "coordinates": {
+        "lat": 48.8566,
+        "lng": 2.3522
+      },
+      "country": {
+        "code": "FR",
+        "name": "France"
+      },
+      "destinationId": {
+        "$oid": "68187dec1e54584b07f2f804"
+      },
+      "region": "Île-de-France",
+      "timezone": "Europe/Paris"
+    },
+    "details": "Great for backpackers and students, offering clean beds and a lively atmosphere.",
+    "distanceToCenterKm": 0.76,
+    "languages": [
+      "English",
+      "Italian",
+      "French"
+    ],
+    "mainPicture": "https://images.unsplash.com/photo-1653280675477-878425ecb5f9?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NTd8fGhvdGVsJTIwZnJvbnR8ZW58MHwwfDB8fHwy",
+    "name": "Seine River Hotel",
+    "pictures": [],
+    "policies": {
+      "cancellation": "Non-refundable.",
+      "payment": "Credit cards, cash",
+      "pets": "Not allowed."
+    },
+    "reviewsSummary": {
+      "avgRating": 0,
+      "totalCount": {
+        "$numberLong": "0"
+      }
+    },
+    "rooms": [
+      {
+        "amenities": [
+          "Locker",
+          "Wi-Fi",
+          "Reading light",
+          "Private bathroom"
+        ],
+        "bedTypes": [
+          "bunk"
+        ],
+        "capacity": 4,
+        "name": "Family room",
+        "pictures": [
+          "https://images.unsplash.com/photo-1524758631624-e2822e304c36"
+        ],
+        "pricePerNight": {
+          "currency": "EUR",
+          "value": 250
+        },
+        "quantity": 2,
+        "type": "family"
+      }
+    ],
+    "services": [
+      "Wi-Fi",
+      "lockers",
+      "breakfast"
+    ],
+    "type": "hotel"
+  },
+  {
+    "_id": {
+      "$oid": "6846abca746baa6313378893"
+    },
+    "address": "40 Avenue des Champs-Élysées, 75008 Paris, France",
+    "checkInTime": "14:00",
+    "checkOutTime": "12:00",
+    "contacts": {
+      "email": "booking@champslux.fr",
+      "phone": "+33 143908888",
+      "website": "https://champslux.fr"
+    },
+    "coordinates": {
+      "lat": 48.8698,
+      "lng": 2.3074
+    },
+    "description": "An upscale hotel offering refined elegance and Parisian charm near Arc de Triomphe.",
+    "destination": {
+      "city": "Paris",
+      "coordinates": {
+        "lat": 48.8566,
+        "lng": 2.3522
+      },
+      "country": {
+        "code": "FR",
+        "name": "France"
+      },
+      "destinationId": {
+        "$oid": "68187dec1e54584b07f2f804"
+      },
+      "region": "Île-de-France",
+      "timezone": "Europe/Paris"
+    },
+    "details": "Indulge in luxury with spa treatments, rooftop dining, and personalized service.",
+    "distanceToCenterKm": 3.59,
+    "languages": [
+      "English",
+      "French",
+      "Arabic",
+      "Mandarin"
+    ],
+    "mainPicture": "https://images.unsplash.com/photo-1668802117202-a256a84d6daa?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NjF8fGhvdGVsJTIwZnJvbnR8ZW58MHwwfDB8fHwy",
+    "name": "Champs-Élysées Luxury Stay",
+    "pictures": [],
+    "policies": {
+      "cancellation": "Full refund if cancelled within 24 hours of booking.",
+      "payment": "Credit cards, PayPal",
+      "pets": "Allowed, surcharge applies."
+    },
+    "reviewsSummary": {
+      "avgRating": 0,
+      "totalCount": {
+        "$numberLong": "0"
+      }
+    },
+    "rooms": [
+      {
+        "amenities": [
+          "Terrace",
+          "Smart TV",
+          "Room service",
+          "Jacuzzi"
+        ],
+        "bedTypes": [
+          "king"
+        ],
+        "capacity": 2,
+        "name": "Prestige Suite",
+        "pictures": [
+          "https://images.unsplash.com/photo-1582719478181-dc47a03ba807"
+        ],
+        "pricePerNight": {
+          "currency": "EUR",
+          "value": 420
+        },
+        "quantity": 3,
+        "type": "suite"
+      }
+    ],
+    "services": [
+      "valet parking",
+      "Wi-Fi",
+      "spa",
+      "restaurant"
+    ],
+    "type": "hotel"
+  },
+  {
+    "_id": {
+      "$oid": "6846abfc746baa6313378894"
+    },
+    "address": "9 Rue de Buci, 75006 Paris, France",
+    "checkInTime": "16:00",
+    "checkOutTime": "11:00",
+    "contacts": {
+      "email": "stay@saintgermainbnb.fr",
+      "phone": "+33 167829001",
+      "website": "https://saintgermainbnb.fr"
+    },
+    "coordinates": {
+      "lat": 48.8531,
+      "lng": 2.3385
+    },
+    "description": "A cozy B&B nestled in the heart of the Latin Quarter, perfect for culture lovers.",
+    "destination": {
+      "city": "Paris",
+      "coordinates": {
+        "lat": 48.8566,
+        "lng": 2.3522
+      },
+      "country": {
+        "code": "FR",
+        "name": "France"
+      },
+      "destinationId": {
+        "$oid": "68187dec1e54584b07f2f804"
+      },
+      "region": "Île-de-France",
+      "timezone": "Europe/Paris"
+    },
+    "details": "Relax in a classic Parisian home with antique decor and gourmet French breakfasts.",
+    "distanceToCenterKm": 1.08,
+    "languages": [
+      "English",
+      "French",
+      "German"
+    ],
+    "mainPicture": "https://images.unsplash.com/photo-1667233286274-702db7bc50d1?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NzR8fGhvdGVsJTIwZnJvbnR8ZW58MHwwfDB8fHwy",
+    "name": "Saint-Germain B&B",
+    "pictures": [],
+    "policies": {
+      "cancellation": "Refundable up to 5 days before stay.",
+      "payment": "Cash only",
+      "pets": "Small pets allowed."
+    },
+    "reviewsSummary": {
+      "avgRating": 0,
+      "totalCount": {
+        "$numberLong": "0"
+      }
+    },
+    "rooms": [
+      {
+        "amenities": [
+          "Wi-Fi",
+          "Desk",
+          "Ensuite bathroom"
+        ],
+        "bedTypes": [
+          "queen"
+        ],
+        "capacity": 2,
+        "name": "Parisian Room",
+        "pictures": [
+          "https://images.unsplash.com/photo-1578894380843-423ba0d99958"
+        ],
+        "pricePerNight": {
+          "currency": "EUR",
+          "value": 95
+        },
+        "quantity": 2,
+        "type": "double"
+      }
+    ],
+    "services": [
+      "Wi-Fi",
+      "breakfast",
+      "daily cleaning"
+    ],
+    "type": "b&b"
+  },
+  {
+    "_id": {
+      "$oid": "6846ad3e746baa6313378895"
+    },
+    "address": "21 Rue de la Chaussée d'Antin, 75009 Paris, France",
+    "checkInTime": "15:00",
+    "checkOutTime": "10:00",
+    "contacts": {
+      "email": "contact@operaview.fr",
+      "phone": "+33 142678322",
+      "website": "https://operaview.fr"
+    },
+    "coordinates": {
+      "lat": 48.8725,
+      "lng": 2.3324
+    },
+    "description": "Modern serviced apartments near Palais Garnier with stunning city views.",
+    "destination": {
+      "city": "Paris",
+      "coordinates": {
+        "lat": 48.8566,
+        "lng": 2.3522
+      },
+      "country": {
+        "code": "FR",
+        "name": "France"
+      },
+      "destinationId": {
+        "$oid": "68187dec1e54584b07f2f804"
+      },
+      "region": "Île-de-France",
+      "timezone": "Europe/Paris"
+    },
+    "details": "Ideal for business travelers and long stays, these apartments offer full kitchens, workspace, and weekly cleaning.",
+    "distanceToCenterKm": 2.29,
+    "languages": [
+      "English",
+      "French"
+    ],
+    "mainPicture": "https://images.unsplash.com/photo-1677154459613-4cddb2c0e426?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nzd8fGhvdGVsJTIwZnJvbnR8ZW58MHwwfDB8fHwy",
+    "name": "Opera View Residence",
+    "pictures": [],
+    "policies": {
+      "cancellation": "Full refund up to 7 days before check-in.",
+      "payment": "Credit card, bank transfer",
+      "pets": "No pets allowed."
+    },
+    "reviewsSummary": {
+      "avgRating": 0,
+      "totalCount": {
+        "$numberLong": "0"
+      }
+    },
+    "rooms": [
+      {
+        "amenities": [
+          "City view",
+          "Wi-Fi",
+          "Kitchen",
+          "Washing machine"
+        ],
+        "bedTypes": [
+          "queen"
+        ],
+        "capacity": 2,
+        "name": "One-Bedroom Apartment",
+        "pictures": [
+          "https://images.unsplash.com/photo-1611892440504-42a792e24d32"
+        ],
+        "pricePerNight": {
+          "currency": "EUR",
+          "value": 120
+        },
+        "quantity": 4,
+        "type": "apartment"
+      }
+    ],
+    "services": [
+      "elevator",
+      "Wi-Fi",
+      "laundry"
+    ],
+    "type": "apartment"
+  },
+  {
+    "_id": {
+      "$oid": "6846ad70746baa6313378896"
+    },
+    "address": "11 Rue des Rosiers, 75004 Paris, France",
+    "checkInTime": "14:00",
+    "checkOutTime": "12:00",
+    "contacts": {
+      "email": "info@maraisgardenhotel.fr",
+      "phone": "+33 155763210",
+      "website": "https://maraisgardenhotel.fr"
+    },
+    "coordinates": {
+      "lat": 48.8582,
+      "lng": 2.3601
+    },
+    "description": "A serene escape in the Marais district with a private inner garden.",
+    "destination": {
+      "city": "Paris",
+      "coordinates": {
+        "lat": 48.8566,
+        "lng": 2.3522
+      },
+      "country": {
+        "code": "FR",
+        "name": "France"
+      },
+      "destinationId": {
+        "$oid": "68187dec1e54584b07f2f804"
+      },
+      "region": "Île-de-France",
+      "timezone": "Europe/Paris"
+    },
+    "details": "Combining tranquility and style, the Marais Garden Hotel is just minutes from the Picasso Museum and Place des Vosges.",
+    "distanceToCenterKm": 0.6,
+    "languages": [
+      "English",
+      "Italian",
+      "French"
+    ],
+    "mainPicture": "https://images.unsplash.com/photo-1660676694025-d196b7ead91a?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTA3fHxob3RlbCUyMGZyb250fGVufDB8MHwwfHx8Mg%3D%3D",
+    "name": "Marais Garden Hotel",
+    "pictures": [],
+    "policies": {
+      "cancellation": "Free cancellation within 48 hours.",
+      "payment": "Credit cards, PayPal",
+      "pets": "Allowed with advance notice."
+    },
+    "reviewsSummary": {
+      "avgRating": 0,
+      "totalCount": {
+        "$numberLong": "0"
+      }
+    },
+    "rooms": [
+      {
+        "amenities": [
+          "Smart TV",
+          "Private balcony",
+          "Mini fridge"
+        ],
+        "bedTypes": [
+          "double"
+        ],
+        "capacity": 2,
+        "name": "Garden View Room",
+        "pictures": [
+          "https://images.unsplash.com/photo-1600585152220-90363fe7e115"
+        ],
+        "pricePerNight": {
+          "currency": "EUR",
+          "value": 140
+        },
+        "quantity": 6,
+        "type": "double"
+      }
+    ],
+    "services": [
+      "Wi-Fi",
+      "garden",
+      "breakfast",
+      "concierge"
+    ],
+    "type": "hotel"
+  },
+  {
+    "_id": {
+      "$oid": "6846adbc746baa6313378897"
+    },
+    "address": "7 Rue de Belleville, 75020 Paris, France",
+    "checkInTime": "14:00",
+    "checkOutTime": "10:00",
+    "contacts": {
+      "email": "stay@bellevillebackpackers.fr",
+      "phone": "+33 146882299",
+      "website": "https://bellevillebackpackers.fr"
+    },
+    "coordinates": {
+      "lat": 48.8732,
+      "lng": 2.3842
+    },
+    "description": "A fun and affordable apartment in the artistic Belleville neighborhood.",
+    "destination": {
+      "city": "Paris",
+      "coordinates": {
+        "lat": 48.8566,
+        "lng": 2.3522
+      },
+      "country": {
+        "code": "FR",
+        "name": "France"
+      },
+      "destinationId": {
+        "$oid": "68187dec1e54584b07f2f804"
+      },
+      "region": "Île-de-France",
+      "timezone": "Europe/Paris"
+    },
+    "details": "Meet other travelers, join group activities, and enjoy Paris on a budget.",
+    "distanceToCenterKm": 2.98,
+    "languages": [
+      "English",
+      "French",
+      "Spanish"
+    ],
+    "mainPicture": "https://images.unsplash.com/photo-1745240087585-5ffb827144ec?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTI0fHxob3RlbCUyMGZyb250fGVufDB8MHwwfHx8Mg%3D%3D",
+    "name": "Belleville Backpackers",
+    "pictures": [],
+    "policies": {
+      "cancellation": "Non-refundable.",
+      "payment": "Credit cards, cash",
+      "pets": "Not allowed."
+    },
+    "reviewsSummary": {
+      "avgRating": 0,
+      "totalCount": {
+        "$numberLong": "0"
+      }
+    },
+    "rooms": [
+      {
+        "amenities": [
+          "Wi-Fi",
+          "Private bathroom"
+        ],
+        "bedTypes": [
+          "double"
+        ],
+        "capacity": 2,
+        "name": "Double room",
+        "pictures": [
+          "https://images.unsplash.com/photo-1524758631624-e2b0a7f7e931"
+        ],
+        "pricePerNight": {
+          "currency": "EUR",
+          "value": 65
+        },
+        "quantity": 2,
+        "type": "double"
+      }
+    ],
+    "services": [
+      "Wi-Fi",
+      "Private kitchen"
+    ],
+    "type": "apartment"
+  },
+  {
+    "_id": {
+      "$oid": "6846adf6746baa6313378898"
+    },
+    "address": "5 Rue de l'Université, 75007 Paris, France",
+    "checkInTime": "16:00",
+    "checkOutTime": "11:00",
+    "contacts": {
+      "email": "booking@eiffelcharm.fr",
+      "phone": "+33 144009876",
+      "website": "https://eiffelcharm.fr"
+    },
+    "coordinates": {
+      "lat": 48.8602,
+      "lng": 2.3067
+    },
+    "description": "Cozy studio apartment with a partial Eiffel Tower view.",
+    "destination": {
+      "city": "Paris",
+      "coordinates": {
+        "lat": 48.8566,
+        "lng": 2.3522
+      },
+      "country": {
+        "code": "FR",
+        "name": "France"
+      },
+      "destinationId": {
+        "$oid": "68187dec1e54584b07f2f804"
+      },
+      "region": "Île-de-France",
+      "timezone": "Europe/Paris"
+    },
+    "details": "Perfect for couples seeking a romantic stay in one of Paris's most elegant areas.",
+    "distanceToCenterKm": 3.35,
+    "languages": [
+      "English",
+      "French"
+    ],
+    "mainPicture": "https://images.unsplash.com/photo-1655698037962-2ce1a9a01d2e?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTQwfHxob3RlbCUyMGZyb250fGVufDB8MHwwfHx8Mg%3D%3D",
+    "name": "Eiffel Charm Studio",
+    "pictures": [],
+    "policies": {
+      "cancellation": "Full refund if canceled 3 days before arrival.",
+      "payment": "Credit cards",
+      "pets": "Not allowed."
+    },
+    "reviewsSummary": {
+      "avgRating": 0,
+      "totalCount": {
+        "$numberLong": "0"
+      }
+    },
+    "rooms": [
+      {
+        "amenities": [
+          "Air conditioning",
+          "Kitchenette",
+          "Wi-Fi"
+        ],
+        "bedTypes": [
+          "double"
+        ],
+        "capacity": 2,
+        "name": "Studio Eiffel View",
+        "pictures": [
+          "https://images.unsplash.com/photo-1598628461956-f7323d43a438"
+        ],
+        "pricePerNight": {
+          "currency": "EUR",
+          "value": 105
+        },
+        "quantity": 2,
+        "type": "studio"
+      }
+    ],
+    "services": [
+      "Wi-Fi",
+      "air conditioning",
+      "kitchen"
+    ],
+    "type": "apartment"
+  },
+  {
+    "_id": {
+      "$oid": "6846ae28746baa6313378899"
+    },
+    "address": "18 Rue Jacob, 75006 Paris, France",
+    "checkInTime": "15:00",
+    "checkOutTime": "11:30",
+    "contacts": {
+      "email": "info@leftbankhotel.fr",
+      "phone": "+33 153784411",
+      "website": "https://leftbankhotel.fr"
+    },
+    "coordinates": {
+      "lat": 48.8547,
+      "lng": 2.3339
+    },
+    "description": "Stylish boutique hotel in Saint-Germain-des-Prés, steps from art galleries and cafés.",
+    "destination": {
+      "city": "Paris",
+      "coordinates": {
+        "lat": 48.8566,
+        "lng": 2.3522
+      },
+      "country": {
+        "code": "FR",
+        "name": "France"
+      },
+      "destinationId": {
+        "$oid": "68187dec1e54584b07f2f804"
+      },
+      "region": "Île-de-France",
+      "timezone": "Europe/Paris"
+    },
+    "details": "This chic retreat combines classic French décor with modern comfort.",
+    "distanceToCenterKm": 1.36,
+    "languages": [
+      "English",
+      "French",
+      "Portuguese"
+    ],
+    "mainPicture": "https://images.unsplash.com/photo-1567625911658-140777a65f4c?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTkwfHxob3RlbCUyMGZyb250fGVufDB8MHwwfHx8Mg%3D%3D",
+    "name": "Left Bank Boutique Hotel",
+    "pictures": [],
+    "policies": {
+      "cancellation": "Free cancellation up to 24 hours before arrival.",
+      "payment": "All major cards",
+      "pets": "Pets allowed with additional fee."
+    },
+    "reviewsSummary": {
+      "avgRating": 0,
+      "totalCount": {
+        "$numberLong": "0"
+      }
+    },
+    "rooms": [
+      {
+        "amenities": [
+          "TV",
+          "Wi-Fi",
+          "Minibar"
+        ],
+        "bedTypes": [
+          "queen"
+        ],
+        "capacity": 2,
+        "name": "Classic Double Room",
+        "pictures": [
+          "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb"
+        ],
+        "pricePerNight": {
+          "currency": "EUR",
+          "value": 115
+        },
+        "quantity": 5,
+        "type": "double"
+      }
+    ],
+    "services": [
+      "Wi-Fi",
+      "breakfast",
+      "lounge bar"
+    ],
+    "type": "hotel"
+  }
+]

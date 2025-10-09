@@ -1,0 +1,17 @@
+<!-- Quick actions -->
+<smt-quick-actions-bar (onNavigateBack)="handleNavigateBack()" />
+
+@if (accommodationDetails$ | async; as accommodation) {
+  @if (accommodation.loading) {
+    <p>Loading...</p>
+  } @else if (accommodation.error) {
+    <smt-not-found type="error" />
+  } @else if (accommodation.data) {
+    <smt-accommodation-details-card
+      [form]="form"
+      [isAgentView]="isAgentView"
+      [accommodationDetails]="accommodation.data"
+      (onCheckout)="handleCheckout($event)"
+    />
+  }
+}

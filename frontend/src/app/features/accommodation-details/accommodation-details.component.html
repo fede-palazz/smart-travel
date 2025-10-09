@@ -1,0 +1,6 @@
+<smt-accommodation-details-view
+  [accommodationId]="accommodationId"
+  [isAgentView]="(isAgentView$ | async) ?? false"
+  (onNavigateBack)="handleNavigateBack()"
+  (onCheckout)="handleCheckout($event)"
+/>

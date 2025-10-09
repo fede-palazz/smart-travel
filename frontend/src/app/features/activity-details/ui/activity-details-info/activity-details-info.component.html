@@ -1,0 +1,73 @@
+<p-fieldset styleClass="mb-5 mt-3">
+  <ng-template pTemplate="header">
+    <div class="flex align-items-center gap-2 px-2">
+      <span class="material-icons">info</span>
+      <span class="font-bold text-lg">Details</span>
+    </div>
+  </ng-template>
+
+  <div class="grid">
+    <!-- Duration -->
+    <div class="col-2 flex flex-column gap-2">
+      <div class="flex align-items-center">
+        <span class="material-icons mr-1">schedule</span>
+        <span><strong>Duration</strong></span>
+      </div>
+      <div class="flex flex-column gap-1 mt-1">
+        <span>{{ activity.schedule.durationMinutes }}m</span>
+      </div>
+    </div>
+
+    <!-- Start time -->
+    <div class="col-2 flex flex-column gap-2">
+      <div class="flex align-items-center">
+        <span class="material-icons mr-1">hourglass_top</span>
+        <span><strong>From</strong></span>
+      </div>
+      <div class="flex flex-column gap-1 mt-1">
+        <span>{{ activity.schedule.recurrence.startTime }}</span>
+      </div>
+    </div>
+
+    <!-- End time -->
+    <div class="col-2 flex flex-column gap-2">
+      <div class="flex align-items-center">
+        <span class="material-icons mr-1">hourglass_bottom</span>
+        <span><strong>To</strong></span>
+      </div>
+      <div class="flex flex-column gap-1 mt-1">
+        <span>{{ activity.schedule.recurrence.endTime }}</span>
+      </div>
+    </div>
+
+    <!-- Languages -->
+    <div class="col flex flex-column gap-2">
+      <div class="flex align-items-center">
+        <span class="material-icons mr-1">translate</span>
+        <span><strong>Spoken languages</strong></span>
+      </div>
+      <div class="flex flex-wrap gap-1">
+        <p-chip
+          *ngFor="let lang of activity.languages"
+          [label]="lang"
+          class="mr-2"
+        />
+      </div>
+    </div>
+
+    <!-- Tags -->
+    <div class="col flex flex-column gap-2">
+      <div class="flex align-items-center">
+        <span class="material-icons mr-1">sell</span>
+        <span><strong>Tags</strong></span>
+      </div>
+      <div class="flex flex-wrap gap-1">
+        <p-chip
+          *ngFor="let service of activity.tags"
+          [label]="service"
+          class="mr-2"
+        />
+      </div>
+    </div>
+  </div>
+</p-fieldset>

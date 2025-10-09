@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  labels:
+    app: smart-travel
+data:
+  # Microservices URLs - using internal service names
+  FRONTEND_URL: "http://frontend-service:8088"
+  FRONTEND_REDIRECT_URL: "https://smart-travel.apps.stage-soldi-okd.lutechstage.com"
+  TRAVEL_CATALOG_URL: "http://travel-catalog-service:8080"
+  USER_URL: "http://user-service:8081"
+  ORDER_URL: "http://order-service:8082"
+  BFF_URL: "https://smart-travel.apps.stage-soldi-okd.lutechstage.com"
+  BROKER_HOST: "rabbit-service"
+  BROKER_PORT: "5672"
+  MAILER_HOST: "mailpit-smtp"
+  MAILER_PORT: "1025"

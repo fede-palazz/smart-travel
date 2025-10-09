@@ -1,0 +1,89 @@
+extend type Query {
+    getAgencyPackages(page: Int, size: Int, sort: String, order: String, filters: AgencyPackageFilter): AgencyPackagePage!
+    getAgencyPackageById(id: ID!): AgencyPackage
+}
+
+extend type Mutation {
+    addAgencyPackage(packageReq: AgencyPackageReq!): AgencyPackage!
+    updateAgencyPackage(id: ID!, packageReq: AgencyPackageReq!): AgencyPackage!
+    deleteAgencyPackage(id: ID!): OkRes!
+    publishAgencyPackage(id: ID!): OkRes!
+    archiveAgencyPackage(id: ID!): OkRes!
+}
+
+###########
+## Model ##
+###########
+
+type AgencyPackage {
+    id: ID!
+    name: String!
+    description: String!
+    tags: [String!]!
+    status: String!
+    startDate: String!
+    endDate: String!
+    totalPrice: Price!
+    destination: DestinationSummary!
+    mainPicture: String!
+    pictures: [String!]
+    departureFlight: FlightOrder!
+    returnFlight: FlightOrder!
+    accommodation: AccommodationOrder!
+    activities: [ActivityOrder!]
+    agentInfo: UserSummary!
+    creationDate: String!
+    quantity: Int!
+}
+
+##########
+## DTOs ##
+##########
+
+input AgencyPackageReq {
+    name: String!
+    description: String!
+    tags: [String!]
+    startDate: String!
+    endDate: String!
+    totalPrice: PriceInput!
+    destination: DestinationSummaryInput!
+    mainPicture: String!
+    pictures: [String!]
+    departureFlight: FlightOrderInput!
+    returnFlight: FlightOrderInput!
+    accommodation: AccommodationOrderInput!
+    activities: [ActivityOrderInput!]
+    agentInfo: UserSummaryInput!
+    quantity: Int!
+}
+
+######################
+## Paging / Filters ##
+######################
+
+type AgencyPackagePage {
+    totalPages: Int!
+    totalElements: Int!
+    currentPage: Int!
+    elementsInPage: Int!
+    content: [AgencyPackage!]!
+}
+
+input AgencyPackageFilter {
+    name: String
+    city: String
+    region: String
+    country: String
+    tags: [String!]
+    status: String
+    minPrice: Float
+    maxPrice: Float
+    startDate: String
+    endDate: String
+    authorId: String
+}
+
+###################
+## Private Types ##
+###################

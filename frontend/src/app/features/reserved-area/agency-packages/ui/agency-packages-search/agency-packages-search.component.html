@@ -1,0 +1,11 @@
+<smt-dialog-container
+  title="Add package"
+  [isVisible]="isVisible"
+  width="40rem"
+  (onClose)="handleClose()"
+>
+  <!-- Filters -->
+  <div dialog-body class="py-1 px-2 flex flex-column">
+    <smt-agency-packages-new-tab (onSearch)="handleSearch($event)" />
+  </div>
+</smt-dialog-container>

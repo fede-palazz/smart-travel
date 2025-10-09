@@ -1,0 +1,61 @@
+<p-accordion class="accommodation-review">
+  <p-accordionTab>
+    <!-- Accommodation overview -->
+    <ng-template pTemplate="header">
+      <div class="grid align-items-center gap-0 w-full">
+        <!-- Accommodation image -->
+        <div class="col-2 text-center p-1">
+          <p-avatar
+            [image]="accommodationOrder.mainPicture"
+            shape="square"
+            class="mr-1"
+            size="xlarge"
+            styleClass="border-round overflow-hidden h-5rem w-5rem"
+          />
+        </div>
+
+        <!-- Accommodation info -->
+        <div class="col">
+          <!-- <div class="flex flex-column align-items-start gap-1"> -->
+          <span class="font-medium text-secondary text-sm">
+            {{ accommodationOrder.type }}
+          </span>
+          <div class="font-medium text-lg text-900 mt-2">
+            {{ accommodationOrder.name }}
+          </div>
+          <!-- </div> -->
+        </div>
+
+        <!-- Price -->
+        <div class="col-2 flex justify-content-end">
+          <span>
+            {{
+              getRoomsTotalPrice()
+                | currency: accommodationOrder.rooms[0].pricePerNight.currency
+            }} </span
+          ><span class="ml-2 text-sm font-light">/ night</span>
+        </div>
+
+        <!-- Edit button -->
+        <div class="col-2 text-center">
+          @if (!hideAction) {
+            <button
+              pButton
+              pRipple
+              severity="warning"
+              (click)="handleEditAccommodation()"
+            >
+              <span class="material-icons">edit</span>
+            </button>
+          }
+        </div>
+      </div>
+    </ng-template>
+
+    <!-- Accommodation details -->
+    <smt-accommodation-details-rooms
+      [rooms]="accommodationOrder.rooms"
+      [readonly]="true"
+    />
+  </p-accordionTab>
+</p-accordion>

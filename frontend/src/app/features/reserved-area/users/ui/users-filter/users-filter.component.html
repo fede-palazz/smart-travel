@@ -1,0 +1,49 @@
+<smt-dialog-container
+  title="Filters"
+  [isVisible]="isVisible"
+  (onClose)="handleClose()"
+>
+  <!-- Filters -->
+  <div dialog-body class="py-1 px-2 flex flex-column">
+    <!-- User id filter -->
+    <div class="flex flex-column mb-3">
+      <label for="id" class="mb-3">User ID</label>
+      <input type="text" name="id" pInputText [(ngModel)]="id" />
+    </div>
+
+    <!-- Email filter -->
+    <div class="flex flex-column mb-3">
+      <label for="email" class="mb-3">Email</label>
+      <input type="text" name="email" pInputText [(ngModel)]="email" />
+    </div>
+
+    <!-- Role filter -->
+    <div class="flex flex-column mb-3">
+      <label for="role" class="mb-3">Role</label>
+      <p-selectButton
+        [options]="roleOptions"
+        [(ngModel)]="role"
+        optionLabel="label"
+        optionValue="value"
+      />
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div dialog-footer>
+    <p-button
+      label="Cancel"
+      [text]="true"
+      severity="secondary"
+      (onClick)="handleClose()"
+    />
+    <p-button
+      styleClass="mr-3"
+      label="Reset"
+      severity="danger"
+      [outlined]="true"
+      (onClick)="handleReset()"
+    />
+    <p-button label="Apply" severity="secondary" (onClick)="handleFilter()" />
+  </div>
+</smt-dialog-container>

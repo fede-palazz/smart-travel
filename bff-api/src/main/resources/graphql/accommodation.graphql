@@ -1,0 +1,163 @@
+extend type Query {
+    getAccommodations(page: Int, size: Int, sort: String, order: String, timezone: String, filters: AccommodationFilter): AccommodationPage!
+    getAccommodationById(id: ID!): Accommodation!
+    getAccommodationDetailsById(id: ID!): AccommodationDetails!
+}
+
+extend type Mutation {
+    addAccommodation(accommodationReq: AccommodationReq!): Accommodation!
+    updateAccommodation(id: ID!, accommodationReq: AccommodationUpdateReq!): AccommodationDetails!
+    deleteAccommodation(id: ID!): OkRes!
+}
+
+###########
+## Model ##
+###########
+
+type Accommodation {
+    id: ID!
+    name: String!
+    type: String!
+    services: [String!]!
+    destination: DestinationSummary!
+    address: String!
+    coordinates: Coordinates!
+    distanceToCenterKm: Float!
+    mainPicture: String!
+    pricePerNight: Float!
+    reviewsSummary: ReviewsSummary!
+}
+
+type AccommodationDetails {
+    id: ID!
+    name: String!
+    type: String!
+    services: [String!]!
+    destination: DestinationSummary!
+    address: String!
+    coordinates: Coordinates!
+    distanceToCenterKm: Float!
+    mainPicture: String!
+    reviewsSummary: ReviewsSummary!
+    description: String
+    details: String
+    checkInTime: String
+    checkOutTime: String
+    contacts: Contacts
+    policies: Policies
+    pictures: [String!]
+    languages: [String!]
+    rooms: [Room!]
+}
+
+##########
+## DTOs ##
+##########
+
+input AccommodationReq {
+    name: String!
+    type: String!
+    services: [String!]
+    destination: DestinationSummaryInput!
+    address: String!
+    coordinates: CoordinatesInput!
+    mainPicture: String!
+}
+
+input AccommodationUpdateReq {
+    name: String!
+    type: String!
+    services: [String!]
+    address: String!
+    coordinates: CoordinatesInput!
+    mainPicture: String!
+    description: String!
+    details: String!
+    checkInTime: String!
+    checkOutTime: String!
+    pictures: [String!]
+    contacts: ContactsInput!
+    policies: PoliciesInput!
+    languages: [String!]
+    rooms: [RoomInput!]
+}
+
+######################
+## Paging / Filters ##
+######################
+
+type AccommodationPage {
+    totalPages: Int!
+    totalElements: Int!
+    currentPage: Int!
+    elementsInPage: Int!
+    content: [Accommodation!]!
+}
+
+input AccommodationFilter {
+    name: String
+    types: [String!]
+    services: [String!]
+    city: String
+    region: String
+    country: String
+    address: String
+    minDistanceToCenterKm: Float
+    maxDistanceToCenterKm: Float
+    minPricePerNight: Float
+    maxPricePerNight: Float
+    minRating: Float
+    startDate: String!
+    endDate: String!
+    guests: Int!
+}
+
+##################
+## Shared Types ##
+##################
+
+type Contacts {
+    phone: String!
+    email: String!
+    website: String
+}
+
+type Policies {
+    cancellation: String!
+    payment: String!
+    pets: String
+}
+
+type Room {
+    name: String!
+    type: String!
+    capacity: Int!
+    pricePerNight: Price!
+    quantity: Int!
+    amenities: [String!]!
+    bedTypes: [String!]!
+    pictures: [String!]!
+}
+
+input ContactsInput {
+    phone: String!
+    email: String!
+    website: String
+}
+
+input PoliciesInput {
+    cancellation: String!
+    payment: String!
+    pets: String
+}
+
+input RoomInput {
+    name: String!
+    type: String!
+    capacity: Int!
+    pricePerNight: PriceInput!
+    quantity: Int!
+    amenities: [String!]!
+    bedTypes: [String!]!
+    pictures: [String!]!
+}

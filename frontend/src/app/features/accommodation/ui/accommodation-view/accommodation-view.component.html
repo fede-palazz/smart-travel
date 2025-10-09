@@ -1,0 +1,72 @@
+<!-- Accommodation search accordion -->
+<p-accordion
+  styleClass="mt-3"
+  expandIcon="pi pi-search-plus"
+  collapseIcon="pi pi-search-minus"
+  [(activeIndex)]="accordionItemIndex"
+>
+  <p-accordionTab>
+    <!-- Search info -->
+    <ng-template pTemplate="header">
+      @if ((params$ | async)?.searchParams; as params) {
+        <div class="grid w-full align-items-center py-0">
+          <div class="col-6 flex align-items-center">
+            <smt-text type="title" class="mr-2">{{
+              params.to | titlecase
+            }}</smt-text>
+          </div>
+          <!-- Dates -->
+          <div class="col-6">
+            <smt-text type="subtitle">{{
+              (params.startDate | date: "EEE, d MMM")! +
+                "  -  " +
+                (params.endDate | date: "EEE, d MMM")!
+            }}</smt-text>
+          </div>
+        </div>
+      }
+    </ng-template>
+
+    <!-- Accommodation search form -->
+    <ng-content />
+  </p-accordionTab>
+</p-accordion>
+
+<!-- Accommodation list and filters -->
+<div class="grid">
+  <div class="col-3 pl-0">
+    @if ((params$ | async)?.filterParams; as filters) {
+      <smt-accommodation-filters
+        [name]="filters.name"
+        [types]="filters.types"
+        [minRating]="filters.minRating"
+        [minPrice]="filters.minPricePerNight"
+        [maxPrice]="filters.maxPricePerNight"
+        [minRange]="filters.minDistanceToCenterKm"
+        [maxRange]="filters.maxDistanceToCenterKm"
+        (onFilter)="handleFilter($event)"
+      />
+    }
+  </div>
+  <div class="col pr-0">
+    @if (accommodations$ | async; as accommodations) {
+      @if (accommodations.loading) {
+        <smt-accommodation-skeleton />
+      } @else if (accommodations.error) {
+        <smt-not-found type="error" />
+      } @else if (accommodations.data) {
+        @if (accommodations.data.elementsInPage === 0) {
+          <smt-not-found type="accommodation" />
+        } @else {
+          <smt-accommodation-list
+            [accommodations]="accommodations.data.content"
+            [totalElements]="accommodations.data.totalElements"
+            [currentPage]="accommodations.data.currentPage"
+            (onPageChange)="handlePageChange($event)"
+            (onSelectAccommodation)="handleSelectAccommodation($event)"
+          />
+        }
+      }
+    }
+  </div>
+</div>

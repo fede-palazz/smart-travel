@@ -1,0 +1,28 @@
+<div class="flex w-full toolbar-container">
+  <p-toolbar>
+    <div class="p-toolbar-group-start">
+      <p-button
+        icon="pi pi-filter"
+        label="Filters"
+        class="mr-2"
+        severity="secondary"
+        [badge]="filterCounter > 0 ? filterCounter + '' : ''"
+        badgeClass="p-badge-contrast"
+        (onClick)="handleDisplayFilters()"
+      />
+    </div>
+    <div class="p-toolbar-group-center">
+      <span class="p-input-icon-right w-6">
+        <i class="pi pi-search"></i>
+        <input
+          pInputText
+          placeholder="Search for customer"
+          class="w-full"
+          [(ngModel)]="query"
+          (ngModelChange)="handleSearch($event)"
+        />
+      </span>
+    </div>
+    <div class="p-toolbar-group-end"></div>
+  </p-toolbar>
+</div>

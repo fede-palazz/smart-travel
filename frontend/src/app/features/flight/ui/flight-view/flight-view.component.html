@@ -1,0 +1,85 @@
+<!-- Flight search accordion -->
+<p-accordion
+  styleClass="px-2"
+  expandIcon="pi pi-search-plus"
+  collapseIcon="pi pi-search-minus"
+  [(activeIndex)]="accordionItemIndex"
+>
+  <p-accordionTab>
+    <!-- Search info -->
+    <ng-template pTemplate="header">
+      @if ((params$ | async)?.searchParams; as params) {
+        @if (step$ | async; as currentStep) {
+          <div class="grid w-full align-items-center py-0">
+            <div class="col-6 flex align-items-center">
+              <smt-text type="title" class="mr-2">{{
+                currentStep === step.FLIGHT_DEPARTURE
+                  ? (params.from | titlecase)
+                  : (params.to | titlecase)
+              }}</smt-text>
+
+              <span class="material-icons mr-1">arrow_right_alt</span>
+              <smt-text type="title" class="mr-2">{{
+                currentStep === step.FLIGHT_DEPARTURE
+                  ? (params.to | titlecase)
+                  : (params.from | titlecase)
+              }}</smt-text>
+            </div>
+            <!-- Dates -->
+            <div class="col-6">
+              <smt-text type="subtitle">
+                {{
+                  (currentStep === step.FLIGHT_DEPARTURE
+                    ? (params.startDate | date: "EEE, d MMM")
+                    : (params.endDate | date: "EEE, d MMM"))!
+                }}
+              </smt-text>
+            </div>
+          </div>
+        }
+      }
+    </ng-template>
+
+    <!-- Flight search form -->
+    <ng-content />
+  </p-accordionTab>
+</p-accordion>
+
+<!-- Flights list and filters -->
+<div class="grid">
+  @if (flights$ | async; as flights) {
+    <!-- Filters -->
+    <div class="col-3">
+      @if ((params$ | async)?.filterParams; as filters) {
+        <smt-flight-filters
+          [flights]="flights.data?.content ?? []"
+          [airline]="filters.airline"
+          [minPrice]="filters.minPrice"
+          [maxPrice]="filters.maxPrice"
+          (onFilter)="handleFilter($event)"
+        />
+      }
+    </div>
+
+    <!-- Main content -->
+    <div class="col">
+      @if (flights.loading) {
+        <smt-flight-list-skeleton [repeat]="4" />
+      } @else if (flights.error) {
+        <smt-not-found type="error" />
+      } @else if (flights.data) {
+        @if (flights.data.elementsInPage === 0) {
+          <smt-not-found type="flight" />
+        } @else {
+          <smt-flight-list
+            [flights]="flights.data.content"
+            [totalElements]="flights.data.totalElements"
+            [currentPage]="flights.data.currentPage"
+            (onPageChange)="handlePageChange($event)"
+            (onSelectFlight)="handleSelectFlight($event)"
+          />
+        }
+      }
+    </div>
+  }
+</div>

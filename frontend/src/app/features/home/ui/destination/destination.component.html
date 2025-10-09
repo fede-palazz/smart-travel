@@ -1,0 +1,29 @@
+<div class="shadow-2 overflow-hidden border-round-md">
+  <p-card [header]="dest.city" [subheader]="dest.country.name">
+    <ng-template pTemplate="header">
+      <img [alt]="dest.city" [src]="dest.pictures[0]" class="h-10rem" />
+    </ng-template>
+    <ng-template pTemplate="content">
+      <div
+        [style]="{ height: '74px' }"
+        class="clamp-4"
+        [pTooltip]="dest.description"
+        tooltipPosition="top"
+        showDelay="500"
+      >
+        {{ dest.description }}
+      </div>
+    </ng-template>
+    <ng-template pTemplate="footer">
+      <div class="mt-1 w-full">
+        <p-button
+          icon="pi pi-compass"
+          label="Explore"
+          severity="primary"
+          outlined="true"
+          (onClick)="handleViewDestination()"
+        />
+      </div>
+    </ng-template>
+  </p-card>
+</div>

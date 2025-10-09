@@ -1,0 +1,184 @@
+<div class="px-2">
+  <div class="flex justify-content-between">
+    <smt-text type="subtitle"
+      ><strong>Customer:</strong> {{ order.customerInfo.name }}
+      {{ order.customerInfo.surname }}
+    </smt-text>
+    <smt-text type="subtitle"><strong>Order:</strong> {{ order.id }}</smt-text>
+  </div>
+  <div class="flex flex-column">
+    <!-- Departure flight -->
+    @if (departureFlight) {
+      <smt-text type="title" className="mt-3">Departure flight</smt-text>
+      <ng-container
+        [ngTemplateOutlet]="flightTemplate"
+        [ngTemplateOutletContext]="{ flight: departureFlight }"
+      />
+    }
+
+    <!-- Return flight -->
+    @if (returnFlight) {
+      <smt-text type="title" className="mt-3">Return flight</smt-text>
+      <ng-container
+        [ngTemplateOutlet]="flightTemplate"
+        [ngTemplateOutletContext]="{ flight: returnFlight }"
+      />
+    }
+
+    <!-- Accommodation -->
+    @if (accommodation) {
+      <smt-text type="title" className="mt-3">Stay</smt-text>
+      <ng-container
+        [ngTemplateOutlet]="accommodationTemplate"
+        [ngTemplateOutletContext]="{ stay: accommodation }"
+      />
+    }
+
+    <!-- Activities -->
+    @if (activities) {
+      <smt-text type="title" className="mt-3">Activities</smt-text>
+      <ng-container
+        [ngTemplateOutlet]="activitiesTemplate"
+        [ngTemplateOutletContext]="{ activities: activities }"
+      />
+    }
+  </div>
+
+  <p-divider />
+
+  <!-- Price to pay -->
+  <div class="w-full grid">
+    <ng-container *ngTemplateOutlet="totalPrice" />
+  </div>
+
+  <!-- Agency price -->
+  @if (order.agencyPackageId) {
+    <p-divider />
+    <div class="w-full grid">
+      <ng-container *ngTemplateOutlet="agencyPrice" />
+    </div>
+  }
+
+  <!-- 
+*******************
+**** TEMPLATES ****
+*******************
+-->
+
+  <!-- Flight -->
+  <ng-template #flightTemplate let-flight="flight">
+    <div class="flex mb-2 gap-3 flex-wrap">
+      <span>
+        <strong>Date:</strong>
+        {{
+          flight.departureTime
+            | date: "dd/MM/yyyy" : dateUtils.getUtcOffset(flight.from.timezone)
+        }}
+      </span>
+      <span>
+        <strong>Quantity:</strong>
+        {{ flight.quantity }}
+      </span>
+    </div>
+    <smt-flight-review [flight]="flight" [hideAction]="true" />
+  </ng-template>
+
+  <!-- Accommodation -->
+  <ng-template #accommodationTemplate let-stay="stay">
+    <div class="flex mb-2 gap-3 flex-wrap">
+      <span>
+        <strong>Dates:</strong>
+        {{ stay.startDate | date: "dd/MM/yyyy" }} -
+        {{ stay.endDate | date: "dd/MM/yyyy" }}
+      </span>
+      <span>
+        <strong>Nights:</strong>
+        {{ getAccommodationNightNumber() }}
+      </span>
+    </div>
+    <smt-accommodation-review [accommodation]="stay" [hideAction]="true" />
+  </ng-template>
+
+  <!-- Activities -->
+  <ng-template #activitiesTemplate let-activities="activities">
+    @for (activity of activities; track activity.activityId) {
+      <div class="mb-2">
+        <div class="flex mb-2 gap-3 flex-wrap">
+          <span>
+            <strong>Date:</strong>
+            {{ activity.date | date: "dd/MM/yyyy" }}
+          </span>
+          <span>
+            <strong>Quantity:</strong>
+            {{ activity.quantity }}
+          </span>
+        </div>
+        <smt-activity-review [activity]="activity" [hideAction]="true" />
+      </div>
+    }
+  </ng-template>
+
+  <!-- Total price -->
+  <ng-template #totalPrice>
+    <span class="col-12 font-bold text-lg">Cost overview</span>
+
+    <!-- Departure flight -->
+    @if (departureFlight) {
+      <div class="col-6">Departure flight</div>
+      <div class="col-6 text-right">
+        {{
+          departureFlight.price.value | currency: departureFlight.price.currency
+        }}
+        x {{ departureFlight.quantity }} people
+      </div>
+    }
+    <!-- Return flight -->
+    @if (returnFlight) {
+      <div class="col-6">Return flight</div>
+      <div class="col-6 text-right">
+        {{ returnFlight.price.value | currency: returnFlight.price.currency }} x
+        {{ returnFlight.quantity }} people
+      </div>
+    }
+    <!-- Accommodation -->
+    @if (accommodation) {
+      <div class="col-6">Stay</div>
+      <div class="col-6 text-right">
+        {{
+          getRoomsTotalPrice()
+            | currency: accommodation.rooms[0].pricePerNight.currency
+        }}
+        x {{ getAccommodationNightNumber() }} nights
+      </div>
+    }
+    <!-- Activities -->
+    @if (activities && activities.length > 0) {
+      <div class="col-6">Activities</div>
+      <div class="col-6 text-right">
+        @for (
+          activity of activities;
+          let last = $last;
+          track activity.activityId
+        ) {
+          {{ activity.price.value | currency: activity.price.currency }} x
+          {{ activity.quantity }} people
+          {{ !last ? " ," : "" }}
+        }
+      </div>
+    }
+
+    <!-- Final price -->
+    <div class="col-6 font-bold">Total</div>
+    <div class="col-6 text-right font-bold">
+      {{ getTotalPrice() | currency: "EUR" }}
+    </div>
+  </ng-template>
+
+  <!-- Agency price -->
+  <ng-template #agencyPrice>
+    <div class="col-6 font-bold">Agency price</div>
+    <div class="col-6 text-right font-bold">
+      {{ order.payment.amount.value | currency: order.payment.amount.currency }}
+    </div>
+  </ng-template>
+</div>

@@ -1,0 +1,112 @@
+@if (step$ | async; as currentStep) {
+  <!-- Breadcrumb navigation -->
+  <p-breadcrumb
+    [model]="(items$ | async) ?? []"
+    styleClass="p-1 my-3 pl-2"
+    (onItemClick)="handleChangeStep($event.item['index'])"
+  >
+    <ng-template pTemplate="item" let-item>
+      <div class="cursor-pointer flex align-items-center">
+        <span class="material-icons text-color mr-1">
+          {{ item.icon }}
+        </span>
+        <span class="text-color">{{ item.label }}</span>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="separator">
+      <span class="material-icons text-color"> chevron_right </span>
+    </ng-template>
+  </p-breadcrumb>
+
+  <p-toast />
+
+  @switch (currentStep) {
+    @case (step.FLIGHT_DEPARTURE) {
+      <smt-flight-view
+        [step$]="step$"
+        [params$]="flightParams$"
+        (onSelectFlight)="handleSelectFlight($event)"
+      >
+        <ng-container *ngTemplateOutlet="agency_packages_new_tab_template" />
+      </smt-flight-view>
+    }
+    @case (step.FLIGHT_RETURN) {
+      <smt-flight-view
+        [step$]="step$"
+        [params$]="flightParams$"
+        (onSelectFlight)="handleSelectFlight($event)"
+      >
+        <ng-container *ngTemplateOutlet="agency_packages_new_tab_template" />
+      </smt-flight-view>
+    }
+    @case (step.ACCOMMODATION) {
+      <smt-accommodation-view
+        [params$]="accommodationParams$"
+        (onSelectAccommodation)="handleSelectAccommodation($event)"
+      >
+        <ng-container *ngTemplateOutlet="agency_packages_new_tab_template" />
+      </smt-accommodation-view>
+    }
+    @case (step.ACCOMMODATION_DETAILS) {
+      <smt-accommodation-details-view
+        [accommodationId]="accommodationId!"
+        (onNavigateBack)="handleChangeStep(step.ACCOMMODATION)"
+        (onCheckout)="handleSelectAccommodationDetails($event)"
+      />
+    }
+    @case (step.ACTIVITY) {
+      <smt-activity-view
+        [params$]="activityParams$"
+        (onSelectActivity)="handleSelectActivity($event)"
+      >
+        <ng-container *ngTemplateOutlet="agency_packages_new_tab_template" />
+      </smt-activity-view>
+    }
+    @case (step.ACTIVITY_DETAILS) {
+      <smt-activity-details-view
+        [activityId]="activityId!"
+        (onNavigateBack)="handleChangeStep(step.ACTIVITY)"
+        (onCheckout)="handleSelectActivityDetails($event)"
+      />
+    }
+    @case (step.CHECKOUT) {
+      @if (order$ | async; as order) {
+        <smt-checkout-confirmation
+          [isAgentView]="true"
+          [departureFlight]="order.departureFlight"
+          [returnFlight]="order.returnFlight"
+          [accommodation]="order.accommodation"
+          [activities]="order.activities"
+          (onEditDepartureFlight)="handleChangeStep(step.FLIGHT_DEPARTURE)"
+          (onEditReturnFlight)="handleChangeStep(step.FLIGHT_RETURN)"
+          (onEditAccommodation)="handleChangeStep(step.ACCOMMODATION)"
+          (onAddActivity)="handleChangeStep(step.ACTIVITY)"
+          (onCheckout)="handleChangeStep(step.CONFIRM)"
+          (onDeleteActivity)="handleDeleteActivity($event)"
+        />
+      }
+    }
+    @case (step.CONFIRM) {
+      <smt-agency-packages-confirmation
+        [isSaving]="isSaving"
+        (onSave)="handleSavePackage($event)"
+      />
+    }
+    @default {
+      <p>Unknown step</p>
+    }
+  }
+}
+
+<!-- 
+*******************
+**** TEMPLATES ****
+*******************
+-->
+
+<ng-template #agency_packages_new_tab_template>
+  <smt-agency-packages-new-tab
+    [params]="initialParams"
+    (onSearch)="handleCustomPackageSearch($event)"
+  />
+</ng-template>

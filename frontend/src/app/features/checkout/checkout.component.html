@@ -1,0 +1,16 @@
+@if (order$ | async; as order) {
+  <div class="mt-4">
+    <smt-checkout-confirmation
+      [departureFlight]="order.departureFlight"
+      [returnFlight]="order.returnFlight"
+      [accommodation]="order.accommodation"
+      [activities]="order.activities"
+      (onEditDepartureFlight)="handleEditDepartureFlight()"
+      (onEditReturnFlight)="handleEditReturnFlight()"
+      (onEditAccommodation)="handleEditAccommodation()"
+      (onAddActivity)="handleAddActivity()"
+      (onDeleteActivity)="handleDeleteActivity($event)"
+      (onCheckout)="handleCheckout()"
+    />
+  </div>
+}

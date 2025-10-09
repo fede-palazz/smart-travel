@@ -1,0 +1,74 @@
+extend type Query {
+    getFlights(page: Int, size: Int, sort: String, order: String, timezone: String, filters: FlightFilter): FlightPage!
+    getFlightById(id: ID!): Flight
+}
+
+extend type Mutation {
+    addFlight(flightReq: FlightReq!): Flight!
+    updateFlight(id: ID!, flightReq: FlightReq!): Flight!
+    deleteFlight(id: ID!): OkRes!
+}
+
+###########
+## Model ##
+###########
+
+type Flight {
+    id: ID!
+    code: String!
+    capacity: Int!
+    airline: String!
+    airlineLogo: String!
+    from: FlightDestination!
+    to: FlightDestination!
+    departureTime: String!
+    arrivalTime: String!
+    price: Price!
+}
+
+##########
+## DTOs ##
+##########
+
+input FlightReq {
+    code: String!
+    capacity: Int!
+    airline: String!
+    airlineLogo: String!
+    from: FlightDestinationInput!
+    to: FlightDestinationInput!
+    departureTime: String!
+    arrivalTime: String!
+    price: PriceInput!
+}
+
+######################
+## Paging / Filters ##
+######################
+
+type FlightPage {
+    totalPages: Int!
+    totalElements: Int!
+    currentPage: Int!
+    elementsInPage: Int!
+    content: [Flight!]!
+}
+
+input FlightFilter {
+    code: String
+    airline: String
+    fromCity: String
+    fromRegion: String
+    fromCountry: String
+    toCity: String
+    toRegion: String
+    toCountry: String
+    minPrice: Float
+    maxPrice: Float
+    departureDate: String
+}
+
+###################
+## Private Types ##
+###################
+

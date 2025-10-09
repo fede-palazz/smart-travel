@@ -1,0 +1,176 @@
+<div class="flex align-items-center justify-content-center pt-6">
+  <p-card
+    header="Create an account"
+    subheader="Insert your information"
+    styleClass="px-6 py-2"
+  >
+    <!-- Brand -->
+    <ng-template pTemplate="header">
+      <div class="pt-4 pb-2">
+        <smt-brand />
+      </div>
+    </ng-template>
+
+    <!-- Signup form -->
+    <form
+      [formGroup]="signupForm"
+      id="loginForm"
+      (ngSubmit)="handleSubmit()"
+      class="mt-4"
+    >
+      <div class="flex flex-column gap-2 w-19rem">
+        <!-- First name -->
+        <div>
+          <label for="firstname" class="block">First name</label>
+          <span class="p-input-icon-left my-2 flex align-items-center">
+            <i class="pi pi-user"></i>
+            <input
+              id="firstname"
+              formControlName="firstname"
+              type="text"
+              pInputText
+              class="w-full"
+              [ngClass]="
+                f['firstname'].touched && f['firstname'].invalid
+                  ? 'ng-invalid ng-dirty'
+                  : ''
+              "
+            />
+          </span>
+          <!-- First name errors -->
+          @if (
+            f["firstname"].invalid &&
+            f["firstname"].touched &&
+            f["firstname"].errors
+          ) {
+            <small *ngIf="f['firstname'].errors['required']" class="p-error">
+              First name is required
+            </small>
+          }
+        </div>
+
+        <!-- Last name -->
+        <div>
+          <label for="lastname" class="block">Last name</label>
+          <span class="p-input-icon-left my-2 flex align-items-center">
+            <i class="pi pi-user"></i>
+            <input
+              id="lastname"
+              formControlName="lastname"
+              type="text"
+              pInputText
+              class="w-full"
+              [ngClass]="
+                f['lastname'].touched && f['lastname'].invalid
+                  ? 'ng-invalid ng-dirty'
+                  : ''
+              "
+            />
+          </span>
+          <!-- First name errors -->
+          @if (
+            f["lastname"].invalid &&
+            f["lastname"].touched &&
+            f["lastname"].errors
+          ) {
+            <small *ngIf="f['lastname'].errors['required']" class="p-error">
+              Last name is required
+            </small>
+          }
+        </div>
+
+        <!-- Email -->
+        <div>
+          <label for="email" class="block">Email</label>
+          <span class="p-input-icon-left my-2 flex align-items-center">
+            <i class="pi pi-envelope"></i>
+            <input
+              id="email"
+              formControlName="email"
+              type="email"
+              pInputText
+              class="w-full"
+              [ngClass]="
+                f['email'].touched && f['email'].invalid
+                  ? 'ng-invalid ng-dirty'
+                  : ''
+              "
+            />
+          </span>
+          <!-- Email errors -->
+          @if (f["email"].invalid && f["email"].touched && f["email"].errors) {
+            <small *ngIf="f['email'].errors['required']" class="p-error">
+              Email is required
+            </small>
+            <small *ngIf="f['email'].errors['email']" class="p-error">
+              Email field must contain a valid email
+            </small>
+          }
+        </div>
+
+        <!-- Password -->
+        <div>
+          <label for="password" class="block">Password</label>
+          <span class="p-input-icon-left my-2 flex align-items-center">
+            <i class="pi pi-lock"></i>
+            <input
+              id="password"
+              formControlName="password"
+              type="password"
+              pInputText
+              class="w-full"
+              [ngClass]="
+                f['password'].touched && f['password'].invalid
+                  ? 'ng-invalid ng-dirty'
+                  : ''
+              "
+            />
+          </span>
+          <!-- Password errors -->
+          @if (
+            f["password"].invalid &&
+            f["password"].touched &&
+            f["password"].errors
+          ) {
+            <small *ngIf="f['password'].errors['required']" class="p-error">
+              Password is required
+            </small>
+            <small *ngIf="f['password'].errors['minlength']" class="p-error">
+              Password must have a minimum length of 5 characters
+            </small>
+            <small *ngIf="f['password'].errors['maxlength']" class="p-error">
+              Password must have a maximum length of 25 characters
+            </small>
+          }
+        </div>
+      </div>
+    </form>
+
+    <p-divider />
+
+    <p>
+      Already have an account?
+      <a routerLink="/login" class="underline">Login here</a>
+    </p>
+
+    <!-- Footer -->
+    <ng-template pTemplate="footer">
+      <div class="flex align-items-center justify-content-end gap-2">
+        <p-button
+          label="Back"
+          severity="secondary"
+          outlined="true"
+          (onClick)="handleBack()"
+        />
+        <p-button
+          type="submit"
+          form="signupForm"
+          label="Register"
+          [disabled]="signupForm.invalid"
+          [loading]="loading"
+        />
+      </div>
+    </ng-template>
+  </p-card>
+</div>
+<p-toast />

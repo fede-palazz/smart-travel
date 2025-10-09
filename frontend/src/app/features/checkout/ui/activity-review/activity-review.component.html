@@ -1,0 +1,101 @@
+<p-accordion class="activity-review">
+  <p-accordionTab>
+    <!-- Activity overview -->
+    <ng-template pTemplate="header">
+      <div class="grid align-items-center gap-0 w-full">
+        <!-- Activity image -->
+        <div class="col-2 text-center p-1">
+          <p-avatar
+            [image]="activityOrder.mainPicture"
+            shape="square"
+            class="mr-1"
+            size="xlarge"
+            styleClass="border-round overflow-hidden h-5rem w-5rem"
+          />
+        </div>
+
+        <!-- Activity info -->
+        <div class="col">
+          <span class="font-medium text-secondary text-sm">
+            {{ activityOrder.type }}
+          </span>
+          <div class="font-medium text-lg text-900 mt-2">
+            {{ activityOrder.name }}
+          </div>
+        </div>
+
+        <!-- Price -->
+        <div class="col-2 flex justify-content-end">
+          <span>
+            {{
+              activityOrder.price.value | currency: activityOrder.price.currency
+            }} </span
+          ><span class="ml-2 text-sm font-light">/ person</span>
+        </div>
+
+        <!-- Delete button -->
+        <div class="col-2 text-center">
+          @if (!hideAction) {
+            <button
+              pButton
+              pRipple
+              severity="danger"
+              (click)="
+                $event.stopPropagation();
+                handleDeleteActivity(activityOrder.activityId)
+              "
+            >
+              <span class="material-icons">delete</span>
+            </button>
+          }
+        </div>
+      </div>
+    </ng-template>
+
+    <!-- Activity details -->
+    <!-- Activity details -->
+    <div class="grid text-sm">
+      <!-- Date -->
+      <div class="col-12 md:col-6 lg:col-3 flex flex-column">
+        <div class="flex align-items-center">
+          <span class="material-icons mr-1">event</span>
+          <smt-text type="subtitle" className="font-bold">Date</smt-text>
+        </div>
+        <p class="my-2 ml-1">{{ activityOrder.date | date: "EEE, d MMM" }}</p>
+      </div>
+
+      <!-- Start time -->
+      <div class="col-12 md:col-6 lg:col-3 flex flex-column">
+        <div class="flex align-items-center">
+          <span class="material-icons mr-1">schedule</span>
+          <smt-text type="subtitle" className="font-bold">From</smt-text>
+        </div>
+        <p class="my-2 ml-1">
+          {{ activityOrder.startTime }}
+        </p>
+      </div>
+
+      <!-- End time -->
+      <div class="col-12 md:col-6 lg:col-3 flex flex-column">
+        <div class="flex align-items-center">
+          <span class="material-icons mr-1">schedule</span>
+          <smt-text type="subtitle" className="font-bold">To</smt-text>
+        </div>
+        <p class="my-2 ml-1">
+          {{ activityOrder.endTime }}
+        </p>
+      </div>
+
+      <!-- People -->
+      <div class="col-12 md:col-6 lg:col-3 flex flex-column">
+        <div class="flex align-items-center">
+          <span class="material-icons mr-1">group</span>
+          <smt-text type="subtitle" className="font-bold">People</smt-text>
+        </div>
+        <p class="my-2 ml-1">
+          {{ activityOrder.quantity }}
+        </p>
+      </div>
+    </div>
+  </p-accordionTab>
+</p-accordion>

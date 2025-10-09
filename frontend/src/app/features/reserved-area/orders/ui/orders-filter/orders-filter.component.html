@@ -1,0 +1,85 @@
+<smt-dialog-container
+  title="Filters"
+  [isVisible]="isVisible"
+  (onClose)="handleClose()"
+>
+  <!-- Filters -->
+  <div dialog-body class="py-1 px-2 flex flex-column">
+    <!-- Order id filter -->
+    <div class="flex flex-column mb-3">
+      <label for="id" class="mb-3">Order number</label>
+      <input type="text" name="id" pInputText [(ngModel)]="orderId" />
+    </div>
+
+    <!-- Customer id filter -->
+    <div class="flex flex-column mb-3">
+      <label for="customer-id" class="mb-3">Customer ID</label>
+      <input
+        type="text"
+        name="customer-id"
+        pInputText
+        [(ngModel)]="customerId"
+      />
+    </div>
+
+    <!-- Price range filter -->
+    <div class="flex flex-column mb-3">
+      <label for="amount" class="mb-3">Amount</label>
+      <div class="px-2">
+        <p-slider
+          id="amount"
+          name="amount"
+          [(ngModel)]="priceRange"
+          [range]="true"
+          [min]="minPrice"
+          [max]="maxPrice"
+        />
+      </div>
+      <div class="flex justify-content-between pt-3">
+        <span>€{{ priceRange[0] }}</span>
+        <span>€{{ priceRange[1] }}</span>
+      </div>
+    </div>
+
+    <!-- Payment status filter -->
+    <div class="flex flex-column mb-3">
+      <label for="prices" class="mb-3">Payment status</label>
+      <p-selectButton
+        [options]="paymentStatusOptions"
+        [(ngModel)]="paymentStatus"
+        optionLabel="label"
+        optionValue="value"
+      />
+    </div>
+
+    <!-- Order type filter -->
+    <div class="flex flex-column mb-3">
+      <label for="type" class="mb-3">Order type</label>
+      <p-selectButton
+        [options]="typeOptions"
+        name="type"
+        [(ngModel)]="type"
+        optionLabel="label"
+        optionValue="value"
+      />
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div dialog-footer>
+    <p-button
+      label="Cancel"
+      [text]="true"
+      severity="secondary"
+      (onClick)="handleClose()"
+    />
+    <p-button
+      styleClass="mr-3"
+      label="Reset"
+      severity="danger"
+      [outlined]="true"
+      (onClick)="handleReset()"
+    />
+    <p-button label="Apply" severity="secondary" (onClick)="handleFilter()" />
+  </div>
+</smt-dialog-container>

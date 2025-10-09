@@ -1,0 +1,25 @@
+<div class="grid">
+  <div
+    class="sm:col-10 sm:col-offset-1 md:col-8 md:col-offset-2 xl:col-6 xl:col-offset-3 mt-5"
+  >
+    <smt-home-tabs />
+  </div>
+</div>
+<div class="grid">
+  <div class="col-12 max-w-full overflow-x-hidden">
+    <p class="text-2xl ml-6 text-800">Popular destinations</p>
+    @if (destinationsPreviews$ | async; as destinations) {
+      @if (destinations.loading) {
+        <smt-destinations-skeleton [repeat]="5" />
+      } @else if (destinations.error) {
+        <smt-not-found type="error" />
+      } @else if (destinations.data) {
+        <smt-destinations-carousel
+          [destinations]="destinations.data.content"
+          (onViewDestination)="handleViewDestination($event)"
+        />
+      }
+    }
+  </div>
+</div>
+<p-toast [life]="6000" />

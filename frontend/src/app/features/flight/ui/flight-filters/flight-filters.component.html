@@ -1,0 +1,67 @@
+<smt-filter-container>
+  <div filter-body>
+    <!-- Filters -->
+    <div class="py-1 flex flex-column">
+      <!-- Airline filter -->
+      <div class="flex flex-column mb-3">
+        <label for="prices" class="mb-2">Airline</label>
+        <p-dropdown
+          [options]="airlines"
+          [(ngModel)]="selectedAirline"
+          optionLabel="name"
+          [filter]="true"
+          filterBy="name"
+          [showClear]="true"
+          placeholder="Select an airline"
+          styleClass="w-full"
+        >
+          <ng-template pTemplate="selectedItem" let-selectedOption>
+            <div class="flex align-items-center gap-2">
+              <img [src]="selectedOption.logo" style="width: 18px" />
+              <div>{{ selectedOption.name }}</div>
+            </div>
+          </ng-template>
+          <ng-template let-option pTemplate="item">
+            <div class="flex align-items-center gap-2">
+              <img [src]="option.logo" style="width: 18px" />
+              <div>{{ option.name }}</div>
+            </div>
+          </ng-template>
+        </p-dropdown>
+      </div>
+
+      <!-- Price range filter -->
+      <div class="flex flex-column mb-3">
+        <label for="prices" class="mb-3">Prices</label>
+        <div class="px-2">
+          <p-slider
+            id="prices"
+            name="prices"
+            [(ngModel)]="priceRange"
+            [range]="true"
+            [min]="minPrice"
+            [max]="maxPrice"
+          />
+        </div>
+        <div class="flex justify-content-between pt-3">
+          <span>€{{ priceRange[0] }}</span>
+          <span>€{{ priceRange[1] }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Apply filters button -->
+  <div filter-footer>
+    <div class="w-full text-right">
+      <p-button
+        styleClass="mr-3"
+        label="Reset"
+        severity="danger"
+        [outlined]="true"
+        (onClick)="handleReset()"
+      />
+      <p-button label="Apply" severity="secondary" (onClick)="handleFilter()" />
+    </div>
+  </div>
+</smt-filter-container>

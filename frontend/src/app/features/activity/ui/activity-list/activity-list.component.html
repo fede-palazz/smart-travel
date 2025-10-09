@@ -1,0 +1,26 @@
+<div class="card border-round overflow-hidden shadow-2">
+  <!-- Activities list -->
+  <p-dataView #dv [value]="activities" [layout]="'list'">
+    <ng-template pTemplate="list" let-activities>
+      <div class="flex flex-column">
+        @for (activity of activities; let first = $first; track activity.id) {
+          <smt-activity-item
+            [activity]="activity"
+            [isFirst]="first"
+            (onSelectActivity)="handleSelectActivity($event)"
+          />
+        }
+      </div>
+    </ng-template>
+  </p-dataView>
+
+  <!-- Paginator -->
+  <p-paginator
+    styleClass="border-noround"
+    [first]="currentPage * pageSize"
+    [rows]="pageSize"
+    [totalRecords]="totalElements"
+    [alwaysShow]="false"
+    (onPageChange)="handlePageChange($event)"
+  />
+</div>

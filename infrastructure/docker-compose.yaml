@@ -1,0 +1,49 @@
+services:
+
+  rabbitmq:
+    image: rabbitmq:4.1-management
+    container_name: rabbitmq
+    user: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672" # Management console
+    volumes:
+      - ./rabbitmq/config/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+      - ./rabbitmq/config/definitions.json:/etc/rabbitmq/definitions.json:ro
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "ping" ]
+      interval: 8s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  debezium-server:
+    image: quay.io/debezium/server:3.2.0
+    container_name: debezium-server
+    ports:
+      - "8086:8080"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      - JAVA_TOOL_OPTIONS=-Dlog4j2.configurationFile=/debezium/conf/log4j2.xml
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - ./debezium/config:/debezium/config:ro
+      #- ./debezium/data:/debezium/data
+    entrypoint: [ "/debezium/config/wait-for-rabbitmq.sh" ]
+
+  mailpit:
+    image: axllent/mailpit:v1.27
+    container_name: mailpit
+    ports:
+      - "1025:1025"  # SMTP port
+      - "8087:8025"  # Web UI port
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/Rome
+      - MP_DATABASE=/data/mailpit.db
+    volumes:
+      - ./mailpit/data:/data

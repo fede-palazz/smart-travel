@@ -1,0 +1,42 @@
+extend type Query {
+    profile: UserNoPwdRes!
+}
+
+extend type Mutation {
+    login(loginReq: LoginReq!): LoginRes!
+    refresh(refreshTokenReq: RefreshTokenReq!): RefreshTokenRes!
+}
+
+##########
+## DTOs ##
+##########
+
+type LoginRes {
+    user: UserNoPwdRes!
+    accessToken: String!
+    refreshToken: String!
+}
+
+input LoginReq {
+    email: String!
+    password: String!
+}
+
+type UserNoPwdRes {
+    id: ID!
+    email: String!
+    role: String!
+    firstname: String!
+    lastname: String!
+    fullname: String!
+}
+
+input RefreshTokenReq {
+    accessToken: String!
+    refreshToken: String!
+}
+
+type RefreshTokenRes {
+    accessToken: String!
+    refreshToken: String!
+}

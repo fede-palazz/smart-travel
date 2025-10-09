@@ -1,0 +1,210 @@
+[
+  {
+    "_id": {
+      "$oid": "680f7af8e634eef19a5e09a0"
+    },
+    "city": "Florence",
+    "region": "Tuscany",
+    "country": {
+      "name": "Italy",
+      "code": "IT"
+    },
+    "timezone": "Europe/Rome",
+    "description": "The birthplace of the Renaissance, filled with art and history.",
+    "coordinates": {
+      "lat": 43.7696,
+      "lng": 11.2558
+    },
+    "pictures": [
+      "https://images.unsplash.com/photo-1476362174823-3a23f4aa6d76?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8ZmxvcmVuY2V8ZW58MHwwfDB8fHwy"
+    ],
+    "tags": [
+      "art",
+      "culture",
+      "history"
+    ],
+    "popularityScore": 87
+  },
+  {
+    "_id": {
+      "$oid": "680f7af8e634eef19a5e09a1"
+    },
+    "city": "Venice",
+    "region": "Veneto",
+    "country": {
+      "name": "Italy",
+      "code": "IT"
+    },
+    "timezone": "Europe/Rome",
+    "description": "Famous for its canals, bridges, and romantic atmosphere.",
+    "coordinates": {
+      "lat": 45.4408,
+      "lng": 12.3155
+    },
+    "pictures": [
+      "https://images.unsplash.com/photo-1613808001729-679e046f7c66?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8ODN8fHZlbmljZXxlbnwwfDB8MHx8fDI%3D"
+    ],
+    "tags": [
+      "romantic",
+      "canals",
+      "culture"
+    ],
+    "popularityScore": 90
+  },
+  {
+    "_id": {
+      "$oid": "680f7af8e634eef19a5e09a2"
+    },
+    "city": "Nice",
+    "region": "Provence-Alpes-Côte d'Azur",
+    "country": {
+      "name": "France",
+      "code": "FR"
+    },
+    "timezone": "Europe/Paris",
+    "description": "A vibrant city on the French Riviera known for beaches and promenades.",
+    "coordinates": {
+      "lat": 43.7102,
+      "lng": 7.262
+    },
+    "pictures": [
+      "https://images.unsplash.com/photo-1643914729809-4aa59fdc4c17?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bml6emF8ZW58MHwwfDB8fHwy"
+    ],
+    "tags": [
+      "beaches",
+      "seaside",
+      "relaxation"
+    ],
+    "popularityScore": 85
+  },
+  {
+    "_id": {
+      "$oid": "680f7af8e634eef19a5e09a6"
+    },
+    "city": "Milan",
+    "region": "Lombardy",
+    "country": {
+      "name": "Italy",
+      "code": "IT"
+    },
+    "timezone": "Europe/Rome",
+    "description": "A global capital of fashion and design with historical landmarks.",
+    "coordinates": {
+      "lat": 45.4642,
+      "lng": 9.19
+    },
+    "pictures": [
+      "https://images.unsplash.com/photo-1654379102633-b86f5cc8a4fd?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDN8fG1pbGFub3xlbnwwfDB8MHx8fDI%3D"
+    ],
+    "tags": [
+      "fashion",
+      "business",
+      "art"
+    ],
+    "popularityScore": 89
+  },
+  {
+    "_id": {
+      "$oid": "680f7af8e634eef19a5e09a7"
+    },
+    "city": "Zurich",
+    "region": "Zurich Canton",
+    "country": {
+      "name": "Switzerland",
+      "code": "CH"
+    },
+    "timezone": "Europe/Zurich",
+    "description": "Financial hub offering a mix of modern life and medieval history.",
+    "coordinates": {
+      "lat": 47.3769,
+      "lng": 8.5417
+    },
+    "pictures": [
+      "https://images.unsplash.com/photo-1620563092215-0fbc6b55cfc5?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8enVyaWdvfGVufDB8MHwwfHx8Mg%3D%3D"
+    ],
+    "tags": [
+      "finance",
+      "lakeside",
+      "culture"
+    ],
+    "popularityScore": 80
+  },
+  {
+    "_id": {
+      "$oid": "680f7af8e634eef19a5e09a9"
+    },
+    "city": "Vienna",
+    "region": "Tyrol",
+    "country": {
+      "name": "Austria",
+      "code": "AT"
+    },
+    "timezone": "Europe/Vienna",
+    "description": "Charming alpine city known for winter sports and mountain views.",
+    "coordinates": {
+      "lat": 47.2692,
+      "lng": 11.4041
+    },
+    "pictures": [
+      "https://images.unsplash.com/photo-1529144415895-6aaf8be872fb?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mjd8fHZpZW5uYXxlbnwwfDB8MHx8fDI%3D"
+    ],
+    "tags": [
+      "mountains",
+      "skiing",
+      "nature"
+    ],
+    "popularityScore": 78
+  },
+  {
+    "_id": {
+      "$oid": "68187dec1e54584b07f2f804"
+    },
+    "city": "Paris",
+    "coordinates": {
+      "lat": 48.8566,
+      "lng": 2.3522
+    },
+    "country": {
+      "code": "FR",
+      "name": "France"
+    },
+    "description": "The capital of France, Paris is known as the City of Light and renowned for its art, fashion, gastronomy, and culture. Iconic landmarks include the Eiffel Tower and the Louvre Museum.",
+    "pictures": [
+      "https://images.unsplash.com/photo-1550340499-a6c60fc8287c?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cGFyaXN8ZW58MHwwfDB8fHwy"
+    ],
+    "popularityScore": 95,
+    "region": "Île-de-France",
+    "tags": [
+      "cultural",
+      "art",
+      "romantic"
+    ],
+    "timezone": "Europe/Paris"
+  },
+  {
+    "_id": {
+      "$oid": "68401642411ed34eaeaa6a6e"
+    },
+    "city": "London",
+    "region": "England",
+    "country": {
+      "name": "United Kingdom",
+      "code": "GB"
+    },
+    "timezone": "Europe/London",
+    "description": "A vibrant global capital known for its historic landmarks, modern culture, and diverse neighborhoods.",
+    "coordinates": {
+      "lat": 51.509865,
+      "lng": -0.118092
+    },
+    "pictures": [
+      "https://images.unsplash.com/photo-1520986606214-8b456906c813?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8bG9uZG9ufGVufDB8MHwwfHx8Mg%3D%3D"
+    ],
+    "tags": [
+      "landmarks",
+      "diversity",
+      "history"
+    ],
+    "popularityScore": 93
+  }
+]

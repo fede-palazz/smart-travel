@@ -1,0 +1,96 @@
+<!-- Flight Details Accordion Body -->
+<div class="grid text-sm">
+  <!-- Airline and Code -->
+  <div class="col-12 md:col-6 lg:col-3 flex flex-column">
+    <div class="flex align-items-center">
+      <span class="material-icons mr-1">flight_class</span>
+      <smt-text type="subtitle" className="font-bold">Flight number</smt-text>
+    </div>
+    <p class="my-2 ml-1">{{ flight.code }} ({{ flight.airline }})</p>
+  </div>
+
+  <!-- Duration -->
+  <div class="col-12 md:col-6 lg:col-3 flex flex-column">
+    <div class="flex align-items-center">
+      <span class="material-icons mr-1">schedule</span>
+      <smt-text type="subtitle" className="font-bold">Duration</smt-text>
+    </div>
+    <p class="my-2 ml-1">
+      {{
+        dateUtils.getFlightDuration(flight.departureTime, flight.arrivalTime)
+      }}
+    </p>
+  </div>
+
+  <!-- From Location -->
+  <div class="col-12 md:col-6 lg:col-3 flex flex-column">
+    <div class="flex align-items-center">
+      <span class="material-icons mr-1">flight</span>
+      <smt-text type="subtitle" className="font-bold">Departure</smt-text>
+    </div>
+    <p class="my-2 ml-1">
+      {{ flight.from.city }}, {{ flight.from.region }} ({{
+        flight.from.country.name
+      }})
+    </p>
+  </div>
+
+  <!-- To Location -->
+  <div class="col-12 md:col-6 lg:col-3 flex flex-column">
+    <div class="flex align-items-center">
+      <span class="material-icons mr-1">flight</span>
+      <smt-text type="subtitle" className="font-bold">Destination</smt-text>
+    </div>
+    <p class="my-2 ml-1">
+      {{ flight.to.city }}, {{ flight.to.region }} ({{
+        flight.to.country.name
+      }})
+    </p>
+  </div>
+
+  <!-- Timeline -->
+  <div class="col flex flex-column">
+    <div class="flex align-items-center mb-2">
+      <span class="material-icons mr-1">event</span>
+      <smt-text type="subtitle" className="font-bold">Timeline</smt-text>
+    </div>
+    <p-timeline
+      [value]="[flight.from, flight.to]"
+      layout="horizontal"
+      align="top"
+    >
+      <!-- Timeline icon -->
+      <ng-template pTemplate="marker" let-dest>
+        <span
+          class="flex w-2rem h-2rem align-items-center justify-content-center text-white border-circle z-1 shadow-1 surface-500"
+        >
+          <span class="material-icons">
+            {{ dest === flight.from ? "flight_takeoff" : "flight_land" }}
+          </span>
+        </span>
+      </ng-template>
+
+      <!-- Timeline info -->
+      <ng-template pTemplate="content" let-dest>
+        <div class="col p-0">
+          <p class="p-0 m-0 white-space-nowrap">
+            {{ dest.airportName }} ({{ dest.airportCode }})
+          </p>
+          <small class="p-text-secondary">
+            {{
+              dest === flight.from
+                ? (flight.departureTime
+                  | date
+                    : "dd/MM/yyyy HH:mm"
+                    : dateUtils.getUtcOffset(flight.from.timezone))
+                : (flight.arrivalTime
+                  | date
+                    : "dd/MM/yyyy HH:mm"
+                    : dateUtils.getUtcOffset(flight.to.timezone))
+            }}
+          </small>
+        </div>
+      </ng-template>
+    </p-timeline>
+  </div>
+</div>

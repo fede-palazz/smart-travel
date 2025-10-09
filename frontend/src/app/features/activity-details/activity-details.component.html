@@ -1,0 +1,6 @@
+<smt-activity-details-view
+  [activityId]="activityId"
+  [isAgentView]="(isAgentView$ | async) ?? false"
+  (onNavigateBack)="handleNavigateBack()"
+  (onCheckout)="handleCheckout($event)"
+/>

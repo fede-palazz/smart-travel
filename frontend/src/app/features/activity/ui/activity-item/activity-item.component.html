@@ -1,0 +1,61 @@
+<div
+  class="grid grid-nogutter p-4 gap-3"
+  [ngClass]="{ 'border-top-1 surface-border': !isFirst }"
+>
+  <!-- Activity image -->
+  <div class="w-12rem h-9rem relative">
+    <img
+      class="block mx-auto border-round w-full h-full"
+      [src]="activity.mainPicture"
+      [alt]="activity.name"
+    />
+  </div>
+
+  <!-- Activity info -->
+  <div
+    class="col-6 flex flex-column md:flex-row justify-content-between md:align-items-center flex-1"
+  >
+    <div
+      class="flex flex-row md:flex-column justify-content-between align-items-start gap-2"
+    >
+      <div>
+        <span class="font-medium text-secondary text-sm">
+          {{ activity.type }}
+        </span>
+        <div class="font-medium text-lg text-900 mt-2">
+          {{ activity.name }}
+        </div>
+        <div class="flex flex-wrap gap-2 mt-2">
+          <p-tag
+            *ngFor="let tag of activity.tags"
+            [value]="tag"
+            severity="secondary"
+            [rounded]="true"
+            styleClass="text-xs"
+          />
+        </div>
+      </div>
+      <!-- <smt-rating [rating]="activity.reviewsSummary.avgRating" />
+      <span class="text-900 font-medium text-sm"
+        >{{ activity.reviewsSummary.totalCount }} reviews</span
+      > -->
+    </div>
+  </div>
+
+  <!-- Activity price -->
+  <div
+    class="col-3 flex flex-column justify-content-end md:align-items-end gap-3 pb-2"
+  >
+    <!-- Price -->
+    <div class="flex align-items-center">
+      <span class="text-xl font-semibold text-900">
+        {{ activity.price.value | currency: activity.price.currency }}
+      </span>
+      <span class="ml-2">/ person</span>
+    </div>
+    <!-- Actions -->
+    <div class="flex gap-2">
+      <p-button label="Discover" (onClick)="handleSelectActivity()" />
+    </div>
+  </div>
+</div>

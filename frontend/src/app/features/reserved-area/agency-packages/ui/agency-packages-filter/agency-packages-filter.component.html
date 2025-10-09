@@ -1,0 +1,170 @@
+<smt-dialog-container
+  title="Filters"
+  [isVisible]="isVisible"
+  (onClose)="handleClose()"
+>
+  <!-- Filters -->
+  <div dialog-body class="py-1 px-2 flex flex-column">
+    <!-- Destination filter -->
+    <div class="flex flex-column mb-3">
+      <label for="to" class="mb-3">Destination</label>
+      <p-autoComplete
+        [(ngModel)]="to"
+        name="to"
+        showClear="true"
+        [suggestions]="toSuggestions"
+        (completeMethod)="onSearchTo($event)"
+        optionLabel="name"
+        inputStyleClass="w-full"
+        styleClass="w-full"
+      >
+        <ng-template let-dest pTemplate="item">
+          <div class="flex align-items-center gap-2">
+            <span class="material-icons">
+              @if (dest.type === "city") {
+                location_city
+              }
+              @if (dest.type === "region") {
+                landscape
+              }
+              @if (dest.type === "country") {
+                south_america
+              }
+            </span>
+            <div>{{ dest.name + " (" + dest.type + ")" }}</div>
+          </div>
+        </ng-template>
+      </p-autoComplete>
+    </div>
+
+    <!-- Start date filter -->
+    <div class="flex flex-column mb-3">
+      <label for="startDate" class="mb-3">Start date</label>
+      <p-calendar
+        [(ngModel)]="startDate"
+        name="startDate"
+        inputId="startDate"
+        [iconDisplay]="'input'"
+        [showIcon]="true"
+        [readonlyInput]="true"
+        dateFormat="dd/mm/yy"
+        [firstDayOfWeek]="1"
+        styleClass="w-full"
+        appendTo="body"
+      >
+        <ng-template pTemplate="inputicon">
+          <i class="material-icons pointer-events-none"> event </i>
+        </ng-template>
+      </p-calendar>
+    </div>
+
+    <!-- End date filter -->
+    <div class="flex flex-column mb-3">
+      <label for="endDate" class="mb-3">End date</label>
+      <p-calendar
+        [(ngModel)]="endDate"
+        name="endDate"
+        inputId="endDate"
+        [iconDisplay]="'input'"
+        [showIcon]="true"
+        [readonlyInput]="true"
+        dateFormat="dd/mm/yy"
+        [firstDayOfWeek]="1"
+        styleClass="w-full"
+        appendTo="body"
+      >
+        <ng-template pTemplate="inputicon">
+          <i class="material-icons pointer-events-none"> event </i>
+        </ng-template>
+      </p-calendar>
+    </div>
+
+    <!-- Author filter -->
+    <div class="flex flex-column mb-3">
+      <label for="to" class="mb-3">Author</label>
+      <p-autoComplete
+        [(ngModel)]="author"
+        name="author"
+        showClear="true"
+        [suggestions]="authorSuggestions"
+        (completeMethod)="onSearchAuthor($event)"
+        optionLabel="fullname"
+        inputStyleClass="w-full"
+        styleClass="w-full"
+      >
+        <ng-template let-author pTemplate="item">
+          <div class="flex align-items-center gap-2">
+            <span class="material-icons"> person </span>
+            <div>{{ author.fullname }}</div>
+          </div>
+        </ng-template>
+      </p-autoComplete>
+    </div>
+
+    <!-- Tags filter -->
+    <div class="flex flex-column mb-3">
+      <label for="types" class="mb-3">Tag</label>
+      <p-multiSelect
+        name="types"
+        [options]="tags"
+        [(ngModel)]="selectedTags"
+        optionLabel="name"
+        optionValue="value"
+        placeholder="Select tag"
+        display="chip"
+        [showClear]="true"
+        [filter]="false"
+        [showHeader]="false"
+        styleClass="w-full"
+      />
+    </div>
+
+    <!-- Price range filter -->
+    <div class="flex flex-column mb-3">
+      <label for="prices" class="mb-3">Prices</label>
+      <div class="px-2">
+        <p-slider
+          id="prices"
+          name="prices"
+          [(ngModel)]="priceRange"
+          [range]="true"
+          [min]="minPrice"
+          [max]="maxPrice"
+        />
+      </div>
+      <div class="flex justify-content-between pt-3">
+        <span>€{{ priceRange[0] }}</span>
+        <span>€{{ priceRange[1] }}</span>
+      </div>
+    </div>
+
+    <!-- Status filter -->
+    <div class="flex flex-column mb-3">
+      <label for="prices" class="mb-3">Status</label>
+      <p-selectButton
+        [options]="statusOptions"
+        [(ngModel)]="selectedStatus"
+        optionLabel="label"
+        optionValue="value"
+      />
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div dialog-footer>
+    <p-button
+      label="Cancel"
+      [text]="true"
+      severity="secondary"
+      (onClick)="handleClose()"
+    />
+    <p-button
+      styleClass="mr-3"
+      label="Reset"
+      severity="danger"
+      [outlined]="true"
+      (onClick)="handleReset()"
+    />
+    <p-button label="Apply" severity="secondary" (onClick)="handleFilter()" />
+  </div>
+</smt-dialog-container>

@@ -1,0 +1,227 @@
+<form class="formgrid grid" (ngSubmit)="submit()" [formGroup]="flightForm">
+  <!-- Flight type (one-way, return) -->
+  <div class="field col-12">
+    <p-selectButton
+      formControlName="type"
+      name="type"
+      [options]="flightOptions"
+      optionLabel="label"
+      optionValue="value"
+      [allowEmpty]="false"
+    >
+      <ng-template let-item pTemplate>
+        <i class="material-icons">{{ item.icon }}</i>
+        <span class="ml-1">{{ item.label }}</span>
+      </ng-template>
+    </p-selectButton>
+  </div>
+
+  <!-- Departure location -->
+  <div class="field col-6 flex flex-column">
+    <label for="from">Departure</label>
+    <p-autoComplete
+      formControlName="from"
+      name="from"
+      showClear="true"
+      [suggestions]="fromSuggestions"
+      (completeMethod)="onSearchFrom($event)"
+      optionLabel="name"
+      inputStyleClass="w-full"
+      styleClass="w-full"
+      [ngClass]="
+        f['from'].touched && (f['from'].invalid || isFromInvalid())
+          ? 'ng-invalid ng-dirty'
+          : ''
+      "
+    >
+      <ng-template let-dest pTemplate="item">
+        <div class="flex align-items-center gap-2">
+          <span class="material-icons">
+            @if (dest.type === "city") {
+              location_city
+            }
+            @if (dest.type === "region") {
+              landscape
+            }
+            @if (dest.type === "country") {
+              south_america
+            }
+          </span>
+          <div>{{ dest.name + " (" + dest.type + ")" }}</div>
+        </div>
+      </ng-template>
+    </p-autoComplete>
+    <small class="p-error" *ngIf="f['from'].invalid && f['from'].touched">
+      Departure is required
+    </small>
+    <small
+      class="p-error"
+      *ngIf="f['from'].touched && !f['from'].invalid && isFromInvalid()"
+    >
+      Please choose a valid departure city
+    </small>
+  </div>
+
+  <!-- Destination location -->
+  <div class="field col-6 flex flex-column">
+    <label for="to">Destination</label>
+    <p-autoComplete
+      formControlName="to"
+      name="to"
+      showClear="true"
+      [suggestions]="toSuggestions"
+      (completeMethod)="onSearchTo($event)"
+      optionLabel="name"
+      inputStyleClass="w-full"
+      styleClass="w-full"
+      [ngClass]="
+        f['to'].touched && (f['to'].invalid || isToInvalid())
+          ? 'ng-invalid ng-dirty'
+          : ''
+      "
+    >
+      <ng-template let-dest pTemplate="item">
+        <div class="flex align-items-center gap-2">
+          <span class="material-icons">
+            @if (dest.type === "city") {
+              location_city
+            }
+            @if (dest.type === "region") {
+              landscape
+            }
+            @if (dest.type === "country") {
+              south_america
+            }
+          </span>
+          <div>{{ dest.name + " (" + dest.type + ")" }}</div>
+        </div>
+      </ng-template>
+    </p-autoComplete>
+    <small class="p-error" *ngIf="f['to'].invalid && f['to'].touched">
+      Destination is required
+    </small>
+    <small
+      class="p-error"
+      *ngIf="f['to'].touched && !f['to'].invalid && isToInvalid()"
+    >
+      Please choose a valid destination city
+    </small>
+  </div>
+
+  <!-- Departure date calendar -->
+  <div class="field col flex flex-column">
+    <label for="startDate">From</label>
+    <p-calendar
+      formControlName="startDate"
+      name="startDate"
+      inputId="startDate"
+      [iconDisplay]="'input'"
+      [showIcon]="true"
+      [minDate]="today"
+      [readonlyInput]="true"
+      dateFormat="dd/mm/yy"
+      [firstDayOfWeek]="1"
+      styleClass="w-full"
+      [ngClass]="
+        f['startDate'].touched && f['startDate'].invalid
+          ? 'ng-invalid ng-dirty'
+          : ''
+      "
+    >
+      <ng-template pTemplate="inputicon">
+        <i class="material-icons pointer-events-none"> event </i>
+      </ng-template>
+    </p-calendar>
+    <small
+      class="p-error"
+      *ngIf="f['startDate'].invalid && f['startDate'].touched"
+    >
+      Departure date is required
+    </small>
+  </div>
+
+  <!-- Return date calendar -->
+  @if (f["type"].value === "return") {
+    <div class="field col-6 flex flex-column">
+      <label for="endDate">To</label>
+      <p-calendar
+        formControlName="endDate"
+        name="endDate"
+        [iconDisplay]="'input'"
+        [showIcon]="true"
+        inputId="endDate"
+        [readonlyInput]="true"
+        dateFormat="dd/mm/yy"
+        [firstDayOfWeek]="1"
+        [minDate]="f['startDate'].value || today"
+        styleClass="w-full"
+        [ngClass]="
+          f['endDate'].touched && !f['endDate'].value
+            ? 'ng-invalid ng-dirty'
+            : ''
+        "
+        [ngClass]="
+          (f['endDate'].touched || f['startDate'].touched) &&
+          isReturnDateInvalid()
+            ? 'ng-invalid ng-dirty'
+            : ''
+        "
+      >
+        <ng-template pTemplate="inputicon">
+          <i class="material-icons pointer-events-none"> event </i>
+        </ng-template>
+      </p-calendar>
+      <small
+        class="p-error"
+        *ngIf="f['endDate'].value === null && f['endDate'].touched"
+      >
+        Return date is required
+      </small>
+      <small
+        class="p-error"
+        *ngIf="
+          (f['endDate'].touched || f['startDate'].touched) &&
+          isReturnDateInvalid()
+        "
+      >
+        Return date must be the same or after the departure date.
+      </small>
+    </div>
+  }
+
+  <!-- Passengers -->
+  <div class="field col-6 flex flex-column">
+    <label for="quantity">Number of passengers</label>
+    <p-dropdown
+      formControlName="quantity"
+      [options]="passengersOptions"
+      optionLabel="label"
+      placeholder="Passengers count"
+      styleClass="w-full"
+      [ngClass]="
+        f['quantity'].touched && f['quantity'].invalid
+          ? 'ng-invalid ng-dirty'
+          : ''
+      "
+    />
+    <small
+      class="p-error"
+      *ngIf="f['quantity'].invalid && f['quantity'].touched"
+    >
+      Number of passengers is required
+    </small>
+  </div>
+
+  <!-- Search button -->
+  <div class="col-12 text-right">
+    <button
+      pButton
+      pRipple
+      type="submit"
+      label="Search"
+      [disabled]="isFormInvalid()"
+    >
+      <span class="material-icons mr-1">search</span>
+    </button>
+  </div>
+</form>

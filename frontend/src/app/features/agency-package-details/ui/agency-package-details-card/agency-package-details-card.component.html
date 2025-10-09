@@ -1,0 +1,97 @@
+<p-card styleClass="px-3">
+  <div class="grid">
+    <!-- Accommodation pictures -->
+    <div class="col-4">
+      <smt-slideshow [pictures]="agencyPackage.pictures ?? []" />
+    </div>
+    <div class="col-8 grid">
+      <!-- Accommodation name -->
+      <div class="col-12 flex flex-column pt-4">
+        <h2 class="my-1">{{ agencyPackage.name }}</h2>
+
+        <!-- Description -->
+        <p class="line-height-3">{{ agencyPackage.description }}</p>
+      </div>
+    </div>
+
+    <!-- Additional info -->
+    <div class="col-12">
+      <!-- <smt-accommodation-details-info
+        [accommodationDetails]="agencyPackage"
+      /> -->
+    </div>
+
+    <!-- Package items -->
+    <div class="grid w-full">
+      <div class="col-12 flex flex-column gap-3">
+        <!-- Flights -->
+        <smt-text type="title">Flights</smt-text>
+
+        <smt-text type="subtitle">Departure</smt-text>
+        <smt-agency-package-details-flight
+          [flight]="agencyPackage.departureFlight"
+        />
+
+        <smt-text type="subtitle">Return</smt-text>
+        <smt-agency-package-details-flight
+          [flight]="agencyPackage.returnFlight"
+        />
+      </div>
+
+      <!-- Accommodation -->
+      <div class="col-12 flex flex-column gap-3">
+        <smt-text type="title">Accommodation</smt-text>
+        <smt-agency-package-details-accommodation
+          [accommodation]="agencyPackage.accommodation"
+          (onViewAccommodation)="handleViewAccommodation($event)"
+        />
+      </div>
+
+      <!-- Activities -->
+      <div class="col-12 flex flex-column gap-3">
+        <smt-text type="title">Activities</smt-text>
+        @for (activity of agencyPackage.activities; track activity.activityId) {
+          <smt-agency-package-details-activity
+            [activity]="activity"
+            (onViewActivity)="handleViewActivity($event)"
+          />
+        }
+      </div>
+    </div>
+
+    <div class="col-12">
+      <p-divider />
+    </div>
+
+    <!-- Total price -->
+    <div class="grid w-full">
+      <div class="col-12">
+        <smt-text type="title">Cost overview</smt-text>
+      </div>
+      <div class="col-6">Quantity</div>
+      <div class="col-6 text-right">{{ agencyPackage.quantity }} people</div>
+      <div class="col-6 font-bold">Total</div>
+      <div class="col-6 text-right font-bold">
+        {{
+          agencyPackage.totalPrice.value
+            | currency: agencyPackage.totalPrice.currency
+        }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <ng-template pTemplate="footer">
+    @if (!isAgentView) {
+      <div class="col-12 flex justify-content-end gap-3 mt-1 w-full">
+        <p-button
+          label="Buy package"
+          icon="pi pi-paypal"
+          iconPos="right"
+          [loading]="isCheckingOut"
+          (onClick)="handleCheckout()"
+        />
+      </div>
+    }
+  </ng-template>
+</p-card>

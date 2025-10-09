@@ -1,0 +1,147 @@
+<p-card class="checkout-container">
+  <div class="flex flex-column">
+    <smt-text type="title">Confirm package details</smt-text>
+    <smt-text type="subtitle">Fill in the remaining package details</smt-text>
+  </div>
+
+  <form
+    class="formgrid grid py-3"
+    (ngSubmit)="handleSave()"
+    [formGroup]="packageForm"
+  >
+    <!-- Name -->
+    <div class="field col-6 flex flex-column">
+      <label for="name">Name</label>
+      <input
+        type="text"
+        pInputText
+        formControlName="name"
+        name="name"
+        styleClass="w-full"
+        [ngClass]="
+          f['name'].touched && f['name'].invalid ? 'ng-invalid ng-dirty' : ''
+        "
+      />
+      <small class="p-error" *ngIf="f['name'].invalid && f['name'].touched">
+        Name is required
+      </small>
+    </div>
+
+    <!-- Tags -->
+    <div class="field col-6 flex flex-column">
+      <label for="tags">Tags</label>
+      <p-multiSelect
+        [options]="tagsOptions"
+        formControlName="tags"
+        optionLabel="name"
+        optionValue="value"
+        placeholder="Select type"
+        display="chip"
+        [showClear]="true"
+        [filter]="false"
+        [showHeader]="false"
+        styleClass="w-full"
+      />
+      <small class="p-error" *ngIf="f['tags'].invalid && f['tags'].touched">
+        Tags are required
+      </small>
+    </div>
+
+    <!-- Description -->
+    <div class="field col-6 flex flex-column">
+      <label for="description">Description</label>
+      <textarea
+        rows="5"
+        cols="30"
+        pInputTextarea
+        name="description"
+        formControlName="description"
+        [ngClass]="
+          f['description'].touched && f['description'].invalid
+            ? 'ng-invalid ng-dirty'
+            : ''
+        "
+      >
+      </textarea>
+      <small
+        class="p-error"
+        *ngIf="f['description'].invalid && f['description'].touched"
+      >
+        Description is required
+      </small>
+    </div>
+
+    <!-- Total price -->
+    <div class="field col-6 flex flex-column">
+      <label for="totalPrice">Total price</label>
+      <p-inputNumber
+        inputId="totalPrice"
+        formControlName="totalPrice"
+        mode="currency"
+        currency="EUR"
+        locale="it-IT"
+        styleClass="w-full"
+        [ngClass]="
+          f['totalPrice'].touched && f['totalPrice'].invalid
+            ? 'ng-invalid ng-dirty'
+            : ''
+        "
+      />
+
+      <small
+        class="p-error"
+        *ngIf="f['totalPrice'].invalid && f['totalPrice'].touched"
+      >
+        Total price is required
+      </small>
+    </div>
+
+    <!-- Main picture -->
+    <div class="field col-12 flex flex-column">
+      <label for="mainPicture">Main picture</label>
+      <input
+        type="text"
+        pInputText
+        formControlName="mainPicture"
+        placeholder="Copy and paste an image link here"
+        name="mainPicture"
+        styleClass="w-full"
+        [ngClass]="
+          f['mainPicture'].touched && f['mainPicture'].invalid
+            ? 'ng-invalid ng-dirty'
+            : ''
+        "
+      />
+      <small
+        class="p-error"
+        *ngIf="
+          f['mainPicture'].errors?.['required'] && f['mainPicture'].touched
+        "
+      >
+        Main picture is required
+      </small>
+      <small
+        class="p-error"
+        *ngIf="
+          f['mainPicture'].errors?.['invalidUrl'] && f['mainPicture'].touched
+        "
+      >
+        Main picture must represent a valid URL
+      </small>
+    </div>
+
+    <!-- Search button -->
+    <div class="col-12 text-right">
+      <button
+        pButton
+        pRipple
+        type="submit"
+        label="Save"
+        [disabled]="isFormInvalid()"
+        [loading]="isSaving"
+      >
+        <span class="material-icons mr-1">save</span>
+      </button>
+    </div>
+  </form>
+</p-card>

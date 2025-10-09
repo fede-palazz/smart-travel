@@ -1,0 +1,76 @@
+<!-- Activity search accordion -->
+<p-accordion
+  styleClass="mt-3"
+  expandIcon="pi pi-search-plus"
+  collapseIcon="pi pi-search-minus"
+  [(activeIndex)]="accordionItemIndex"
+>
+  <p-accordionTab>
+    <!-- Search info -->
+    <ng-template pTemplate="header">
+      @if ((params$ | async)?.searchParams; as params) {
+        <div class="grid w-full align-items-center py-0">
+          <div class="col-6 flex align-items-center">
+            <smt-text type="title" class="mr-2">
+              {{ params.to | titlecase }}
+            </smt-text>
+          </div>
+          <!-- Dates -->
+          <div class="col-6">
+            <smt-text type="subtitle">
+              {{
+                (params.startDate | date: "EEE, d MMM")! +
+                  "  -  " +
+                  (params.endDate | date: "EEE, d MMM")!
+              }}
+            </smt-text>
+          </div>
+        </div>
+      }
+    </ng-template>
+
+    <!-- Activity search form -->
+    <ng-content />
+  </p-accordionTab>
+</p-accordion>
+
+<!-- Activity list and filters -->
+<div class="grid">
+  <div class="col-3 pl-0">
+    @if ((params$ | async)?.filterParams; as filters) {
+      <smt-activity-filters
+        [name]="filters.name"
+        [types]="filters.types"
+        [tags]="filters.tags"
+        [languages]="filters.languages"
+        [minRating]="filters.minRating"
+        [minPrice]="filters.minPrice"
+        [maxPrice]="filters.maxPrice"
+        (onFilter)="handleFilter($event)"
+      />
+    }
+  </div>
+
+  <!-- Main content -->
+  <div class="col pr-0">
+    @if (activities$ | async; as activities) {
+      @if (activities.loading) {
+        <smt-activity-skeleton />
+      } @else if (activities.error) {
+        <smt-not-found type="error" />
+      } @else if (activities.data) {
+        @if (activities.data.content.length === 0) {
+          <smt-not-found type="activity" />
+        } @else {
+          <smt-activity-list
+            [activities]="activities.data.content"
+            [totalElements]="activities.data.totalElements"
+            [currentPage]="activities.data.currentPage"
+            (onSelectActivity)="handleSelectActivity($event)"
+            (onPageChange)="handlePageChange($event)"
+          />
+        }
+      }
+    }
+  </div>
+</div>

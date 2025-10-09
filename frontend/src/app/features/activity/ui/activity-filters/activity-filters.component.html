@@ -1,0 +1,102 @@
+<smt-filter-container>
+  <div filter-body>
+    <!-- Filters -->
+    <div class="py-1 flex flex-column">
+      <!-- Activity name filter -->
+      <div class="flex flex-column mb-3">
+        <label for="name" class="mb-2">Name</label>
+        <input type="text" pInputText [(ngModel)]="name" />
+      </div>
+
+      <!-- Activity types filter -->
+      <div class="flex flex-column mb-3">
+        <label for="types" class="mb-3">Type</label>
+        <p-multiSelect
+          [options]="types"
+          [(ngModel)]="selectedTypes"
+          optionLabel="name"
+          optionValue="value"
+          placeholder="Select type"
+          display="chip"
+          [showClear]="true"
+          [filter]="false"
+          [showHeader]="false"
+          styleClass="w-full"
+        />
+      </div>
+
+      <!-- Activity tags filter -->
+      <div class="flex flex-column mb-3">
+        <label for="types" class="mb-3">Tags</label>
+        <p-multiSelect
+          [options]="tags"
+          [(ngModel)]="selectedTags"
+          optionLabel="name"
+          optionValue="value"
+          placeholder="Select tags"
+          display="chip"
+          [showClear]="true"
+          [showToggleAll]="false"
+          [filter]="true"
+          styleClass="w-full"
+        />
+      </div>
+
+      <!-- Activity languages filter -->
+      <div class="flex flex-column mb-3">
+        <label for="types" class="mb-3">Language</label>
+        <p-multiSelect
+          [options]="languages"
+          [(ngModel)]="selectedLanguages"
+          optionLabel="name"
+          optionValue="value"
+          placeholder="Select tags"
+          display="chip"
+          [showClear]="true"
+          [showToggleAll]="false"
+          [filter]="true"
+          styleClass="w-full"
+        />
+      </div>
+
+      <!-- Price range filter -->
+      <div class="flex flex-column mb-3">
+        <label for="prices" class="mb-3">Price</label>
+        <div class="px-2">
+          <p-slider
+            id="prices"
+            name="prices"
+            [(ngModel)]="priceRange"
+            [range]="true"
+            [min]="minPrice"
+            [max]="maxPrice"
+          />
+        </div>
+        <div class="flex justify-content-between pt-3">
+          <span>€{{ priceRange[0] }}</span>
+          <span>€{{ priceRange[1] }}</span>
+        </div>
+      </div>
+
+      <!-- Mimimum rating filter -->
+      <!-- <div class="flex flex-column mb-3">
+        <label for="rating" class="mb-3">Minimum rating</label>
+        <p-rating name="rating" [(ngModel)]="minRating" [cancel]="true" />
+      </div> -->
+    </div>
+  </div>
+
+  <!-- Apply filters button -->
+  <div filter-footer>
+    <div class="w-full text-right">
+      <p-button
+        styleClass="mr-3"
+        label="Reset"
+        severity="danger"
+        [outlined]="true"
+        (onClick)="handleReset()"
+      />
+      <p-button label="Apply" severity="secondary" (onClick)="handleFilter()" />
+    </div>
+  </div>
+</smt-filter-container>

@@ -1,0 +1,79 @@
+<p-table [value]="rooms">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Capacity</th>
+      <th>Amenities</th>
+      @if (displayPrice) {
+        <th class="white-space-nowrap">Price / night</th>
+      }
+      <th>Quantity</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-room let-idx="rowIndex">
+    <tr>
+      <!-- Room name -->
+      <td>{{ room.name }}</td>
+
+      <!-- Room type -->
+      <td>
+        <p-tag
+          [value]="room.type"
+          [severity]="
+            room.type === 'single'
+              ? 'info'
+              : room.type === 'double'
+                ? 'secondary'
+                : 'contrast'
+          "
+        />
+      </td>
+
+      <!-- Capacity -->
+      <td>
+        {{ room.capacity }}{{ room.capacity > 1 ? " people" : " person" }}
+      </td>
+
+      <!-- Amenities -->
+      <td>
+        <div class="flex flex-wrap gap-1">
+          <ul class="pl-0">
+            <li *ngFor="let amenity of room.amenities">
+              {{ amenity }}
+            </li>
+          </ul>
+        </div>
+      </td>
+
+      <!-- Price -->
+      @if (displayPrice) {
+        <td>
+          {{ room.pricePerNight.value | currency: room.pricePerNight.currency }}
+        </td>
+      }
+
+      <!-- Quantity -->
+      @if (!readonly) {
+        <td formArrayName="roomQuantities">
+          <ng-content />
+          <p-dropdown
+            [options]="getQuantityOptions(room.quantity)"
+            [formControlName]="idx"
+            [placeholder]="'Select quantity'"
+            [autoDisplayFirst]="true"
+            optionLabel="label"
+            optionValue="value"
+            [filter]="false"
+            [showClear]="false"
+            [emptyMessage]="'No options'"
+            [appendTo]="'body'"
+          >
+          </p-dropdown>
+        </td>
+      } @else {
+        <td>{{ room.quantity }}</td>
+      }
+    </tr>
+  </ng-template>
+</p-table>

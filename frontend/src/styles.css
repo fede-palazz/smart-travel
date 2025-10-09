@@ -1,0 +1,115 @@
+@import "primeng/resources/primeng.css";
+@import "primeng/resources/themes/lara-light-blue/theme.css";
+@import "primeicons/primeicons.css";
+@import "primeflex/primeflex.css";
+@import "https://fonts.googleapis.com/icon?family=Material+Icons";
+
+.material-icons {
+  font-family: "Material Icons";
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px; /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Support for IE. */
+  font-feature-settings: "liga";
+}
+
+/* Global styles */
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  background-color: #3d5bea26;
+}
+
+.clamp-1 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  overflow: hidden;
+}
+
+.clamp-2 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+
+.clamp-3 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+}
+
+.clamp-4 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  overflow: hidden;
+}
+
+/* Button style */
+.p-button {
+  padding: 10px 12px;
+}
+
+/* Select button style */
+.p-selectbutton .p-button {
+  padding: 5px 10px;
+  background-color: var(--);
+}
+
+/* Vertically center icon within icon fields */
+.p-icon-field .p-input-icon {
+  margin-top: -0.75rem;
+}
+
+/* Reset default links style */
+a {
+  text-decoration: none; /* Removes underline */
+  color: inherit; /* Inherit text color from parent */
+}
+
+/* Reser grid negative margin */
+.grid {
+  margin: 0;
+}
+
+/* Remove breadcrumb default background */
+.p-breadcrumb {
+  background: none;
+}
+
+/* Remove card content padding */
+.p-card-content {
+  padding: 0;
+}

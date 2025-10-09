@@ -1,0 +1,28 @@
+<smt-dialog-container
+  title="Order details"
+  [isVisible]="!!orderId"
+  width="70rem"
+  (onClose)="handleClose()"
+>
+  <!-- Filters -->
+  <div dialog-body class="py-1 px-2 flex flex-column">
+    @if (order$ | async; as order) {
+      @if (order.loading) {
+        <div
+          class="w-full h-full flex align-items-center justify-content-center mt-3"
+        >
+          <p-progressSpinner
+            styleClass="w-4rem h-4rem"
+            strokeWidth="6"
+            fill="var(--surface-ground)"
+            animationDuration=".5s"
+          />
+        </div>
+      } @else if (order.error) {
+        <smt-not-found type="error" />
+      } @else if (order.data) {
+        <smt-orders-details-items [order]="order.data" />
+      }
+    }
+  </div>
+</smt-dialog-container>

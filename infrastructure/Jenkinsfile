@@ -1,0 +1,106 @@
+pipeline {
+    agent any
+
+    environment {
+        // Docker image options
+        DEBEZIUM_IMAGE_NAME = 'debezium'
+        RABBIT_IMAGE_NAME = 'rabbit'
+        IMAGE_TAG = "${BUILD_NUMBER}"
+    }
+
+    stages {
+
+        stage('Validate Debezium Docker Environment') {
+            steps {
+                script {
+                    echo "Validating Debezium Docker environment..."
+
+                    // Check if Dockerfile exists
+                    sh 'test -f debezium/Dockerfile || (echo "Dockerfile not found in debezium/ directory" && exit 1)'
+
+                    // Check if config directory exists
+                    sh 'test -d debezium/config || (echo "Config directory not found in debezium/ directory" && exit 1)'
+                    }
+                }
+        }
+
+        stage('Validate RabbitMQ Docker Environment') {
+            steps {
+                script {
+                    echo "Validating RabbitMQ environment..."
+
+                    // Check if Dockerfile exists
+                    sh 'test -f rabbitmq/Dockerfile || (echo "Dockerfile not found in rabbitmq/ directory" && exit 1)'
+
+                    // Check if config directory exists
+                    sh 'test -d rabbitmq/config || (echo "Config directory not found in rabbitmq/ directory" && exit 1)'
+                }
+            }
+        }
+
+        stage('Prepare Debezium Build Context') {
+            steps {
+                script {
+                    echo "Preparing build context and fixing permissions..."
+
+                    // Ensure the script has executable permissions before Docker build
+                    sh """
+                        cd debezium
+                        if [ -f config/wait-for-rabbitmq.sh ]; then
+                            chmod +x config/wait-for-rabbitmq.sh
+                            ls -la config/wait-for-rabbitmq.sh
+                        else
+                            echo "Warning: wait-for-rabbitmq.sh not found"
+                        fi
+                    """
+                }
+            }
+        }
+
+        stage('Build Debezium Docker Image') {
+            steps {
+                sh 'docker build -t $DEBEZIUM_IMAGE_NAME:$IMAGE_TAG ./debezium'
+                echo 'Successfully built Debezium Docker image'
+            }
+        }
+
+        stage('Build RabbitMQ Docker Image') {
+            steps {
+                sh 'docker build -t $RABBIT_IMAGE_NAME:$IMAGE_TAG ./rabbitmq'
+                echo 'Successfully built RabbitMQ Docker image'
+            }
+        }
+
+        stage('Deploy Docker Images') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'registry-creds',
+                    usernameVariable: 'REGISTRY_USER',
+                    passwordVariable: 'REGISTRY_PASS')
+                ]) {
+                    sh '''
+                        echo "Logging into Container registry..."
+                        echo $REGISTRY_PASS | docker login -u $REGISTRY_USER --password-stdin $REGISTRY_URL
+
+                        echo "Tagging Debezium image..."
+                        docker tag $DEBEZIUM_IMAGE_NAME:$IMAGE_TAG $REGISTRY_URL/$REGISTRY_NAMESPACE/$DEBEZIUM_IMAGE_NAME:$IMAGE_TAG
+
+                        echo "Pushing Debezium image..."
+                        docker push $REGISTRY_URL/$REGISTRY_NAMESPACE/$DEBEZIUM_IMAGE_NAME:$IMAGE_TAG
+
+                        echo "Tagging RabbitMQ image..."
+                        docker tag $RABBIT_IMAGE_NAME:$IMAGE_TAG $REGISTRY_URL/$REGISTRY_NAMESPACE/$RABBIT_IMAGE_NAME:$IMAGE_TAG
+
+                        echo "Pushing RabbitMQ image..."
+                        docker push $REGISTRY_URL/$REGISTRY_NAMESPACE/$RABBIT_IMAGE_NAME:$IMAGE_TAG
+
+                        echo "Cleaning up local images..."
+                        docker rmi $REGISTRY_URL/$REGISTRY_NAMESPACE/$DEBEZIUM_IMAGE_NAME:$IMAGE_TAG $DEBEZIUM_IMAGE_NAME:$IMAGE_TAG || true
+                        docker rmi $REGISTRY_URL/$REGISTRY_NAMESPACE/$RABBIT_IMAGE_NAME:$IMAGE_TAG $RABBIT_IMAGE_NAME:$IMAGE_TAG || true
+                    '''
+                }
+                echo 'Successfully pushed Docker images'
+            }
+        }
+    }
+}

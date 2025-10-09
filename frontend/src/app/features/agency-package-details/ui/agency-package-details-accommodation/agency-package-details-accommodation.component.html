@@ -1,0 +1,46 @@
+<p-accordion class="accommodation-review">
+  <p-accordionTab>
+    <!-- Accommodation overview -->
+    <ng-template pTemplate="header">
+      <div class="grid align-items-center gap-0 w-full">
+        <!-- Accommodation image -->
+        <div class="col-2 text-center p-1">
+          <p-avatar
+            [image]="accommodationOrder.mainPicture"
+            shape="square"
+            class="mr-1"
+            size="xlarge"
+            styleClass="border-round overflow-hidden h-5rem w-5rem"
+          />
+        </div>
+
+        <!-- Accommodation info -->
+        <div class="col">
+          <span class="font-medium text-secondary text-sm">
+            {{ accommodationOrder.type }}
+          </span>
+          <div class="font-medium text-lg text-900 mt-2">
+            {{ accommodationOrder.name }}
+          </div>
+        </div>
+
+        <!-- View accommodation button -->
+        <div class="col-2 text-center">
+          <p-button
+            severity="info"
+            icon="pi pi-external-link"
+            label="View"
+            (click)="handleViewAccommodation($event)"
+          />
+        </div>
+      </div>
+    </ng-template>
+
+    <!-- Accommodation details -->
+    <smt-accommodation-details-rooms
+      [rooms]="accommodationOrder.rooms"
+      [readonly]="true"
+      [displayPrice]="false"
+    />
+  </p-accordionTab>
+</p-accordion>

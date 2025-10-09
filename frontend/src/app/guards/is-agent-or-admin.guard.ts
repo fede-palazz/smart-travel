@@ -1,0 +1,19 @@
+import { inject } from '@angular/core';
+import { Router, type CanActivateFn } from '@angular/router';
+import { AuthService } from '../services/auth.service';
+import { map, take } from 'rxjs';
+import { UserRole } from '../interfaces/model/User';
+
+export const isAgentOrAdminGuard: CanActivateFn = (route, state) => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
+
+  return authService.user$.pipe(
+    take(1),
+    map((user) =>
+      !user || user.role === UserRole.CUSTOMER
+        ? router.createUrlTree(['/home'])
+        : true,
+    ),
+  );
+};

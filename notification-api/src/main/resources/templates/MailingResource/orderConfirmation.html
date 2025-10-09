@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation - Smart Travel</title>
+    <style>
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+      }
+
+      .email-container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+
+      .header {
+        background: linear-gradient(135deg, #3c5ceb 0%, #3a54d9 100%);
+        color: white;
+        padding: 30px;
+        text-align: center;
+      }
+
+      .header h1 {
+        margin: 0 0 10px 0;
+        font-size: 2.5em;
+        font-weight: 300;
+      }
+
+      .header p {
+        margin: 0;
+        font-size: 1.1em;
+        opacity: 0.9;
+      }
+
+      .header-title {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: white;
+        border-radius: 10px;
+        padding: 10px 20px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .content {
+        padding: 40px;
+      }
+
+      .order-info {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 12px;
+        margin-bottom: 30px;
+        border-left: 5px solid #3c5ceb;
+      }
+
+      .order-info h2 {
+        margin: 0 0 15px 0;
+        color: #333;
+        font-size: 1.4em;
+      }
+
+      .info-grid {
+        display: grid;
+        /*grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));*/
+        grid-template-columns: repeat(2, 1fr); /* Default: two columns */
+        gap: 15px;
+      }
+
+      .info-item {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .info-label {
+        font-weight: 600;
+        color: #666;
+        font-size: 0.9em;
+        margin-bottom: 5px;
+      }
+
+      .info-value {
+        color: #333;
+        font-size: 1.1em;
+      }
+
+      .section {
+        margin-bottom: 35px;
+      }
+
+      .section-title {
+        color: #333;
+        font-size: 1.6em;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #e9ecef;
+        display: flex;
+        align-items: center;
+      }
+
+      .section-icon {
+        margin-right: 10px;
+        font-size: 1.2em;
+      }
+
+      .flight-card, .accommodation-card, .activity-card {
+        background: white;
+        border: 1px solid #e9ecef;
+        border-radius: 12px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      }
+
+      .flight-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .airline-logo {
+        width: 70px;
+        height: 70px;
+        margin-right: 25px;
+        border-radius: 6px;
+      }
+
+      .flight-code {
+        font-size: 1.3em;
+        font-weight: 600;
+        color: #333;
+      }
+
+      .flight-table, .accommodation-table, .activity-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+      }
+
+      .flight-table th, .accommodation-table th, .activity-table th {
+        background: #f8f9fa;
+        padding: 12px;
+        text-align: left;
+        font-weight: 600;
+        color: #555;
+        border-bottom: 2px solid #e9ecef;
+      }
+
+      .flight-table td, .accommodation-table td, .activity-table td {
+        padding: 12px;
+        border-bottom: 1px solid #e9ecef;
+        color: #333;
+      }
+
+      .route {
+        font-size: 1.1em;
+        font-weight: 600;
+        /*color: #4CAF50;*/
+        color: #333;
+      }
+
+      .datetime {
+        color: #666;
+        font-size: 0.95em;
+      }
+
+      .price {
+        font-weight: 600;
+        color: #333;
+        font-size: 1.1em;
+      }
+
+      .amenities {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 10px;
+      }
+
+      .amenity-tag {
+        background: #e3f2fd;
+        color: #1976d2;
+        padding: 4px 10px;
+        border-radius: 16px;
+        font-size: 0.85em;
+        font-weight: 500;
+      }
+
+      .total-section {
+        background: linear-gradient(135deg, #3c5ceb 0%, #3a54d9 100%);
+        color: white;
+        padding: 25px;
+        border-radius: 12px;
+        text-align: center;
+        margin-top: 30px;
+      }
+
+      .total-amount {
+        font-size: 2.2em;
+        font-weight: 300;
+        margin: 0;
+      }
+
+      .footer {
+        background: #f8f9fa;
+        padding: 30px;
+        text-align: center;
+        color: #666;
+        font-size: 0.95em;
+      }
+
+      .footer p {
+        margin: 5px 0;
+      }
+
+      @media (max-width: 600px) {
+        body {
+          padding: 10px;
+        }
+
+        .content {
+          padding: 20px;
+        }
+
+        .header h1 {
+          font-size: 2em;
+        }
+
+        .info-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .flight-table, .accommodation-table, .activity-table {
+          font-size: 0.9em;
+        }
+      }
+    </style>
+</head>
+<body>
+<div class="email-container">
+    <!-- Header -->
+    <div class="header">
+        <div class="header-title">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgdmlld0JveD0iMCAwIDIwNC4zNjMgMzE1Ij4NCiAgPHN0eWxlPg0KICAgIC5zdDAgeyBmaWxsOiAjM0Q1QkVBOyB9DQogICAgLnN0MSB7IG9wYWNpdHk6IDAuMzsgfQ0KICA8L3N0eWxlPg0KICANCiAgPGcgaWQ9ImNvbG9yX2luZGV4XzAiIGNsYXNzPSJzdDAiPg0KICAgIDxwYXRoIGQ9Ik0xNzguNTYzLDQ2LjU4M2gtMjQuNDA5VjIzLjE0OEMxNTQuMTUzLDEwLjM5MSwxNDMuNzc2LDAsMTMxLjAyLDBINzMuODU5QzYxLjA4OCwwLDUwLjcxMSwxMC4zOTEsNTAuNzExLDIzLjE0OHYyMy40MzVIMjUuOGMtMTQuMjQ5LDAtMjUuOCwxMS41NTEtMjUuOCwyNS44djY1LjY2YzAsMjMuMjYzLDE5LjA2Myw0Mi40MTIsNDIuMjk3LDQxLjYyNGM0Ljc3My0wLjE1OCw5Ljc0Ny0wLjkzMiwxNC44NjQtMi40MDhjMTQuOTkyLTQuMzQzLDM1LjE1OS0xNy40NzIsMzUuMTU5LTE3LjQ3MmwtMy4yNjgtNC42ODdsLTUzLjcwNi00OS4xNjNsNy41NjgtMi4yNWwzOC41NTYsMTguNTYxbDkuMDQ0LTQuOTQ1YzEuNTA1LTAuODE3LDMuNDI2LTAuMjI5LDQuMTg1LDEuMzljMC41ODgsMS4yMzMsMC4xNzIsMi43MjMtMC44NiwzLjY0MWwtNC4zMjksMy43OThsMTEuMTY2LDUuMzc1bDkuMDE1LTQuOTE2YzEuNzkyLTAuOTc1LDMuOTQyLDAuMzU4LDMuODcsMi4zOTRsLTAuMDg2LDEuNzkyYzAsMC4yNDQtMC4xNTgsMC41NzMtMC4zNDQsMC43MzFsLTQuNDE1LDMuODdsMTAuOTM2LDUuMjc1bDIyLjI1OS0xNS41NjZjNy4xOTUtNS4wNDUsMTYuMDM5LTcuMTUyLDI0LjcyNS01LjkwNWMtMS44MDYsOC42LTYuODA4LDE2LjE4Mi0xNC4wMDMsMjEuMjI3bC0yMi4yNDUsMTUuNTY2bDEuMjA0LDEyLjA4M2w1LjE2LTIuODI0YzEuNTA1LTAuODE3LDMuNDI2LTAuMjI5LDQuMTg1LDEuMzljMC41ODgsMS4yMzMsMC4xNTgsMi43MjMtMC44NzQsMy42NDFsLTcuNTgyLDYuNjY1bDEuMjMzLDEyLjM0MWw1LjE4OS0yLjgzOGMxLjUwNS0wLjgxNywzLjQyNi0wLjIyOSw0LjE4NSwxLjM5YzAuNTg4LDEuMjMzLDAuMTU4LDIuNzIzLTAuODYsMy42NDFsLTcuNjQsNi42OTRsNC4yNTcsNDIuNTg0bC00LjcwMSw2LjMzNWwtMjcuODIxLTY3LjI4bC0zLjI2OC00LjY4N2MwLDAtMzYuMjQ5LDIwLjg2OS02NS44NzUsNDcuMTdjLTkuNTQ0LDguNDcxLTIzLjM5NSwyMy4yMTYtMzEuNzg0LDM0LjAwM0MxLjg4LDI2MC44MDIsMCwyNjYuMzc1LDAsMjcyLjEwMWMwLDE0LjI0OSwxMS41NTEsMjUuOCwyNS44LDI1LjhoNi45M2MwLDAuMDAyLDAsMC4wMDQsMCwwLjAwNmMwLDkuNDQsNy42NTMsMTcuMDkzLDE3LjA5MywxNy4wOTNzMTcuMDkzLTcuNjUzLDE3LjA5My0xNy4wOTNjMC0wLjAwMiwwLTAuMDA0LDAtMC4wMDZoNzAuNTMxYzAsMC4wMDIsMCwwLjAwNCwwLDAuMDA2YzAsOS40NCw3LjY1MywxNy4wOTMsMTcuMDkzLDE3LjA5M3MxNy4wOTMtNy42NTMsMTcuMDkzLTE3LjA5M2MwLTAuMDAyLDAtMC4wMDQsMC0wLjAwNmg2LjkzYzE0LjI0OSwwLDI1LjgtMTEuNTUxLDI1LjgtMjUuOFY3Mi4zODNDMjA0LjM2Myw1OC4xMzQsMTkyLjgxMiw0Ni41ODMsMTc4LjU2Myw0Ni41ODN6IE02My42MTEsNDYuNTgzVjIzLjE0OGMwLTUuNjQ3LDQuNTg3LTEwLjI0OCwxMC4yNDgtMTAuMjQ4aDU3LjE2MWM1LjY0NywwLDEwLjIzNCw0LjYwMSwxMC4yMzQsMTAuMjQ4djIzLjQzNUg2My42MTF6Ii8+DQogIDwvZz4NCiAgDQogIDxnIGNsYXNzPSJzdDEiPg0KICAgIDxwYXRoIGQ9Ik04NS45ODYsMTU5LjA2MWwzLjA0NCwyLjc4NmMyLjA2MS0xLjI2MSwzLjI5MS0yLjA2MSwzLjI5MS0yLjA2MWwtMy4yNjgtNC42ODdsLTUzLjcwNi00OS4xNjNsMS42MzUsOC4yNjVMODUuOTg2LDE1OS4wNjF6Ii8+DQogICAgPHBhdGggZD0iTTkzLjgzOSwxMjIuMzM0bC00LjMyOSwzLjc5OGw2LjgyMywzLjI4NWMwLjM4NS0wLjkxMiwwLjIzNi0xLjY4MiwwLjIzNi0xLjY4MmwtMS41OS04LjAyMWMxLjA0MiwwLjk1LDAuNjIzLDEuOTQyLTEuMTQsMi42MnoiLz4NCiAgICA8cGF0aCBkPSJNMTEzLjU2MiwxMjguOTg0bC0wLjA4NiwxLjc5MmMwLDAuMjQ0LTAuMTU4LDAuNTczLTAuMzQ0LDAuNzMxbC00LjQxNSwzLjg3bDYuNDIxLDMuMDk3YzAuMDk4LTEuMjEyLDAuMDI5LTEuNjg0LDAuMDI5LTEuNjg0bC0xLjY1OC04LjM4MUMxMTMuNTM5LDEyOC41NzIsMTEzLjU2OSwxMjguNzcyLDExMy41NjIsMTI4Ljk4NHoiLz4NCiAgICA8cGF0aCBkPSJNODkuMDI3LDE2MS44NDljLTAuMDI4LDAuMDE2LTE3LjcwNiw5LjcwNy0yMi4yMiwxMS44MTRDNzUuNjIxLDE2OS44MDUsODQuNDIxLDE2NC42NjgsODkuMDI3LDE2MS44NDl6Ii8+DQogICAgPHBhdGggZD0iTTQyLjI5NywxNzkuNjY2YzQuNzczLTAuMTU4LDkuNzQ3LTAuOTMyLDE0Ljg2NC0yLjQwOGMyLjkzMi0wLjg0OSw2LjA2Mi0yLjA0LDkuMi0zLjM5OGMtNC43NTksMi4wODMtMjguODU0LDkuODk0LTQ4LjE3NS0xLjI2NUMyNS4wNDQsMTc3LjI5OCwzMy4zNTMsMTc5Ljk3LDQyLjI5NywxNzkuNjY2eiIvPg0KICAgIDxwYXRoIGQ9Ik0xNjYuOTA3LDExOS4zMTNjLTEuODY0LDguNDYyLTYuODE2LDE1LjkxOC0xMy45MTgsMjAuODk4bC0yMi4yNDUsMTUuNTY2bDEuMjA0LDEyLjA4M2wwLjc3Ny0wLjQyNWwtMC4zNDYtMy4zOTNsMjcuMzYxLTE5Ljg3YzAsMCw0LjIzNC00LjY3OCw2LjEzLTguOTAzYzEuOTU2LTQuMzYsMi43NjQtNy44OTEsMi43NjQtNy44OTFMMTY2LjkwNywxMTkuMzEzeiIvPg0KICAgIDxwYXRoIGQ9Ik0xNDEuMTk5LDE2Ny41NDZjMC4wOSwwLjk5Mi0wLjM0MSwyLjAxNi0xLjEyMywyLjcxMWwtNy41ODIsNi42NjVsMS4yMzMsMTIuMzQxbDAuNzY4LTAuNDJsLTAuMzY1LTMuNjU2YzAsMCw1LjY4OC01LjA1OCw3LjU4Mi02LjY2NWMxLjU3OC0xLjMzOCwxLjA0NC0zLjE3OSwxLjA0NC0zLjE3OUwxNDEuMTk5LDE2Ny41NDZ6Ii8+DQogICAgPHBhdGggZD0iTTEyLjQ1LDI1Ny44MzJjMTguMjYxLTE5LjYzLDI1Ljc5My0yOC4wNzYsNTYuMjEtNTEuMDc1YzEzLjIzOC0xMC4wMSwzNi4wMy0yMy4zODMsMzYuMDMtMjMuMzgzbDMuMTUxLDQuNTJsMjcuOTM3LDY3LjQ0N2w0LjcwMS02LjMzNWwtNC4yNTctNDIuNTg0YzAsMCw2LjE3OS01LjM2NSw3LjY0LTYuNjk0YzEuNTI1LTEuMzg4LDEuMDMtMy4xNzksMS4wMy0zLjE3OWwtMS41NTEtNy44MzdjLTAuMTM5LDEuMzQ1LTAuNjQ4LDIuNTI2LTEuMzE4LDMuNDVsLTcuNjQsNi42OTRsNC4yNTcsNDIuNTg0bC00LjcwMSw2LjMzNWwtMjcuODIxLTY3LjI4bC0zLjI2OC00LjY4N2MwLDAtMzYuMjQ5LDIwLjg2OS02NS44NzUsNDcuMTdjLTIuMzU0LDIuMDktNC45NzIsNC41NjMtNy43MDMsNy4yNjNjLTMuODI1LDMuNzgtNy44Nyw4LjAwNS0xMS43NDYsMTIuMjU4Yy00LjU3Nyw1LjAyMy04LjkxMywxMC4wODItMTIuMzM2LDE0LjQ4M2MtMi40MTksMy4xMTEtNC4wNDMsNi43MjUtNC44MzQsMTAuNTM5QzAuMjA1LDI2OC41NDgsMCwyNzAuMzE0LDAsMjcyLjEwMWMwLDMuMDExLDAuNTQzLDUuODg5LDEuNDkxLDguNTc2QzEuOTU0LDI3Ny45ODIsMS44MzgsMjY5LjI0LDEyLjQ1LDI1Ny44MzJ6Ii8+DQogIDwvZz4NCjwvc3ZnPg0K"
+                 alt="Smart Travel Logo" style="height: 50px; margin-right: 15px;">
+            <h1 style="margin: 0; color: #333;">Smart Travel</h1>
+        </div>
+        <p>Your journey confirmation is ready!</p>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+        <!-- Order Information -->
+        <div class="order-info">
+            <h2>Order Confirmation</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Customer</span>
+                    <span class="info-value">{order.customerInfo.name} {order.customerInfo.surname}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Email</span>
+                    <span class="info-value">{order.customerInfo.email}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Order ID</span>
+                    <span class="info-value">{order.id}</span>
+                </div>
+                {#if order.agencyPackageId}
+                    <div class="info-item">
+                        <span class="info-label">Package ID</span>
+                        <span class="info-value">{order.agencyPackageId}</span>
+                    </div>
+                {/if}
+            </div>
+        </div>
+
+        <!-- Departure Flight -->
+        {#if order.items.departureFlight}
+            <div class="section">
+                <h3 class="section-title">
+                    <span class="section-icon">🛫</span>
+                    Departure Flight
+                </h3>
+                <div class="flight-card">
+                    <div class="flight-header">
+                        <img src="{order.items.departureFlight.airlineLogo}"
+                             alt="{order.items.departureFlight.airline}" class="airline-logo">
+                        <div>
+                            <div class="flight-code">{order.items.departureFlight.code}</div>
+                            <div style="color: #666;">{order.items.departureFlight.airline}</div>
+                        </div>
+                    </div>
+                    <table class="flight-table">
+                        <thead>
+                        <tr>
+                            <th>Route</th>
+                            <th>Departure</th>
+                            <th>Arrival</th>
+                            <th>Passengers</th>
+                            {#if ! order.agencyPackageId}
+                                <th>Price</th>
+                            {/if}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td class="route">{order.items.departureFlight.from.city}
+                                ({order.items.departureFlight.from.airportCode})
+                                → {order.items.departureFlight.to.city}
+                                ({order.items.departureFlight.to.airportCode})
+                            </td>
+                            <td>
+                                <div>{order.items.departureFlight.formatDepartureDate}</div>
+                                <div class="datetime">{order.items.departureFlight.formatDepartureTime}</div>
+                            </td>
+                            <td>
+                                <div>{order.items.departureFlight.formatArrivalDate}</div>
+                                <div class="datetime">{order.items.departureFlight.formatArrivalTime}</div>
+                            </td>
+                            <td>{order.items.departureFlight.quantity}</td>
+                            {#if ! order.agencyPackageId}
+                                <td class="price">
+                                    €{str:format('%.2f', order.items.departureFlight.price.value, 1)}
+                                </td>
+                            {/if}
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {/if}
+
+        <!-- Return Flight -->
+        {#if order.items.returnFlight}
+            <div class="section">
+                <h3 class="section-title">
+                    <span class="section-icon">🛬</span>
+                    Return Flight
+                </h3>
+                <div class="flight-card">
+                    <div class="flight-header">
+                        <img src="{order.items.returnFlight.airlineLogo}"
+                             alt="{order.items.returnFlight.airline}" class="airline-logo">
+                        <div>
+                            <div class="flight-code">{order.items.returnFlight.code}</div>
+                            <div style="color: #666;">{order.items.returnFlight.airline}</div>
+                        </div>
+                    </div>
+                    <table class="flight-table">
+                        <thead>
+                        <tr>
+                            <th>Route</th>
+                            <th>Departure</th>
+                            <th>Arrival</th>
+                            <th>Passengers</th>
+                            {#if ! order.agencyPackageId}
+                                <th>Price</th>
+                            {/if}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td class="route">{order.items.returnFlight.from.city}
+                                ({order.items.returnFlight.from.airportCode})
+                                → {order.items.returnFlight.to.city}
+                                ({order.items.returnFlight.to.airportCode})
+                            </td>
+                            <td>
+                                <div>{order.items.returnFlight.formatDepartureDate}</div>
+                                <div class="datetime">{order.items.returnFlight.formatDepartureTime}</div>
+                            </td>
+                            <td>
+                                <div>{order.items.returnFlight.formatArrivalDate}</div>
+                                <div class="datetime">{order.items.returnFlight.formatArrivalTime}</div>
+                            </td>
+                            <td>{order.items.returnFlight.quantity}</td>
+                            {#if ! order.agencyPackageId}
+                                <td class="price">
+                                    €{str:format('%.2f', order.items.returnFlight.price.value, 1)}
+                                </td>
+                            {/if}
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {/if}
+
+        <!-- Accommodation -->
+        {#if order.items.accommodation}
+            <div class="section">
+                <h3 class="section-title">
+                    <span class="section-icon">🏨</span>
+                    Accommodation
+                </h3>
+                <div class="accommodation-card">
+                    <h4 style="margin: 0 0 15px 0; color: #333; font-size: 1.3em;">{order.items.accommodation.name}</h4>
+                    <table class="accommodation-table">
+                        <thead>
+                        <tr>
+                            <th>Check-in</th>
+                            <th>Check-out</th>
+                            <th>Type</th>
+                            <th>Rooms</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>{order.items.accommodation.formatStartDate}</td>
+                            <td>{order.items.accommodation.formatEndDate}</td>
+                            <td style="text-transform: capitalize;">{order.items.accommodation.type}</td>
+                            <td>{order.items.accommodation.rooms.size()}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    {#for room in order.items.accommodation.rooms}
+                        <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                            <h5 style="margin: 0 0 10px 0; color: #333;">{room.name}</h5>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 10px;">
+                                <div>
+                                    <span class="info-label">Capacity</span><br>
+                                    <span>{room.capacity} guests</span>
+                                </div>
+                                <div>
+                                    <span class="info-label">Bed Type</span><br>
+                                    <span style="text-transform: capitalize;">
+                                    {#for bedType in room.bedTypes}
+                                        {bedType}{#if bedType_hasNext}, {/if}
+                                    {/for}
+                                </span>
+                                </div>
+                                {#if ! order.agencyPackageId}
+                                    <div>
+                                        <span class="info-label">Price per Night</span><br>
+                                        <span class="price">
+                                            €{str:format('%.2f', room.pricePerNight.value, 1)}
+                                        </span>
+                                    </div>
+                                {/if}
+                            </div>
+                            {#if room.amenities && room.amenities.size() > 0}
+                                <div>
+                                    <span class="info-label">Amenities</span>
+                                    <div class="amenities">
+                                        {#for amenity in room.amenities}
+                                            <span class="amenity-tag">{amenity}</span>
+                                        {/for}
+                                    </div>
+                                </div>
+                            {/if}
+                        </div>
+                    {/for}
+                </div>
+            </div>
+        {/if}
+
+        <!-- Activities -->
+        {#if order.items.activities && order.items.activities.size() > 0}
+            <div class="section">
+                <h3 class="section-title">
+                    <span class="section-icon">🎯</span>
+                    Activities
+                </h3>
+                {#for activity in order.items.activities}
+                    <div class="activity-card">
+                        <h4 style="margin: 0 0 15px 0; color: #333; font-size: 1.3em;">{activity.name}</h4>
+                        <table class="activity-table">
+                            <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Type</th>
+                                <th>Participants</th>
+                                {#if ! order.agencyPackageId}
+                                    <th>Price per person</th>
+                                {/if}
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>{activity.formatDate}</td>
+                                <td>{activity.startTime} - {activity.endTime}</td>
+                                <td style="text-transform: capitalize;">{activity.type}</td>
+                                <td>{activity.quantity}</td>
+                                {#if ! order.agencyPackageId}
+                                    <td class="price">
+                                        €{str:format('%.2f', activity.price.value, 1)}
+                                    </td>
+                                {/if}
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                {/for}
+            </div>
+        {/if}
+
+        <!-- Total -->
+        <div class="total-section">
+            <p style="margin: 0 0 10px 0; font-size: 1.2em;">Total Amount</p>
+            <h2 class="total-amount">
+                <strong>€{str:format('%.2f', order.amount.value, 1)}</strong>
+            </h2>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p><strong>Smart Travel</strong> - Your trusted travel companion</p> <br/>
+        <p>Thank you for choosing us for your travel needs!</p>
+        <p>For any questions, please contact our support team.</p>
+    </div>
+</div>
+</body>
+</html>

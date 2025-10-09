@@ -1,0 +1,105 @@
+<div class="flex align-items-center justify-content-center pt-4 md:pt-8">
+  <p-card
+    header="Access your account"
+    subheader="Insert your credentials"
+    styleClass="px-6 py-2"
+  >
+    <!-- Brand -->
+    <ng-template pTemplate="header">
+      <div class="py-4">
+        <smt-brand />
+      </div>
+    </ng-template>
+
+    <!-- Login form -->
+    <form [formGroup]="loginForm" id="loginForm" class="mt-4">
+      <div class="flex flex-column gap-2 w-19rem">
+        <!-- Email -->
+        <div>
+          <label for="email" class="block">Email</label>
+          <span class="p-input-icon-left my-2 flex align-items-center">
+            <i class="pi pi-envelope"></i>
+            <input
+              id="email"
+              formControlName="email"
+              type="email"
+              pInputText
+              class="w-full"
+              [ngClass]="
+                f['email'].touched && f['email'].invalid
+                  ? 'ng-invalid ng-dirty'
+                  : ''
+              "
+            />
+          </span>
+          <!-- Email errors -->
+          @if (f["email"].invalid && f["email"].touched && f["email"].errors) {
+            <small *ngIf="f['email'].errors['required']" class="p-error">
+              Email is required
+            </small>
+            <small *ngIf="f['email'].errors['email']" class="p-error">
+              Email field must contain a valid email
+            </small>
+          }
+        </div>
+
+        <!-- Password -->
+        <div>
+          <label for="password" class="block">Password</label>
+          <span class="p-input-icon-left my-2 flex align-items-center">
+            <i class="pi pi-lock"></i>
+            <input
+              id="password"
+              formControlName="password"
+              type="password"
+              pInputText
+              class="w-full"
+              [ngClass]="
+                f['password'].touched && f['password'].invalid
+                  ? 'ng-invalid ng-dirty'
+                  : ''
+              "
+            />
+          </span>
+          <!-- Password errors -->
+          @if (
+            f["password"].invalid &&
+            f["password"].touched &&
+            f["password"].errors
+          ) {
+            <small *ngIf="f['password'].errors['required']" class="p-error">
+              Password is required
+            </small>
+          }
+        </div>
+      </div>
+    </form>
+    <p-divider />
+    <p>
+      Don't have an account?
+      <a routerLink="/register" class="underline">Register here</a>
+    </p>
+
+    <!-- Footer -->
+    <ng-template pTemplate="footer">
+      <div class="flex align-items-center justify-content-end gap-2">
+        <p-button
+          label="Back"
+          severity="secondary"
+          outlined="true"
+          [disabled]="loading"
+          (onClick)="handleBack()"
+        />
+        <p-button
+          type="submit"
+          form="loginForm"
+          label="Login"
+          [disabled]="loginForm.invalid"
+          [loading]="loading"
+          (onClick)="handleSubmit()"
+        />
+      </div>
+    </ng-template>
+  </p-card>
+</div>
+<p-toast />

@@ -1,0 +1,122 @@
+<div class="card border-round overflow-hidden shadow-2">
+  <p-dataView #dv [value]="packages" [layout]="'list'">
+    <ng-template pTemplate="list" let-packages>
+      <div class="flex flex-column">
+        @for (package of packages; let first = $first; track package.id) {
+          <div
+            class="grid grid-nogutter p-4 gap-3"
+            [ngClass]="{ 'border-top-1 surface-border': !first }"
+          >
+            <!-- Package image -->
+            <div class="w-12rem h-9rem relative">
+              <img
+                class="block mx-auto border-round w-full h-full"
+                [src]="package.mainPicture"
+                [alt]="package.name"
+              />
+              <p-tag
+                [value]="
+                  package.destination.city +
+                  ', ' +
+                  package.destination.country.name
+                "
+                severity="contrast"
+                class="absolute"
+                [style.top.px]="5"
+                [style.left.px]="4"
+              />
+            </div>
+
+            <!-- Package info -->
+            <div
+              class="col-6 flex flex-column md:flex-row justify-content-between md:align-items-center flex-1"
+            >
+              <div
+                class="flex flex-row md:flex-column justify-content-between align-items-start gap-3"
+              >
+                <span class="font-medium text-secondary text-sm">
+                  {{ package.startDate | date: "dd/MM/yyy" }} -
+                  {{ package.endDate | date: "dd/MM/yyy" }}
+                </span>
+                <div>
+                  <div class="font-medium text-lg text-900">
+                    {{ package.name }}
+                  </div>
+                  <div class="clamp-2 font-light text-sm text-800 mt-2">
+                    {{ package.description }}
+                  </div>
+                </div>
+
+                <!-- Badges -->
+                <div class="flex gap-2">
+                  <!-- People tag -->
+                  <div>
+                    @if (package.quantity === 1) {
+                      <p-tag
+                        icon="pi pi-tag"
+                        value="Individual"
+                        severity="warning"
+                      />
+                    } @else if (package.quantity === 2) {
+                      <p-tag icon="pi pi-tag" value="Couple" severity="info" />
+                    } @else {
+                      <p-tag
+                        icon="pi pi-tag"
+                        value="Group"
+                        severity="success"
+                      />
+                    }
+                  </div>
+
+                  <!-- Target number of people -->
+                  <div>
+                    <p-tag
+                      icon="pi pi-users"
+                      [value]="
+                        package.quantity +
+                        (package.quantity > 1 ? ' people' : ' person')
+                      "
+                      severity="contrast"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Package price -->
+            <div
+              class="col-3 flex flex-column justify-content-end md:align-items-end gap-5"
+            >
+              <!-- Price -->
+              <div class="flex align-items-center">
+                <span class="text-xl font-semibold text-900">
+                  {{
+                    package.totalPrice.value
+                      | currency: package.totalPrice.currency
+                  }}
+                </span>
+              </div>
+              <!-- Actions -->
+              <div class="flex gap-2">
+                <p-button
+                  label="Discover"
+                  (onClick)="handleSelectAgencyPackage(package)"
+                />
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </ng-template>
+  </p-dataView>
+
+  <!-- Paginator -->
+  <p-paginator
+    styleClass="border-noround"
+    [first]="currentPage * pageSize"
+    [rows]="pageSize"
+    [totalRecords]="totalElements"
+    [alwaysShow]="false"
+    (onPageChange)="handlePageChange($event)"
+  />
+</div>

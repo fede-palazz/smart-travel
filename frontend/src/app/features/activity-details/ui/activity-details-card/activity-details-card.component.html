@@ -1,0 +1,92 @@
+<p-card styleClass="px-3">
+  <div class="grid">
+    <!-- Activity pictures -->
+    <div class="col-4">
+      <smt-slideshow [pictures]="activity.pictures" />
+    </div>
+    <div class="col-8 grid">
+      <!-- Activity name -->
+      <div class="col-12 flex align-items-center">
+        <h2 class="my-1">{{ activity.name }}</h2>
+        <smt-text type="subtitle" className="ml-2 pt-1">
+          • {{ activity.type }}
+        </smt-text>
+      </div>
+
+      <!-- Description -->
+      <div class="col-12">
+        <p>{{ activity.description }}</p>
+        <p>{{ activity.notes }}</p>
+      </div>
+
+      <!-- Address -->
+      <div class="col flex flex-column gap-2">
+        <div class="flex align-items-center">
+          <span class="material-icons mr-1">place</span>
+          <span><strong>Address</strong></span>
+        </div>
+        <div class="">
+          <span>{{ activity.address }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Additional info -->
+    <div class="col-12">
+      <smt-activity-details-info [activity]="activity" />
+    </div>
+
+    @if (!isAgentView) {
+      <!-- Form section -->
+      <div class="col-12">
+        <smt-text type="title">Book activity</smt-text>
+      </div>
+      <form class="col-12 flex gap-3">
+        <!-- Selected date calendar -->
+        <div class="flex flex-column gap-2">
+          <label for="date">Select the desidered date</label>
+          <p-calendar
+            [(ngModel)]="selectedDate"
+            name="date"
+            inputId="date"
+            [iconDisplay]="'input'"
+            [showIcon]="true"
+            [minDate]="minDate"
+            [maxDate]="maxDate"
+            [readonlyInput]="true"
+            dateFormat="dd/mm/yy"
+            [firstDayOfWeek]="1"
+          >
+            <ng-template pTemplate="inputicon">
+              <i class="material-icons pointer-events-none"> event </i>
+            </ng-template>
+          </p-calendar>
+        </div>
+
+        <!-- Selected number of people -->
+        <div class="flex flex-column gap-2">
+          <label for="guests">Choose number of people</label>
+          <p-dropdown
+            name="peopleNum"
+            [(ngModel)]="selectedPeopleNum"
+            [options]="peopleOptions"
+            optionLabel="label"
+            styleClass="w-10rem"
+          />
+        </div>
+      </form>
+    }
+  </div>
+
+  <ng-template pTemplate="footer">
+    @if (!isAgentView) {
+      <div class="w-full text-right">
+        <p-button
+          label="Next"
+          [disabled]="!selectedDate || !selectedPeopleNum"
+          (onClick)="handleCheckout()"
+        />
+      </div>
+    }
+  </ng-template>
+</p-card>

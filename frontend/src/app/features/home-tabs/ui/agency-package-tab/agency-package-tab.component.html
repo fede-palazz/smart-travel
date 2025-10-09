@@ -1,0 +1,93 @@
+<form class="formgrid grid" (ngSubmit)="submit()" [formGroup]="packageForm">
+  <!-- Destination location -->
+  <div class="field col-6 flex flex-column">
+    <label for="to">Destination</label>
+    <p-autoComplete
+      formControlName="to"
+      name="to"
+      showClear="true"
+      [suggestions]="toSuggestions"
+      (completeMethod)="onSearchTo($event)"
+      optionLabel="name"
+      inputStyleClass="w-full"
+      styleClass="w-full"
+      [ngClass]="
+        f['to'].touched && (f['to'].invalid || isToInvalid())
+          ? 'ng-invalid ng-dirty'
+          : ''
+      "
+    >
+      <ng-template let-dest pTemplate="item">
+        <div class="flex align-items-center gap-2">
+          <span class="material-icons">
+            @if (dest.type === "city") {
+              location_city
+            }
+            @if (dest.type === "region") {
+              landscape
+            }
+            @if (dest.type === "country") {
+              south_america
+            }
+          </span>
+          <div>{{ dest.name + " (" + dest.type + ")" }}</div>
+        </div>
+      </ng-template>
+    </p-autoComplete>
+    <small class="p-error" *ngIf="f['to'].invalid && f['to'].touched">
+      Destination is required
+    </small>
+    <small
+      class="p-error"
+      *ngIf="f['to'].touched && !f['to'].invalid && isToInvalid()"
+    >
+      Please choose a valid destination city
+    </small>
+  </div>
+
+  <!-- Date range calendar -->
+  <div class="field col-6 flex flex-column">
+    <label for="dates">Dates</label>
+    <p-calendar
+      formControlName="dates"
+      name="dates"
+      inputId="dates"
+      selectionMode="range"
+      [iconDisplay]="'input'"
+      [showIcon]="true"
+      [minDate]="today"
+      [readonlyInput]="true"
+      dateFormat="dd/mm/yy"
+      styleClass="w-full"
+      [firstDayOfWeek]="1"
+      [ngClass]="
+        f['dates'].touched && f['dates'].invalid ? 'ng-invalid ng-dirty' : ''
+      "
+    >
+      <ng-template pTemplate="inputicon">
+        <i class="material-icons pointer-events-none"> event </i>
+      </ng-template>
+    </p-calendar>
+    <small class="p-error" *ngIf="f['dates'].invalid && f['dates'].touched">
+      Departure and return dates are required
+    </small>
+  </div>
+  <div class="col-12 text-right">
+    @if (showCustomize) {
+      <button
+        pButton
+        pRipple
+        [outlined]="true"
+        severity="secondary"
+        label="Customize"
+        class="mr-2"
+        (click)="handleCustomizePackage()"
+      >
+        <span class="material-icons mr-1">settings</span>
+      </button>
+    }
+    <button pButton pRipple label="Search" [disabled]="isFormInvalid()">
+      <span class="material-icons mr-1">search</span>
+    </button>
+  </div>
+</form>

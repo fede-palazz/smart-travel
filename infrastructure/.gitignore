@@ -1,0 +1,9 @@
+# Ignore everything in */data
+**/data/*
+
+# Except the directory itself
+!**/data/.gitkeep
+
+# Ignore .env files
+.env
+.env.*

@@ -1,0 +1,47 @@
+<p-table
+  [value]="users"
+  [rows]="pageSize"
+  styleClass="p-datatable-striped p-datatable-gridlines"
+>
+  <ng-template pTemplate="header" let-columns>
+    <tr>
+      <th>ID</th>
+      <th>Lastname</th>
+      <th>Firstname</th>
+      <th>Email</th>
+      <th>Role</th>
+      <th>Actions</th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-user let-columns="columns">
+    <tr>
+      <td><span class="p-column-title">ID</span>{{ user.id }}</td>
+      <td><span class="p-column-title">Lastname</span>{{ user.lastname }}</td>
+      <td><span class="p-column-title">Firstname</span>{{ user.firstname }}</td>
+      <td><span class="p-column-title">Email</span>{{ user.email }}</td>
+      <td>
+        <span class="p-column-title">Role</span>
+        <p-tag [value]="user.role" [severity]="getSeverity(user.role)" />
+      </td>
+      <td>
+        <smt-users-actions
+          [user]="user"
+          (onDeleteUser)="handleDeleteUser($event)"
+        />
+      </td>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="summary">
+    <!-- Paginator -->
+    <p-paginator
+      styleClass="border-noround"
+      [first]="currentPage * pageSize"
+      [rows]="pageSize"
+      [totalRecords]="totalElements"
+      [alwaysShow]="false"
+      (onPageChange)="handlePageChange($event)"
+    />
+  </ng-template>
+</p-table>

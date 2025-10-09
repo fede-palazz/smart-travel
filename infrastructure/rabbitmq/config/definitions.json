@@ -1,0 +1,112 @@
+{
+  "rabbit_version": "4.1.2",
+  "rabbitmq_version": "4.1.2",
+  "product_name": "RabbitMQ",
+  "product_version": "4.1.2",
+  "rabbitmq_definition_format": "cluster",
+  "original_cluster_name": "rabbit@ebf7da22e119",
+  "explanation": "Definitions of cluster 'rabbit@ebf7da22e119'",
+  "users": [
+    {
+      "name": "user",
+      "password_hash": "b2rHa1+ByL6qrX7xPCa6D17gNxzhMybgm7rsS+sn29JewvGo",
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "tags": [
+        "administrator"
+      ],
+      "limits": {}
+    }
+  ],
+  "vhosts": [
+    {
+      "name": "/",
+      "description": "Default virtual host",
+      "metadata": {
+        "description": "Default virtual host",
+        "tags": [],
+        "default_queue_type": "classic"
+      },
+      "tags": []
+    }
+  ],
+  "permissions": [
+    {
+      "user": "user",
+      "vhost": "/",
+      "configure": ".*",
+      "write": ".*",
+      "read": ".*"
+    }
+  ],
+  "topic_permissions": [],
+  "parameters": [],
+  "global_parameters": [
+    {
+      "name": "cluster_tags",
+      "value": []
+    },
+    {
+      "name": "internal_cluster_id",
+      "value": "rabbitmq-cluster-id-9jn7P5_GJZf3c32Ofzx7-A"
+    }
+  ],
+  "policies": [],
+  "queues": [
+    {
+      "name": "orders_outbox_events",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "classic"
+      }
+    },
+    {
+      "name": "notification_events",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "classic"
+      }
+    }
+  ],
+  "exchanges": [
+    {
+      "name": "notification_events",
+      "vhost": "/",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "orders_outbox_events",
+      "vhost": "/",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    }
+  ],
+  "bindings": [
+    {
+      "source": "notification_events",
+      "vhost": "/",
+      "destination": "notification_events",
+      "destination_type": "queue",
+      "routing_key": "notification_events",
+      "arguments": {}
+    },
+    {
+      "source": "orders_outbox_events",
+      "vhost": "/",
+      "destination": "orders_outbox_events",
+      "destination_type": "queue",
+      "routing_key": "orders_outbox_events",
+      "arguments": {}
+    }
+  ]
+}

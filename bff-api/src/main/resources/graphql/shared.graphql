@@ -1,0 +1,151 @@
+##################
+## Shared Types ##
+##################
+
+type DestinationSummary {
+    destinationId: String!
+    city: String!
+    region: String!
+    country: Country!
+    coordinates: Coordinates!
+    timezone: String!
+}
+
+type FlightSummary {
+    flightId: String!
+    code: String!
+    airline: String!
+    airlineLogo: String!
+    from: FlightDestination!
+    to: FlightDestination!
+}
+
+type FlightDestination {
+    destinationId: String!
+    city: String!
+    region: String!
+    country: Country!
+    coordinates: Coordinates!
+    timezone: String!
+    airportCode: String!
+    airportName: String!
+}
+
+type AccommodationSummary {
+    accommodationId: String!
+    name: String!
+    type: String!
+    mainPicture: String!
+}
+
+type ActivitySummary {
+    activityId: String!
+    name: String!
+    type: String!
+    mainPicture: String!
+}
+
+type UserSummary {
+    userId: String!
+    email: String!
+    name: String!
+    surname: String!
+}
+
+type Country {
+    code: String!
+    name: String!
+}
+
+type Coordinates {
+    lat: Float!
+    lng: Float!
+}
+
+type Price {
+    value: Float!
+    currency: String!
+}
+
+type ReviewsSummary {
+    avgRating: Float!
+    totalCount: Int!
+}
+
+##################
+## Shared Input ##
+##################
+
+input FlightSummaryInput {
+    flightId: String!
+    code: String!
+    airline: String!
+    airlineLogo: String!
+    from: FlightDestinationInput!
+    to: FlightDestinationInput!
+}
+
+input FlightDestinationInput {
+    destinationId: String!
+    city: String!
+    region: String!
+    country: CountryInput!
+    coordinates: CoordinatesInput!
+    timezone: String!
+    airportCode: String!
+    airportName: String!
+}
+
+input AccommodationSummaryInput {
+    accommodationId: String!
+    name: String!
+    type: String!
+    mainPicture: String!
+}
+
+input ActivitySummaryInput {
+    activityId: String!
+    name: String!
+    type: String!
+    mainPicture: String!
+}
+
+input CountryInput {
+    code: String!
+    name: String!
+}
+
+input CoordinatesInput {
+    lat: Float!
+    lng: Float!
+}
+
+input DestinationSummaryInput {
+    destinationId: String!
+    city: String!
+    region: String!
+    country: CountryInput!
+    coordinates: CoordinatesInput!
+    timezone: String!
+}
+
+input PriceInput {
+    value: Float!
+    currency: String!
+}
+
+input UserSummaryInput {
+    userId: String!
+    email: String!
+    name: String!
+    surname: String!
+}
+
+##########
+## DTOs ##
+##########
+
+type OkRes {
+    id: ID!
+}
+

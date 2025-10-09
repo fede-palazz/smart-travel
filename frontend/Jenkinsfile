@@ -1,0 +1,71 @@
+pipeline {
+    agent none
+
+    environment {
+        // Docker image options
+        IMAGE_NAME = 'frontend'
+    }
+
+    stages {
+
+        stage('Build App') {
+            agent {
+                docker {
+                    image 'node:20-alpine'
+                    args '-u root'
+                }
+            }
+            steps {
+                script {
+                    // Extract version from package.json
+                    def version = sh(
+                            script: "node -p \"require('./package.json').version\"",
+                            returnStdout: true
+                    ).trim()
+                    env.IMAGE_TAG = version
+                    echo "Project version extracted from package.json: ${env.IMAGE_TAG}"
+                }
+                // Install dependencies and build Angular app
+                sh '''
+                  npm ci
+                  npm run build
+                '''
+                echo 'Successfully built Frontend'
+            }
+        }
+
+        stage('Build Docker Image') {
+            agent any
+            steps {
+                sh 'docker build -t $IMAGE_NAME:$IMAGE_TAG .'
+                echo 'Successfully built Docker image'
+            }
+        }
+
+        stage('Deploy Docker Image') {
+            agent any
+            steps {
+                echo 'Deploying Frontend Docker image'
+                withCredentials([usernamePassword(
+                    credentialsId: 'registry-creds',
+                    usernameVariable: 'REGISTRY_USER',
+                    passwordVariable: 'REGISTRY_PASS')
+                ]) {
+                    sh '''
+                        echo "Logging into Container registry..."
+                        echo $REGISTRY_PASS | docker login -u $REGISTRY_USER --password-stdin $REGISTRY_URL
+
+                        echo "Tagging image..."
+                        docker tag $IMAGE_NAME:$IMAGE_TAG $REGISTRY_URL/$REGISTRY_NAMESPACE/$IMAGE_NAME:$IMAGE_TAG
+
+                        echo "Pushing image..."
+                        docker push $REGISTRY_URL/$REGISTRY_NAMESPACE/$IMAGE_NAME:$IMAGE_TAG
+
+                        echo "Cleaning up local image..."
+                        docker rmi $REGISTRY_URL/$REGISTRY_NAMESPACE/$IMAGE_NAME:$IMAGE_TAG $IMAGE_NAME:$IMAGE_TAG || true
+                    '''
+                }
+                echo 'Successfully pushed and cleaned up Docker image'            }
+        }
+    }
+}

@@ -1,0 +1,57 @@
+extend type Query {
+    getUsers(page: Int, size: Int, sort: String, order: String, filters: UserFilter): UserPage!
+    getUserById(id: ID!): User
+    getUserByEmail(email: String!): User
+    getUsersList(name: String!, excludeCustomers: Boolean): [User]!
+}
+
+extend type Mutation {
+    addUser(userReq: UserReq!): User!
+    updateUser(id: ID!, userReq: UserReq!): User!
+    deleteUser(id: ID!): OkRes!
+}
+
+###########
+## Model ##
+###########
+
+type User {
+    id: ID!
+    email: String!
+    role: String!
+    firstname: String!
+    lastname: String!
+    fullname: String!
+}
+
+##########
+## DTOs ##
+##########
+
+input UserReq {
+    email: String!
+    password: String!
+    role: String!
+    firstname: String!
+    lastname: String!
+}
+
+######################
+## Paging / Filters ##
+######################
+
+type UserPage {
+    totalPages: Int!
+    totalElements: Int!
+    currentPage: Int!
+    elementsInPage: Int!
+    content: [User!]!
+}
+
+input UserFilter {
+    id: String
+    name: String
+    email: String
+    role: String
+}
+

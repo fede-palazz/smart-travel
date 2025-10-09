@@ -1,0 +1,31 @@
+<!-- Breadcrumb -->
+@if (step$ | async; as currentStep) {
+  <p-breadcrumb
+    [model]="currentStep === step.FLIGHT_DEPARTURE ? items.slice(0, 2) : items"
+    styleClass="p-1 my-3 pl-2"
+    (onItemClick)="handleChangeStep($event.item['index'])"
+  >
+    <ng-template pTemplate="item" let-item>
+      <div class="cursor-pointer flex align-items-center">
+        <span class="material-icons text-color mr-1">
+          {{ item.icon }}
+        </span>
+        <span class="text-color">{{ item.label }}</span>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="separator">
+      <span class="material-icons text-color"> chevron_right </span>
+    </ng-template>
+  </p-breadcrumb>
+}
+
+<smt-flight-view
+  [step$]="step$"
+  [params$]="flightParams$"
+  (onSelectFlight)="handleSelectFlight($event)"
+>
+  <smt-flight-tab
+    [params]="(flightParams$ | async)?.searchParams"
+    (onSearch)="handleFlightSearch($event)"
+  />
+</smt-flight-view>

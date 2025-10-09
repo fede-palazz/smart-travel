@@ -1,0 +1,12 @@
+<div class="min-h-screen min-w-full md:pt-2 md:px-3 flex flex-column">
+  <!-- Navbar -->
+  <smt-navbar *ngIf="showNavbar$ | async" />
+
+  <!-- App body -->
+  <div class="flex-grow-1 md:px-3">
+    <router-outlet />
+  </div>
+
+  <!-- Footer -->
+  <smt-footer />
+</div>

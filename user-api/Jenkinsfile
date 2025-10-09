@@ -1,0 +1,86 @@
+pipeline {
+    agent none
+
+    environment {
+        // Docker image options
+        IMAGE_NAME = 'user-api'
+    }
+
+    stages {
+
+        stage('Build Common') {
+            agent {
+                docker {
+                    image 'maven:3.9.6-eclipse-temurin-21'
+                    args '-u root -v $HOME/.m2:/root/.m2'
+                }
+            }
+            steps {
+                dir("${COMMON_DIR}") {
+                     git branch: "${env.COMMON_BRANCH}",
+                        url: "${env.COMMON_REPO}",
+                        credentialsId: 'gitlab-creds'
+                     sh 'mvn clean install -q -DskipTests'
+                     echo 'Successfully built common dependency'
+                }
+            }
+        }
+
+        stage('Build App') {
+            agent {
+                docker {
+                    image 'maven:3.9.6-eclipse-temurin-21'
+                    args '-u root -v $HOME/.m2:/root/.m2'
+                }
+            }
+            steps {
+                script {
+                    // Extract version from pom.xml
+                    def version = sh(
+                            script: "mvn help:evaluate -Dexpression=project.version -q -DforceStdout",
+                            returnStdout: true
+                    ).trim()
+                    env.IMAGE_TAG = version
+                    echo "Project version extracted from pom.xml: ${env.IMAGE_TAG}"
+                }
+                sh 'mvn clean package -DskipTests -q'
+                echo 'Successfully built User Api'
+            }
+        }
+
+        stage('Build Docker Image') {
+            agent any
+            steps {
+                sh 'docker build -t $IMAGE_NAME:$IMAGE_TAG .'
+                echo 'Successfully built Docker image'
+            }
+        }
+
+        stage('Deploy Docker Image') {
+            agent any
+            steps {
+                echo 'Deploying User Docker image'
+                withCredentials([usernamePassword(
+                    credentialsId: 'registry-creds',
+                    usernameVariable: 'REGISTRY_USER',
+                    passwordVariable: 'REGISTRY_PASS')
+                ]) {
+                    sh '''
+                        echo "Logging into Container registry..."
+                        echo $REGISTRY_PASS | docker login -u $REGISTRY_USER --password-stdin $REGISTRY_URL
+
+                        echo "Tagging image..."
+                        docker tag $IMAGE_NAME:$IMAGE_TAG $REGISTRY_URL/$REGISTRY_NAMESPACE/$IMAGE_NAME:$IMAGE_TAG
+
+                        echo "Pushing image..."
+                        docker push $REGISTRY_URL/$REGISTRY_NAMESPACE/$IMAGE_NAME:$IMAGE_TAG
+                        
+                        echo "Cleaning up local image..."
+                        docker rmi $REGISTRY_URL/$REGISTRY_NAMESPACE/$IMAGE_NAME:$IMAGE_TAG $IMAGE_NAME:$IMAGE_TAG || true
+                    '''
+                }
+                echo 'Successfully pushed and cleaned up Docker image' 
+            }
+        }
+    }
+}

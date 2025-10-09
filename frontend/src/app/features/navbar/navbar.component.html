@@ -1,0 +1,119 @@
+<p-menubar
+  [model]="
+    !user || user.role === role.CUSTOMER ? [activeItem || {}] : agentNavbarItems
+  "
+>
+  <!-- Brand -->
+  <ng-template pTemplate="start">
+    <smt-brand />
+  </ng-template>
+
+  <!-- Middle items -->
+  <ng-template pTemplate="item" let-item let-root="root">
+    @if (activeItem) {
+      <a
+        pRipple
+        [routerLink]="item.url"
+        class="flex align-items-center p-menuitem-link"
+      >
+        <span class="material-icons">{{ item.icon }}</span>
+        <span class="ml-2">{{ item.label }}</span>
+        @if (item.items) {
+          <i
+            [ngClass]="[
+              'pi',
+              root ? 'pi-angle-down ml-2' : 'pi-angle-right ml-auto',
+            ]"
+          ></i>
+        }
+      </a>
+    } @else if (!item.adminOnly || user?.role === role.ADMIN) {
+      <a
+        pRipple
+        [routerLink]="item.url"
+        class="flex align-items-center p-menuitem-link"
+      >
+        <span class="material-icons">{{ item.icon }}</span>
+        <span class="ml-2">{{ item.label }}</span>
+      </a>
+    }
+  </ng-template>
+
+  <!-- Right side -->
+  <ng-template pTemplate="end">
+    <div class="flex align-items-center gap-2">
+      @if (user) {
+        <ng-container
+          [ngTemplateOutlet]="loggedin"
+          [ngTemplateOutletContext]="{ user }"
+        />
+      } @else {
+        <ng-container *ngTemplateOutlet="unlogged" />
+      }
+    </div>
+  </ng-template>
+</p-menubar>
+
+<!-- 
+  *******************
+  **** TEMPLATES ****
+  *******************
+  -->
+
+<!-- Logged in user template -->
+<ng-template #loggedin let-user="user">
+  @if (user.role === role.AGENT || user.role === role.ADMIN) {
+    <p-tag
+      [value]="user.role | titlecase"
+      rounded="true"
+      severity="secondary"
+    />
+  }
+  <span>{{ "Hey, " + (user.firstname | titlecase) }}</span>
+  <p-avatar
+    [label]="user.firstname[0] + user.lastname[0]"
+    size="large"
+    shape="circle"
+    styleClass="cursor-pointer"
+    (click)="menu.toggle($event)"
+  />
+  <div class="card flex justify-content-center">
+    <p-menu #menu [model]="userMenuItems" [popup]="true" />
+  </div>
+</ng-template>
+
+<!-- Unlogged user template -->
+<ng-template #unlogged>
+  <p-button
+    label="Register"
+    severity="contrast"
+    [text]="true"
+    routerLink="/register"
+  />
+  <p-button
+    label="Login"
+    severity="secondary"
+    [raised]="true"
+    routerLink="/login"
+  />
+</ng-template>
+
+<!-- Agent/Admin navigation menu -->
+<ng-template #nav_menu>
+  <a
+    pRipple
+    routerLink="/dashboard/packages"
+    class="flex align-items-center p-menuitem-link"
+  >
+    <span class="material-icons">luggage</span>
+    <span class="ml-2">Packages</span>
+  </a>
+  <a
+    pRipple
+    routerLink="/dashboard/users"
+    class="flex align-items-center p-menuitem-link"
+  >
+    <span class="material-icons">people</span>
+    <span class="ml-2">Users</span>
+  </a>
+</ng-template>

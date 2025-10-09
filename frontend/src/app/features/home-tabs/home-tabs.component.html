@@ -1,0 +1,54 @@
+<p-card styleClass="border-round-xl">
+  <!-- Tabs header -->
+  <ng-template pTemplate="header">
+    <div class="border-round-xl overflow-hidden">
+      <p-tabMenu
+        [model]="items"
+        [activeItem]="activeItem"
+        [routerLink]="activeItem!.url"
+        [replaceUrl]="true"
+        (activeItemChange)="handleActiveItemChange($event)"
+      >
+        <ng-template pTemplate="item" let-item>
+          <a
+            class="p-menuitem-link flex align-items-center gap-2"
+            [ngClass]="activeItem === item ? 'text-primary' : ''"
+          >
+            <span class="material-icons">{{ item.icon }}</span>
+            <span>
+              {{ item.label }}
+            </span>
+          </a>
+        </ng-template>
+      </p-tabMenu>
+    </div>
+  </ng-template>
+
+  <!-- Tabs -->
+  @if (activeItem) {
+    @switch (activeItem.url) {
+      @case ("/home/packages") {
+        @if (showCustomPackageTab) {
+          <smt-custom-package-tab
+            (onSearch)="handleCustomPackageSearch($event)"
+            (onAgencyPackage)="handleViewAgencyPackage()"
+          />
+        } @else {
+          <smt-agency-package-tab
+            (onSearch)="handleAgencyPackageSearch($event)"
+            (onCustomizePackage)="handleViewCustomizedPackage()"
+          />
+        }
+      }
+      @case ("/home/flights") {
+        <smt-flight-tab (onSearch)="handleFlightSearch($event)" />
+      }
+      @case ("/home/stays") {
+        <smt-accommodation-tab (onSearch)="handleAccommodationSearch($event)" />
+      }
+      @case ("/home/activities") {
+        <smt-activity-tab (onSearch)="handleActivitySearch($event)" />
+      }
+    }
+  }
+</p-card>

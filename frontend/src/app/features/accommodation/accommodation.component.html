@@ -1,0 +1,9 @@
+<smt-accommodation-view
+  [params$]="accommodationParams$"
+  (onSelectAccommodation)="handleSelectAccommodation($event)"
+>
+  <smt-accommodation-tab
+    [params]="(accommodationParams$ | async)?.searchParams"
+    (onSearch)="handleAccommodationSearch($event)"
+  />
+</smt-accommodation-view>

@@ -1,0 +1,154 @@
+<p-fieldset styleClass="mb-5 mt-3">
+  <ng-template pTemplate="header">
+    <div class="flex align-items-center gap-2 px-2">
+      <span class="material-icons">info</span>
+      <span class="font-bold text-lg">Details</span>
+    </div>
+  </ng-template>
+
+  <div class="grid">
+    <!-- Check in -->
+    <div class="col-2 flex gap-2">
+      <span class="material-icons">login</span>
+      <div class="flex flex-column gap-2 mt-1">
+        <span><strong>Check-in</strong></span>
+        <span>{{ accommodationDetails.checkInTime }}</span>
+      </div>
+    </div>
+
+    <!-- Check out -->
+    <div class="col-2 flex gap-2">
+      <span class="material-icons">logout</span>
+      <div class="flex flex-column gap-2 mt-1">
+        <span><strong>Check-out</strong></span>
+        <span>{{ accommodationDetails.checkOutTime }}</span>
+      </div>
+    </div>
+
+    <!-- Languages -->
+    <div class="col flex gap-2">
+      <span class="material-icons">translate</span>
+      <div class="flex flex-column gap-2 mt-1">
+        <span><strong>Spoken languages</strong></span>
+        <div class="flex flex-wrap gap-1">
+          <p-chip
+            *ngFor="let lang of accommodationDetails.languages"
+            [label]="lang"
+            class="mr-2"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Services -->
+    <div class="col flex gap-2">
+      <span class="material-icons">room_service</span>
+      <div class="flex flex-column gap-2 mt-1">
+        <span><strong>Services</strong></span>
+        <div class="flex flex-wrap gap-1">
+          <p-chip
+            *ngFor="let service of accommodationDetails.services"
+            [label]="service"
+            class="mr-2"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</p-fieldset>
+
+<!-- Policies -->
+<p-fieldset styleClass="mb-5">
+  <ng-template pTemplate="header">
+    <div class="flex align-items-center gap-2 px-2">
+      <span class="material-icons">policy</span>
+      <span class="font-bold text-lg">Policies</span>
+    </div>
+  </ng-template>
+
+  <div class="grid">
+    <!-- Cancellation -->
+    <div class="col flex gap-2">
+      <span class="material-icons">event_busy</span>
+      <div class="flex flex-column gap-1 mt-1">
+        <span><strong>Cancellation</strong></span>
+        <span>{{ accommodationDetails.policies.cancellation }}</span>
+      </div>
+    </div>
+
+    <!-- Payment -->
+    <div class="col flex gap-2">
+      <span class="material-icons">payment</span>
+      <div class="flex flex-column gap-1 mt-1">
+        <span><strong>Payment</strong></span>
+        <span>{{ accommodationDetails.policies.payment }}</span>
+      </div>
+    </div>
+
+    <!-- Pets -->
+    <div class="col flex gap-2" *ngIf="accommodationDetails.policies.pets">
+      <span class="material-icons">pets</span>
+      <div class="flex flex-column gap-1 mt-1">
+        <span><strong>Pets</strong></span>
+        <span>{{ accommodationDetails.policies.pets }}</span>
+      </div>
+    </div>
+  </div>
+</p-fieldset>
+
+<!-- Contacts -->
+<p-fieldset styleClass="mb-3">
+  <ng-template pTemplate="header">
+    <div class="flex align-items-center gap-2 px-2">
+      <span class="material-icons">chat</span>
+      <span class="font-bold text-lg">Contacts</span>
+    </div>
+  </ng-template>
+
+  <div class="w-full grid">
+    <!-- Phone -->
+    <div class="col flex gap-2">
+      <span class="material-icons">phone</span>
+      <div class="flex flex-column gap-2 mt-1">
+        <span><strong>Phone</strong></span>
+        <a
+          [href]="'tel:' + accommodationDetails.contacts.phone"
+          class="text-primary hover:underline"
+        >
+          {{ accommodationDetails.contacts.phone }}
+        </a>
+      </div>
+    </div>
+
+    <!-- Email -->
+    <div class="col flex gap-2">
+      <span class="material-icons">email</span>
+      <div class="flex flex-column gap-2 mt-1">
+        <span><strong>E-mail</strong></span>
+        <a
+          [href]="'mailto:' + accommodationDetails.contacts.email"
+          class="text-primary hover:underline"
+        >
+          {{ accommodationDetails.contacts.email }}
+        </a>
+      </div>
+    </div>
+
+    <!-- Website -->
+    @if (accommodationDetails.contacts.website) {
+      <div class="col flex gap-2">
+        <span class="material-icons">share</span>
+        <div class="flex flex-column gap-2 mt-1">
+          <span><strong>Website</strong></span>
+          <a
+            [href]="accommodationDetails.contacts.website"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-primary hover:underline"
+            >{{ accommodationDetails.contacts.website }}
+          </a>
+        </div>
+      </div>
+    }
+  </div>
+</p-fieldset>

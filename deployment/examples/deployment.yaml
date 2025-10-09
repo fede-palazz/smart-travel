@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak
+  namespace: stage-palazzi
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: keycloak
+  template:
+    metadata:
+      labels:
+        app: keycloak
+    spec:
+      containers:
+        - name: keycloak
+          image: image-registry.openshift-image-registry.svc:5000/stage-clemente/keycloak:v1
+          ports:
+            - containerPort: 8080
+          command: ["/opt/keycloak/bin/kc.sh"]
+          args: ["start-dev"]
+          env:
+            - name: KC_BOOTSTRAP_ADMIN_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-secret
+                  key: KC_BOOTSTRAP_ADMIN_USERNAME
+            - name: KC_BOOTSTRAP_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-secret
+                  key: KC_BOOTSTRAP_ADMIN_PASSWORD
+          envFrom:
+            - configMapRef:
+                name: keycloak
+          volumeMounts:
+            - name: keycloak-storage
+              mountPath: /opt/keycloak/data
+      volumes:
+          - name: keycloak-storage
+            persistentVolumeClaim:
+              claimName: pvc-ebs-esistente

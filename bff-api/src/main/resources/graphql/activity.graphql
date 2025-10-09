@@ -1,0 +1,111 @@
+extend type Query {
+    getActivities(page: Int, size: Int, sort: String, order: String, timezone: String, filters: ActivityFilter): ActivityPage!
+    getActivityById(id: ID!): Activity
+}
+
+extend type Mutation {
+    addActivity(activityReq: ActivityReq!): Activity!
+    updateActivity(id: ID!, activityReq: ActivityReq!): Activity!
+    deleteActivity(id: ID!): OkRes!
+}
+
+###########
+## Model ##
+###########
+
+type Activity {
+    id: ID!
+    name: String!
+    type: String!
+    description: String!
+    notes: String
+    address: String!
+    coordinates: Coordinates!
+    destination: DestinationSummary!
+    mainPicture: String!
+    pictures: [String!]
+    tags: [String!]
+    languages: [String!]
+    schedule: Schedule!
+    price: Price!
+    reviewsSummary: ReviewsSummary!
+}
+
+##########
+## DTOs ##
+##########
+
+input ActivityReq {
+    name: String!
+    type: String!
+    description: String!
+    notes: String
+    address: String!
+    coordinates: CoordinatesInput!
+    destination: DestinationSummaryInput!
+    mainPicture: String!
+    pictures: [String!]
+    tags: [String!]
+    languages: [String!]
+    schedule: ScheduleInput!
+    price: PriceInput!
+}
+
+######################
+## Paging / Filters ##
+######################
+
+type ActivityPage {
+    totalPages: Int!
+    totalElements: Int!
+    currentPage: Int!
+    elementsInPage: Int!
+    content: [Activity!]!
+}
+
+input ActivityFilter {
+    name: String
+    types: [String!]
+    description: String
+    address: String
+    city: String
+    region: String
+    country: String
+    tags: [String!]
+    languages: [String!]
+    minPrice: Float
+    maxPrice: Float
+    minRating: Float
+    startDate: String
+    endDate: String
+}
+
+###################
+## Private Types ##
+###################
+
+type Schedule {
+    startDate: String!  # ISO 8601 date-time string (yyyy-mm-dd)
+    endDate: String!
+    durationMinutes: Int!
+    recurrence: ScheduleRecurrence!
+}
+
+type ScheduleRecurrence {
+    daysOfWeek: [String!]
+    startTime: String!
+    endTime: String!
+}
+
+input ScheduleInput {
+    startDate: String!  # ISO 8601 date-time string (yyyy-mm-dd)
+    endDate: String!
+    durationMinutes: Int!
+    recurrence: ScheduleRecurrenceInput
+}
+
+input ScheduleRecurrenceInput {
+    daysOfWeek: [String!]
+    startTime: String!
+    endTime: String!
+}

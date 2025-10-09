@@ -1,0 +1,67 @@
+<p-table
+  [value]="orders"
+  [rows]="pageSize"
+  styleClass="p-datatable-striped p-datatable-gridlines"
+>
+  <ng-template pTemplate="header" let-columns>
+    <tr>
+      <th>Code</th>
+      <th>Customer</th>
+      <th>Email</th>
+      <th>Amount</th>
+      <th>Payment date</th>
+      <th>Type</th>
+      <th>Actions</th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-order let-columns="columns">
+    <tr>
+      <td><span class="p-column-title">Code</span>{{ order.id }}</td>
+      <td>
+        <span class="p-column-title">Customer</span
+        >{{ order.customerInfo.name }} {{ order.customerInfo.surname }}
+      </td>
+      <td>
+        <span class="p-column-title">Email</span>{{ order.customerInfo.email }}
+      </td>
+      <td>
+        <span class="p-column-title">Amount</span
+        >{{
+          order.payment.amount.value | currency: order.payment.amount.currency
+        }}
+      </td>
+      <td>
+        <span class="p-column-title">Payment date</span
+        >{{
+          order.payment.status !== "CANCELLED"
+            ? (order.payment.paidAt | date: "d/MM/yyy HH:mm:ss")
+            : "CANCELLED"
+        }}
+      </td>
+      <td>
+        <span class="p-column-title">Type</span>
+        <p-tag [value]="order.type" [severity]="getSeverity(order.type)" />
+      </td>
+      <td>
+        <smt-orders-actions
+          [order]="order"
+          (onViewDetails)="handleViewDetails($event)"
+          (onViewPackage)="handleViewPackage($event)"
+        />
+      </td>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="summary">
+    <!-- Paginator -->
+    <p-paginator
+      styleClass="border-noround"
+      [first]="currentPage * pageSize"
+      [rows]="pageSize"
+      [totalRecords]="totalElements"
+      [alwaysShow]="false"
+      (onPageChange)="handlePageChange($event)"
+    />
+  </ng-template>
+</p-table>

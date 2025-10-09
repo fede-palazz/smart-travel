@@ -1,0 +1,72 @@
+<div class="flex flex-column pt-2">
+  <!-- Title bar -->
+  <div class="flex justify-content-between align-items-center mt-4 mb-3">
+    <p class="text-3xl text-800 m-0">Users</p>
+    <button
+      pButton
+      pRipple
+      severity="primary"
+      label="Add user"
+      (click)="displayNewUserDialog = true"
+    >
+      <span class="material-icons mr-1">add</span>
+    </button>
+  </div>
+  <p-toast />
+
+  <!-- Filters -->
+  @if ((filters$ | async)?.filterParams; as filters) {
+    <smt-users-filter
+      [isVisible]="displayFilters"
+      (onClose)="displayFilters = false"
+      (onFilter)="handleFilter($event)"
+    />
+  }
+
+  <!-- Add user dialog -->
+  @if (displayNewUserDialog) {
+    <smt-users-new
+      [isVisible]="displayNewUserDialog"
+      [isLoading]="addUserLoading"
+      (onClose)="displayNewUserDialog = false"
+      (onSubmit)="handleAddUser($event)"
+    />
+  }
+
+  <!-- Data visualization -->
+  <p-card>
+    @if (users$ | async; as users) {
+      <p-dataView #dv [value]="users.data?.content ?? []" [layout]="'list'">
+        <ng-template pTemplate="header">
+          <smt-users-toolbar
+            [filterCounter]="(filterCounter$ | async) ?? 0"
+            (onDisplayFilters)="displayFilters = true"
+            (onSearch)="handleSearch($event)"
+          />
+        </ng-template>
+
+        <!-- Table view -->
+        <ng-template pTemplate="list" let-packages>
+          @if (users.loading) {
+            <smt-agency-packages-table-skeleton />
+          } @else if (users.error) {
+            <smt-not-found type="error" />
+          } @else if (users.data) {
+            <div class="grid grid-nogutter">
+              <div class="w-full px-2">
+                <smt-users-table
+                  [pageSize]="pageSize"
+                  [users]="users.data.content"
+                  [totalElements]="users.data.totalElements"
+                  [currentPage]="users.data.currentPage"
+                  (onPageChange)="handlePageChange($event)"
+                  (onDeleteUser)="handleDeleteUser($event)"
+                />
+              </div>
+            </div>
+          }
+        </ng-template>
+      </p-dataView>
+    }
+  </p-card>
+</div>

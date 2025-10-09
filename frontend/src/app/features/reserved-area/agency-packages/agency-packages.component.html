@@ -1,0 +1,100 @@
+<div class="flex flex-column pt-2">
+  <!-- Title bar -->
+  <div class="flex justify-content-between align-items-center mt-4 mb-3">
+    <p class="text-3xl text-800 m-0">Packages</p>
+    <button
+      pButton
+      pRipple
+      severity="primary"
+      label="Add package"
+      (click)="displayPackageSearchTab = true"
+    >
+      <span class="material-icons mr-1">add</span>
+    </button>
+  </div>
+
+  <!-- Filters -->
+  @if ((filters$ | async)?.filterParams; as filters) {
+    <smt-agency-packages-filter
+      [isVisible]="displayFilters"
+      (onClose)="displayFilters = false"
+      (onFilter)="handleFilter($event)"
+    />
+  }
+
+  <!-- Add package search popup -->
+  <smt-agency-packages-search
+    [isVisible]="displayPackageSearchTab"
+    (onClose)="displayPackageSearchTab = false"
+    (onSearch)="handleAddPackageSearch($event)"
+  />
+
+  <!-- Data visualization -->
+  <p-card>
+    @if (agencyPackages$ | async; as agencyPackages) {
+      <p-dataView
+        #dv
+        [value]="agencyPackages.data?.content ?? []"
+        [layout]="dvLayout"
+      >
+        <ng-template pTemplate="header">
+          <smt-agency-packages-toolbar
+            [layout]="dvLayout"
+            [filterCounter]="(filterCounter$ | async) ?? 0"
+            (onLayoutChange)="handleLayoutChange($event)"
+            (onDisplayFilters)="displayFilters = true"
+            (onSearch)="handleSearch($event)"
+          />
+        </ng-template>
+
+        <!-- Table view -->
+        <ng-template pTemplate="list" let-packages>
+          @if (agencyPackages.loading) {
+            <smt-agency-packages-table-skeleton />
+          } @else if (agencyPackages.error) {
+            <smt-not-found type="error" />
+          } @else if (agencyPackages.data) {
+            <div class="grid grid-nogutter">
+              <div class="w-full px-2">
+                <smt-agency-packages-table
+                  [pageSize]="pageSize"
+                  [packages]="agencyPackages.data.content"
+                  [totalElements]="agencyPackages.data.totalElements"
+                  [currentPage]="agencyPackages.data.currentPage"
+                  (onPageChange)="handlePageChange($event)"
+                  (onArchivePackage)="handleArchivePackage($event)"
+                  (onDeletePackage)="handleDeletePackage($event)"
+                  (onPublishPackage)="handlePublishPackage($event)"
+                  (onViewDetails)="handleViewDetails($event)"
+                />
+              </div>
+            </div>
+          }
+        </ng-template>
+
+        <!-- Card view -->
+        <ng-template pTemplate="grid" let-packages>
+          @if (agencyPackages.loading) {
+            <smt-agency-packages-card-skeleton />
+          } @else if (agencyPackages.error) {
+            <smt-not-found type="error" />
+          } @else if (agencyPackages.data) {
+            <div class="grid grid-nogutter">
+              @for (package of packages; track package.id) {
+                <div class="col-12 sm:col-6 lg:col-4 xl:col-3 p-2">
+                  <smt-agency-packages-card
+                    [package]="package"
+                    (onViewDetails)="handleViewDetails($event)"
+                  />
+                </div>
+              } @empty {
+                <smt-not-found type="package" />
+              }
+            </div>
+          }
+        </ng-template>
+      </p-dataView>
+    }
+  </p-card>
+</div>
+<p-toast />

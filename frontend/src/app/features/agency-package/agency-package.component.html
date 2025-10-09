@@ -1,0 +1,73 @@
+<!-- Agency package search accordion -->
+<p-accordion
+  styleClass="mt-3"
+  expandIcon="pi pi-search-plus"
+  collapseIcon="pi pi-search-minus"
+  [(activeIndex)]="accordionItemIndex"
+>
+  @if ((params$ | async)?.searchParams; as params) {
+    <p-accordionTab>
+      <!-- Search info -->
+      <ng-template pTemplate="header">
+        <div class="grid w-full align-items-center py-0">
+          <div class="col-6">
+            <smt-text type="title" class="mr-2">{{
+              params.to | titlecase
+            }}</smt-text>
+          </div>
+          <!-- Dates -->
+          <div class="col-6">
+            <smt-text type="subtitle">
+              {{ (params.startDate | date: "EEE, d MMM")! }}
+              -
+              {{ (params.endDate | date: "EEE, d MMM")! }}
+            </smt-text>
+          </div>
+        </div>
+      </ng-template>
+
+      <!-- Agency package search form -->
+      <smt-agency-package-tab
+        [params]="params"
+        [showCustomize]="false"
+        (onSearch)="handlePackageSearch($event)"
+      />
+    </p-accordionTab>
+  }
+</p-accordion>
+
+<!-- Agency package list and filters -->
+<div class="grid">
+  <div class="col-3 pl-0">
+    @if ((params$ | async)?.filterParams; as filters) {
+      <smt-agency-package-filter
+        [name]="filters.name"
+        [tags]="filters.tags"
+        [minPrice]="filters.minPrice"
+        [maxPrice]="filters.maxPrice"
+        (onFilter)="handleFilter($event)"
+      />
+    }
+  </div>
+  <div class="col pr-0">
+    @if (packages$ | async; as packages) {
+      @if (packages.loading) {
+        <smt-agency-package-skeleton />
+      } @else if (packages.error) {
+        <smt-not-found type="error" />
+      } @else if (packages.data) {
+        @if (packages.data.elementsInPage === 0) {
+          <smt-not-found type="package" />
+        } @else {
+          <smt-agency-package-list
+            [packages]="packages.data.content"
+            [totalElements]="packages.data.totalElements"
+            [currentPage]="packages.data.currentPage"
+            (onPageChange)="handlePageChange($event)"
+            (onSelectAgencyPackage)="handleSelectAgencyPackage($event)"
+          />
+        }
+      }
+    }
+  </div>
+</div>

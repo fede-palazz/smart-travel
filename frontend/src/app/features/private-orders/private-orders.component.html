@@ -1,0 +1,30 @@
+<div class="flex flex-column pt-2">
+  <!-- Title bar -->
+  <div class="flex justify-content-between align-items-center mt-4 mb-3">
+    <p class="text-3xl text-800 m-0">My orders</p>
+  </div>
+
+  @if (displayedOrderId) {
+    <!-- Order details -->
+    <smt-orders-details
+      [orderId]="displayedOrderId"
+      (onClose)="handleClose()"
+    />
+  }
+
+  <!-- Data visualization -->
+  <p-card header="List of your last orders" styleClass="px-6 py-2">
+    @if (orders$ | async; as orders) {
+      @if (orders.loading) {
+        <smt-agency-packages-table-skeleton />
+      } @else if (orders.error) {
+        <smt-not-found type="error" />
+      } @else if (orders.data) {
+        <smt-private-orders-list
+          [orders]="orders.data.content"
+          (onViewDetails)="handleViewDetails($event)"
+        />
+      }
+    }
+  </p-card>
+</div>

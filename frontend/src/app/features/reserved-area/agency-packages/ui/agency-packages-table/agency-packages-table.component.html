@@ -1,0 +1,67 @@
+<p-table
+  [value]="packages"
+  [rows]="pageSize"
+  styleClass="p-datatable-striped p-datatable-gridlines"
+>
+  <ng-template pTemplate="header" let-columns>
+    <tr>
+      <th>Name</th>
+      <th>Destination</th>
+      <th>Dates</th>
+      <th>People</th>
+      <th>Price</th>
+      <th>Author</th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-package let-columns="columns">
+    <tr>
+      <td><span class="p-column-title">Name</span>{{ package.name }}</td>
+      <td>
+        <span class="p-column-title">Destination</span
+        >{{ package.destination.city }}
+      </td>
+      <td>
+        <span class="p-column-title">Dates</span
+        >{{ package.startDate | date: "d/MM/yyy" }} -
+        {{ package.endDate | date: "d/MM/yyy" }}
+      </td>
+      <td><span class="p-column-title">People</span>{{ package.quantity }}</td>
+      <td>
+        <span class="p-column-title">Price</span
+        >{{ package.totalPrice.value | currency: package.totalPrice.currency }}
+      </td>
+      <td>
+        <span class="p-column-title">Author</span>{{ package.agentInfo.name }}
+        {{ package.agentInfo.surname }}
+      </td>
+      <td>
+        <span class="p-column-title">Status</span>
+        <p-tag [value]="package.status" [severity]="getSeverity(package)" />
+      </td>
+      <td>
+        <smt-agency-packages-actions
+          [agencyPackage]="package"
+          (onArchivePackage)="handleArchivePackage($event)"
+          (onDeletePackage)="handleDeletePackage($event)"
+          (onPublishPackage)="handlePublishPackage($event)"
+          (onViewDetails)="handleViewDetails($event)"
+        />
+      </td>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="summary">
+    <!-- Paginator -->
+    <p-paginator
+      styleClass="border-noround"
+      [first]="currentPage * pageSize"
+      [rows]="pageSize"
+      [totalRecords]="totalElements"
+      [alwaysShow]="false"
+      (onPageChange)="handlePageChange($event)"
+    />
+  </ng-template>
+</p-table>

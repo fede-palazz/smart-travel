@@ -1,0 +1,52 @@
+<p-dataView #dv [value]="orders" [layout]="'list'">
+  <ng-template pTemplate="list" let-orders>
+    <div class="flex flex-column">
+      <div class="grid grid-nogutter pt-3">
+        <div class="col-3 ml-6"><span>Type</span></div>
+        <div class="col-3 flex ml-8"><span>Date</span></div>
+        <div class="col-3 flex">
+          <span>Amount</span>
+        </div>
+        <div class="col-3 flex justify-content-center"></div>
+      </div>
+      @for (order of orders; let first = $first; track order.id) {
+        <div
+          class="grid grid-nogutter p-4 gap-3"
+          [ngClass]="{ 'border-top-1 surface-border': !first }"
+        >
+          <!-- Order info -->
+          <div class="col flex align-items-center">
+            <p-tag
+              icon="pi pi-tag"
+              [value]="order.type"
+              [severity]="getSeverity(order.type)"
+            />
+          </div>
+
+          <!-- Date -->
+          <div class="col flex align-items-center justify-content-center">
+            <span>{{ order.createdAt | date: "EEE, dd MMMM yyy" }}</span>
+          </div>
+
+          <!-- Price -->
+          <div class="col flex align-items-center justify-content-center">
+            <span class="text-xl text-900">
+              {{ order.payment.amount.value | currency: "EUR" }}
+            </span>
+          </div>
+
+          <!-- View details -->
+          <div
+            class="col flex flex-column justify-content-end md:align-items-end gap-3 pb-2"
+          >
+            <!-- Actions -->
+            <p-button
+              label="View details"
+              (onClick)="handleViewDetails(order)"
+            />
+          </div>
+        </div>
+      }
+    </div>
+  </ng-template>
+</p-dataView>

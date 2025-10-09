@@ -1,0 +1,70 @@
+extend type Query {
+    getDestinations(page: Int, size: Int, sort: String, order: String, filters: DestinationFilter): DestinationPage!
+    getDestinationById(id: ID!): Destination
+    getDestinationsList(name: String!): [DestinationSearch]!
+}
+
+extend type Mutation {
+    addDestination(destinationReq: DestinationReq!): Destination!
+    updateDestination(id: ID!, destinationReq: DestinationReq!): Destination!
+    deleteDestination(id: ID!): OkRes!
+}
+
+###########
+## Model ##
+###########
+
+type Destination {
+    id: ID!
+    city: String!
+    region: String!
+    country: Country!
+    coordinates: Coordinates!
+    description: String!
+    pictures: [String!]
+    tags: [String!]
+    popularityScore: Int!
+    timezone: String!
+}
+
+##########
+## DTOs ##
+##########
+
+input DestinationReq {
+    city: String!
+    region: String!
+    country: CountryInput!
+    coordinates: CoordinatesInput!
+    description: String!
+    pictures: [String!]
+    tags: [String!]
+    popularityScore: Int!
+    timezone: String!
+}
+
+######################
+## Paging / Filters ##
+######################
+
+type DestinationPage {
+    totalPages: Int!
+    totalElements: Int!
+    currentPage: Int!
+    elementsInPage: Int!
+    content: [Destination!]!
+}
+
+input DestinationFilter {
+    city: String
+    region: String
+    countryCode: String
+    minPopularity: Int
+    maxPopularity: Int
+    tags: [String!]
+}
+
+type DestinationSearch {
+    name: String!
+    type: String!
+}

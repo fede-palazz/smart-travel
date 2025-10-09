@@ -1,0 +1,215 @@
+<p-card class="checkout-container">
+  <div class="flex flex-column">
+    <smt-text type="title">Review your choices</smt-text>
+    <smt-text type="subtitle">You can still change your selections</smt-text>
+  </div>
+  <div class="flex flex-column">
+    <!-- Departure flight -->
+    @if (departureFlight) {
+      <smt-text type="title" className="mt-3">Departure flight</smt-text>
+      <ng-container
+        [ngTemplateOutlet]="flightTemplate"
+        [ngTemplateOutletContext]="{ flight: departureFlight }"
+      />
+    }
+
+    <!-- Return flight -->
+    @if (returnFlight) {
+      <smt-text type="title" className="mt-3">Return flight</smt-text>
+      <ng-container
+        [ngTemplateOutlet]="flightTemplate"
+        [ngTemplateOutletContext]="{ flight: returnFlight }"
+      />
+    }
+
+    <!-- Accommodation -->
+    @if (accommodation) {
+      <smt-text type="title" className="mt-3">Stay</smt-text>
+      <ng-container
+        [ngTemplateOutlet]="accommodationTemplate"
+        [ngTemplateOutletContext]="{ stay: accommodation }"
+      />
+    }
+
+    <!-- Activities -->
+    @if (activities) {
+      <smt-text type="title" className="mt-3">Activities</smt-text>
+      <ng-container
+        [ngTemplateOutlet]="activitiesTemplate"
+        [ngTemplateOutletContext]="{ activities: activities }"
+      />
+      <div class="pt-4 w-full text-right">
+        <p-button
+          label="Add activity"
+          icon="pi pi-plus"
+          severity="success"
+          (onClick)="handleAddActivity()"
+        />
+      </div>
+    }
+  </div>
+
+  <p-divider />
+
+  <!-- Price to pay -->
+  <div class="w-full grid">
+    <ng-container *ngTemplateOutlet="totalPrice" />
+  </div>
+
+  <!-- Footer -->
+  <ng-template pTemplate="footer">
+    <p-confirmPopup />
+    <div class="col-12 flex justify-content-end gap-3 mt-1 w-full">
+      @if (isAgentView) {
+        <p-button
+          pButton
+          pRipple
+          label="Next"
+          severity="primary"
+          (click)="handleCheckout()"
+        />
+      } @else {
+        <p-button
+          label="Cancel order"
+          severity="danger"
+          outlined="true"
+          icon="pi pi-times"
+          [disabled]="isCheckingOut"
+          (onClick)="handleCancelOrder($event)"
+        />
+        <p-button
+          label="Checkout order"
+          icon="pi pi-paypal"
+          iconPos="right"
+          [loading]="isCheckingOut"
+          (onClick)="handleCheckout()"
+          [disabled]="isOrderEmpty()"
+        />
+      }
+    </div>
+  </ng-template>
+</p-card>
+
+<!-- 
+*******************
+**** TEMPLATES ****
+*******************
+-->
+
+<!-- Flight -->
+<ng-template #flightTemplate let-flight="flight">
+  <div class="flex mb-2 gap-3 flex-wrap">
+    <span>
+      <strong>Date:</strong>
+      {{
+        flight.departureTime
+          | date: "dd/MM/yyyy" : dateUtils.getUtcOffset(flight.from.timezone)
+      }}
+    </span>
+    <span>
+      <strong>Quantity:</strong>
+      {{ flight.quantity }}
+    </span>
+  </div>
+  <smt-flight-review
+    [flight]="flight"
+    (onEditFlight)="handleEditFlight($event)"
+  />
+</ng-template>
+
+<!-- Accommodation -->
+<ng-template #accommodationTemplate let-stay="stay">
+  <div class="flex mb-2 gap-3 flex-wrap">
+    <span>
+      <strong>Dates:</strong>
+      {{ stay.startDate | date: "dd/MM/yyyy" }} -
+      {{ stay.endDate | date: "dd/MM/yyyy" }}
+    </span>
+    <span>
+      <strong>Nights:</strong>
+      {{ getAccommodationNightNumber() }}
+    </span>
+  </div>
+  <smt-accommodation-review
+    [accommodation]="stay"
+    (onEditAccommodation)="handleEditAccommodation()"
+  />
+</ng-template>
+
+<!-- Activities -->
+<ng-template #activitiesTemplate let-activities="activities">
+  @for (activity of activities; track activity.activityId) {
+    <div class="mb-2">
+      <div class="flex mb-2 gap-3 flex-wrap">
+        <span>
+          <strong>Date:</strong>
+          {{ activity.date | date: "dd/MM/yyyy" }}
+        </span>
+        <span>
+          <strong>Quantity:</strong>
+          {{ activity.quantity }}
+        </span>
+      </div>
+      <smt-activity-review
+        [activity]="activity"
+        (onDeleteActivity)="handleDeleteActivity($event)"
+      />
+    </div>
+  }
+</ng-template>
+
+<!-- Total price -->
+<ng-template #totalPrice>
+  <span class="col-12 font-bold text-lg">Cost overview</span>
+
+  <!-- Departure flight -->
+  @if (departureFlight) {
+    <div class="col-6">Departure flight</div>
+    <div class="col-6 text-right">
+      {{
+        departureFlight.price.value | currency: departureFlight.price.currency
+      }}
+      x {{ departureFlight.quantity }} people
+    </div>
+  }
+  <!-- Return flight -->
+  @if (returnFlight) {
+    <div class="col-6">Return flight</div>
+    <div class="col-6 text-right">
+      {{ returnFlight.price.value | currency: returnFlight.price.currency }} x
+      {{ returnFlight.quantity }} people
+    </div>
+  }
+  <!-- Accommodation -->
+  @if (accommodation) {
+    <div class="col-6">Stay</div>
+    <div class="col-6 text-right">
+      {{
+        getRoomsTotalPrice()
+          | currency: accommodation.rooms[0].pricePerNight.currency
+      }}
+      x {{ getAccommodationNightNumber() }} nights
+    </div>
+  }
+  <!-- Activities -->
+  @if (activities && activities.length > 0) {
+    <div class="col-6">Activities</div>
+    <div class="col-6 text-right">
+      @for (
+        activity of activities;
+        let last = $last;
+        track activity.activityId
+      ) {
+        {{ activity.price.value | currency: activity.price.currency }} x
+        {{ activity.quantity }} people
+        {{ !last ? " ," : "" }}
+      }
+    </div>
+  }
+
+  <!-- Final price -->
+  <div class="col-6 font-bold">Total</div>
+  <div class="col-6 text-right font-bold">
+    {{ getTotalPrice() | currency: "EUR" }}
+  </div>
+</ng-template>

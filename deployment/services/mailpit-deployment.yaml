@@ -1,0 +1,95 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mailpit
+  namespace: stage-palazzi
+  labels:
+    app: mailpit
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: mailpit
+  template:
+    metadata:
+      labels:
+        app: mailpit
+    spec:
+      containers:
+      - name: mailpit
+        image: axllent/mailpit:v1.27
+        ports:
+        - containerPort: 1025
+          name: smtp
+          protocol: TCP
+        - containerPort: 8025
+          name: web
+          protocol: TCP
+        env:
+        - name: TZ
+          value: "Europe/Rome"
+        # Health checks - TCP socket probe since no actuator
+        # livenessProbe:
+        #   tcpSocket:
+        #     port: 8085
+        #   initialDelaySeconds: 60
+        #   periodSeconds: 30
+        #   timeoutSeconds: 10
+        # readinessProbe:
+        #   tcpSocket:
+        #     port: 8085
+        #   initialDelaySeconds: 30
+        #   periodSeconds: 10
+        #   timeoutSeconds: 5
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mailpit-smtp
+  labels:
+    app: mailpit
+spec:
+  type: ClusterIP
+  ports:
+  - port: 1025
+    targetPort: 1025
+    protocol: TCP
+    name: smtp
+  selector:
+    app: mailpit
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mailpit-web
+  labels:
+    app: mailpit
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8087
+    targetPort: 8025
+    protocol: TCP
+    name: web
+  selector:
+    app: mailpit
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: mailpit-route
+  namespace: stage-palazzi
+  labels:
+    app: mailpit
+spec:
+  host: mailpit.apps.stage-soldi-okd.lutechstage.com
+  to:
+    kind: Service
+    name: mailpit-web
+  port:
+    targetPort: web  # Reference the named port in service
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect

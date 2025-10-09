@@ -1,0 +1,16 @@
+<!-- Quick actions -->
+<smt-quick-actions-bar (onNavigateBack)="handleNavigateBack()" />
+
+@if (activityDetails$ | async; as activity) {
+  @if (activity.loading) {
+    <p>Loading...</p>
+  } @else if (activity.error) {
+    <smt-not-found type="error" />
+  } @else if (activity.data) {
+    <smt-activity-details-card
+      [activity]="activity.data"
+      [isAgentView]="isAgentView"
+      (onCheckout)="handleCheckout($event)"
+    />
+  }
+}
