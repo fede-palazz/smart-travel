@@ -1,1 +1,1 @@
-# smart-travel
+# Smart Travel
