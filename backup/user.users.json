@@ -1,0 +1,66 @@
+[{
+  "_id": {
+    "$oid": "68d5c23b71a5457626d03e43"
+  },
+  "email": "michael.anderson@smart-travel.com",
+  "password": "$2a$12$mBSqs4f0afKxUNORSPhoS.qGgYmnvGKmIE6cSoVbsejH6xH.dcTQu",
+  "role": "AGENT",
+  "firstname": "Michael",
+  "lastname": "Anderson",
+  "_class": "com.certimetergroup.smart_travel.userapi.model.User"
+},
+{
+  "_id": {
+    "$oid": "68d5c2ce71a5457626d03e44"
+  },
+  "email": "alexander.smith@smart-travel.com",
+  "password": "$2a$12$6DwqOwOSrz7CW./eKNdQUeDIuXgOUV2zTaeGcPciidBvlFFEoFa02",
+  "role": "ADMIN",
+  "firstname": "Alexander",
+  "lastname": "Smith",
+  "_class": "com.certimetergroup.smart_travel.userapi.model.User"
+},
+{
+  "_id": {
+    "$oid": "68d5c3ef71a5457626d03e45"
+  },
+  "email": "maria.lopez@smart-travel.com",
+  "password": "$2a$12$HW9fdXA9pPg2q/DceyMkW.Piwzq1lq3P.NhBVZOeCcanJcmv61YL6",
+  "role": "AGENT",
+  "firstname": "Maria",
+  "lastname": "López",
+  "_class": "com.certimetergroup.smart_travel.userapi.model.User"
+},
+{
+  "_id": {
+    "$oid": "68d5c45671a5457626d03e46"
+  },
+  "email": "amelia.thompson@smart-travel.com",
+  "password": "$2a$12$1APXxOwYMwGk51eQ1rpAB.3oSy51fZqrQNuZAOAQabezelzOupCjO",
+  "role": "ADMIN",
+  "firstname": "Amelia",
+  "lastname": "Thompson",
+  "_class": "com.certimetergroup.smart_travel.userapi.model.User"
+},
+{
+  "_id": {
+    "$oid": "68d5c51071a5457626d03e47"
+  },
+  "email": "caleb.johnson@gmail.com",
+  "password": "$2a$12$eUW07FbC3QDpPblDB7YsuOS7b6lQuHBZaF1XKsqtU3V5J3xFwwGYO",
+  "role": "CUSTOMER",
+  "firstname": "Caleb",
+  "lastname": "Johnson",
+  "_class": "com.certimetergroup.smart_travel.userapi.model.User"
+},
+{
+  "_id": {
+    "$oid": "68d5c58171a5457626d03e48"
+  },
+  "email": "charlotte.williams@gmail.com",
+  "password": "$2a$12$iSWP3ruRvluBQlQCt9OBt.p9Ekzn4jFpVbpbkWJS0yApOUFKQ8Z32",
+  "role": "CUSTOMER",
+  "firstname": "Charlotte",
+  "lastname": "Williams",
+  "_class": "com.certimetergroup.smart_travel.userapi.model.User"
+}]

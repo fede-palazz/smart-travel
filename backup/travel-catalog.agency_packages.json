@@ -1,0 +1,704 @@
+[{
+  "_id": {
+    "$oid": "68d5c77c4e12806ded44cb5b"
+  },
+  "accommodation": {
+    "accommodationId": {
+      "$oid": "6846ab78746baa6313378892"
+    },
+    "endDate": {
+      "$date": "2025-06-29T22:00:00.000Z"
+    },
+    "mainPicture": "https://images.unsplash.com/photo-1653280675477-878425ecb5f9?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NTd8fGhvdGVsJTIwZnJvbnR8ZW58MHwwfDB8fHwy",
+    "name": "Seine River Hotel",
+    "rooms": [
+      {
+        "amenities": [
+          "Locker",
+          "Wi-Fi",
+          "Reading light",
+          "Private bathroom"
+        ],
+        "bedTypes": [
+          "bunk"
+        ],
+        "capacity": 4,
+        "name": "Family room",
+        "pictures": [
+          "https://images.unsplash.com/photo-1524758631624-e2822e304c36"
+        ],
+        "pricePerNight": {
+          "currency": "EUR",
+          "value": 250
+        },
+        "quantity": 1,
+        "type": "family"
+      }
+    ],
+    "startDate": {
+      "$date": "2025-06-25T22:00:00.000Z"
+    },
+    "type": "hotel"
+  },
+  "activities": [
+    {
+      "activityId": {
+        "$oid": "686d33efb091256a632ceafc"
+      },
+      "date": {
+        "$date": "2025-06-27T22:00:00.000Z"
+      },
+      "endTime": "17:00",
+      "mainPicture": "https://images.unsplash.com/photo-1587648415693-4a5362b2ce41?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "name": "Louvre Museum Admission",
+      "price": {
+        "currency": "EUR",
+        "value": 15
+      },
+      "quantity": 4,
+      "startTime": "10:00",
+      "type": "museum"
+    },
+    {
+      "activityId": {
+        "$oid": "686e40a573d8487dad27d266"
+      },
+      "date": {
+        "$date": "2025-06-26T22:00:00.000Z"
+      },
+      "endTime": "13:00",
+      "mainPicture": "https://images.unsplash.com/photo-1640878840475-9a32bae6f360?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mjh8fGVpZmZlbGwlMjB0b3dlcnxlbnwwfDB8MHx8fDI%3D",
+      "name": "Eiffel Tower Guided Tour",
+      "price": {
+        "currency": "EUR",
+        "value": 35
+      },
+      "quantity": 4,
+      "startTime": "11:00",
+      "type": "tour"
+    }
+  ],
+  "agentInfo": {
+    "email": "maria.lopez@smart-travel.com",
+    "name": "Maria",
+    "surname": "López",
+    "userId": {
+      "$oid": "68d5c3ef71a5457626d03e45"
+    }
+  },
+  "creationDate": {
+    "$date": "2025-05-25T22:51:40.273Z"
+  },
+  "departureFlight": {
+    "airline": "Air France",
+    "airlineLogo": "https://upload.wikimedia.org/wikipedia/commons/4/44/Air_France_Logo.svg",
+    "arrivalTime": {
+      "$date": "2025-06-26T19:05:00.000Z"
+    },
+    "code": "AF7739",
+    "departureTime": {
+      "$date": "2025-06-26T17:30:00.000Z"
+    },
+    "flightId": {
+      "$oid": "688c67410c391c05ee703f37"
+    },
+    "from": {
+      "airportCode": "MXP",
+      "airportName": "Malpensa",
+      "city": "Milan",
+      "coordinates": {
+        "lat": 45.4642,
+        "lng": 9.19
+      },
+      "country": {
+        "code": "IT",
+        "name": "Italy"
+      },
+      "destinationId": {
+        "$oid": "680f7af8e634eef19a5e09a6"
+      },
+      "region": "Lombardy",
+      "timezone": "Europe/Rome"
+    },
+    "price": {
+      "currency": "EUR",
+      "value": 113.04
+    },
+    "quantity": 4,
+    "to": {
+      "airportCode": "CDG",
+      "airportName": "Charles de Gaulle",
+      "city": "Paris",
+      "coordinates": {
+        "lat": 48.8566,
+        "lng": 2.3522
+      },
+      "country": {
+        "code": "FR",
+        "name": "France"
+      },
+      "destinationId": {
+        "$oid": "68187dec1e54584b07f2f804"
+      },
+      "region": "Île-de-France",
+      "timezone": "Europe/Paris"
+    }
+  },
+  "description": "A 4-day package covering the city’s essentials — Eiffel Tower and Louvre Museum. Perfect for first-time visitors who want a balance of sightseeing and free time.",
+  "destination": {
+    "city": "Paris",
+    "coordinates": {
+      "lat": 48.8566,
+      "lng": 2.3522
+    },
+    "country": {
+      "code": "FR",
+      "name": "France"
+    },
+    "destinationId": {
+      "$oid": "68187dec1e54584b07f2f804"
+    },
+    "region": "Île-de-France",
+    "timezone": "Europe/Paris"
+  },
+  "endDate": {
+    "$date": "2025-06-29T22:00:00.000Z"
+  },
+  "mainPicture": "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?q=80&w=1173&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "name": "Paris Highlights Getaway",
+  "pictures": [
+    "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?q=80&w=1173&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+  ],
+  "quantity": 4,
+  "returnFlight": {
+    "airline": "Air France",
+    "airlineLogo": "https://upload.wikimedia.org/wikipedia/commons/4/44/Air_France_Logo.svg",
+    "arrivalTime": {
+      "$date": "2025-06-30T17:36:00.000Z"
+    },
+    "code": "AF1738",
+    "departureTime": {
+      "$date": "2025-06-30T16:01:00.000Z"
+    },
+    "flightId": {
+      "$oid": "688c67410c391c05ee703f50"
+    },
+    "from": {
+      "airportCode": "CDG",
+      "airportName": "Charles de Gaulle",
+      "city": "Paris",
+      "coordinates": {
+        "lat": 48.8566,
+        "lng": 2.3522
+      },
+      "country": {
+        "code": "FR",
+        "name": "France"
+      },
+      "destinationId": {
+        "$oid": "68187dec1e54584b07f2f804"
+      },
+      "region": "Île-de-France",
+      "timezone": "Europe/Paris"
+    },
+    "price": {
+      "currency": "EUR",
+      "value": 101.81
+    },
+    "quantity": 4,
+    "to": {
+      "airportCode": "MXP",
+      "airportName": "Malpensa",
+      "city": "Milan",
+      "coordinates": {
+        "lat": 45.4642,
+        "lng": 9.19
+      },
+      "country": {
+        "code": "IT",
+        "name": "Italy"
+      },
+      "destinationId": {
+        "$oid": "680f7af8e634eef19a5e09a6"
+      },
+      "region": "Lombardy",
+      "timezone": "Europe/Rome"
+    }
+  },
+  "startDate": {
+    "$date": "2025-06-25T22:00:00.000Z"
+  },
+  "status": "ARCHIVED",
+  "tags": [
+    "romantic",
+    "group_tour",
+    "cultural_experience"
+  ],
+  "totalPrice": {
+    "currency": "EUR",
+    "value": 2200
+  }
+},
+{
+  "_id": {
+    "$oid": "68d5e3aa4e12806ded44cb68"
+  },
+  "accommodation": {
+    "accommodationId": {
+      "$oid": "68d5cd994e12806ded44cb5e"
+    },
+    "endDate": {
+      "$date": "2025-10-09T22:00:00.000Z"
+    },
+    "mainPicture": "https://images.unsplash.com/photo-1665424305668-2c6dc28f2613?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "name": "Riverside View Apartment",
+    "rooms": [
+      {
+        "amenities": [
+          "Air conditioning",
+          "TV",
+          "Mini bar"
+        ],
+        "bedTypes": [
+          "double"
+        ],
+        "capacity": 2,
+        "name": "Deluxe Double Room",
+        "pictures": [
+          "https://images.unsplash.com/photo-1613977257363-707ba9348220",
+          "https://images.unsplash.com/photo-1560347876-aeef00ee58a1"
+        ],
+        "pricePerNight": {
+          "currency": "EUR",
+          "value": 100
+        },
+        "quantity": 1,
+        "type": "double"
+      }
+    ],
+    "startDate": {
+      "$date": "2025-10-06T22:00:00.000Z"
+    },
+    "type": "apartment"
+  },
+  "activities": [
+    {
+      "activityId": {
+        "$oid": "68d5d76a4e12806ded44cb62"
+      },
+      "date": {
+        "$date": "2025-10-08T22:00:00.000Z"
+      },
+      "endTime": "16:30",
+      "mainPicture": "https://images.unsplash.com/photo-1701866657323-e5197385c8b9?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "name": "Tower of London Guided Tour",
+      "price": {
+        "currency": "EUR",
+        "value": 25
+      },
+      "quantity": 2,
+      "startTime": "09:30",
+      "type": "tour"
+    },
+    {
+      "activityId": {
+        "$oid": "68d5d8194e12806ded44cb63"
+      },
+      "date": {
+        "$date": "2025-10-07T22:00:00.000Z"
+      },
+      "endTime": "20:00",
+      "mainPicture": "https://images.unsplash.com/photo-1598981234708-9c2f7b80d261?q=80&w=1172&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "name": "Thames Evening Boat Ride",
+      "price": {
+        "currency": "EUR",
+        "value": 30
+      },
+      "quantity": 2,
+      "startTime": "18:30",
+      "type": "boat"
+    }
+  ],
+  "agentInfo": {
+    "email": "michael.anderson@smart-travel.com",
+    "name": "Michael",
+    "surname": "Anderson",
+    "userId": {
+      "$oid": "68d5c23b71a5457626d03e43"
+    }
+  },
+  "creationDate": {
+    "$date": "2025-09-26T00:51:54.263Z"
+  },
+  "departureFlight": {
+    "airline": "British Airways",
+    "airlineLogo": "https://upload.wikimedia.org/wikipedia/it/4/42/British_Airways_Logo.svg",
+    "arrivalTime": {
+      "$date": "2025-10-07T07:32:00.000Z"
+    },
+    "code": "BA6929",
+    "departureTime": {
+      "$date": "2025-10-07T05:42:00.000Z"
+    },
+    "flightId": {
+      "$oid": "68b5c6040456815d0b98cb31"
+    },
+    "from": {
+      "airportCode": "MXP",
+      "airportName": "Malpensa",
+      "city": "Milan",
+      "coordinates": {
+        "lat": 45.4642,
+        "lng": 9.19
+      },
+      "country": {
+        "code": "IT",
+        "name": "Italy"
+      },
+      "destinationId": {
+        "$oid": "680f7af8e634eef19a5e09a6"
+      },
+      "region": "Lombardy",
+      "timezone": "Europe/Rome"
+    },
+    "price": {
+      "currency": "EUR",
+      "value": 126.67
+    },
+    "quantity": 2,
+    "to": {
+      "airportCode": "LHR",
+      "airportName": "Heathrow Airport",
+      "city": "London",
+      "coordinates": {
+        "lat": 51.509865,
+        "lng": -0.118092
+      },
+      "country": {
+        "code": "GB",
+        "name": "United Kingdom"
+      },
+      "destinationId": {
+        "$oid": "68401642411ed34eaeaa6a6e"
+      },
+      "region": "England",
+      "timezone": "Europe/London"
+    }
+  },
+  "description": "Discover the best of London with this all-in-one travel package. From historic landmarks like the Tower of London and Westminster Abbey to cultural experiences such as world-class museums and bustling markets, this package offers a perfect mix of sightseeing, leisure, and local experiences. Ideal for first-time visitors and those looking to experience the city’s vibrant atmosphere in comfort and style.",
+  "destination": {
+    "city": "London",
+    "coordinates": {
+      "lat": 51.509865,
+      "lng": -0.118092
+    },
+    "country": {
+      "code": "GB",
+      "name": "United Kingdom"
+    },
+    "destinationId": {
+      "$oid": "68401642411ed34eaeaa6a6e"
+    },
+    "region": "England",
+    "timezone": "Europe/London"
+  },
+  "endDate": {
+    "$date": "2025-10-09T22:00:00.000Z"
+  },
+  "mainPicture": "https://images.unsplash.com/photo-1533929736458-ca588d08c8be?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "name": "Explore London: Iconic Sights & Experiences",
+  "pictures": [
+    "https://images.unsplash.com/photo-1533929736458-ca588d08c8be?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+  ],
+  "quantity": 2,
+  "returnFlight": {
+    "airline": "British Airways",
+    "airlineLogo": "https://upload.wikimedia.org/wikipedia/it/4/42/British_Airways_Logo.svg",
+    "arrivalTime": {
+      "$date": "2025-10-10T20:24:00.000Z"
+    },
+    "code": "BA4611",
+    "departureTime": {
+      "$date": "2025-10-10T18:34:00.000Z"
+    },
+    "flightId": {
+      "$oid": "68b5c6040456815d0b98cb42"
+    },
+    "from": {
+      "airportCode": "LHR",
+      "airportName": "Heathrow Airport",
+      "city": "London",
+      "coordinates": {
+        "lat": 51.509865,
+        "lng": -0.118092
+      },
+      "country": {
+        "code": "GB",
+        "name": "United Kingdom"
+      },
+      "destinationId": {
+        "$oid": "68401642411ed34eaeaa6a6e"
+      },
+      "region": "England",
+      "timezone": "Europe/London"
+    },
+    "price": {
+      "currency": "EUR",
+      "value": 97.35
+    },
+    "quantity": 2,
+    "to": {
+      "airportCode": "MXP",
+      "airportName": "Malpensa",
+      "city": "Milan",
+      "coordinates": {
+        "lat": 45.4642,
+        "lng": 9.19
+      },
+      "country": {
+        "code": "IT",
+        "name": "Italy"
+      },
+      "destinationId": {
+        "$oid": "680f7af8e634eef19a5e09a6"
+      },
+      "region": "Lombardy",
+      "timezone": "Europe/Rome"
+    }
+  },
+  "startDate": {
+    "$date": "2025-10-06T22:00:00.000Z"
+  },
+  "status": "PUBLISHED",
+  "tags": [
+    "low_cost",
+    "romantic",
+    "last_minute"
+  ],
+  "totalPrice": {
+    "currency": "EUR",
+    "value": 1000
+  }
+},
+{
+  "_id": {
+    "$oid": "68d66af8b8c8503118ef9580"
+  },
+  "accommodation": {
+    "accommodationId": {
+      "$oid": "6846ab78746baa6313378892"
+    },
+    "endDate": {
+      "$date": "2025-10-09T22:00:00.000Z"
+    },
+    "mainPicture": "https://images.unsplash.com/photo-1653280675477-878425ecb5f9?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NTd8fGhvdGVsJTIwZnJvbnR8ZW58MHwwfDB8fHwy",
+    "name": "Seine River Hotel",
+    "rooms": [
+      {
+        "amenities": [
+          "Locker",
+          "Wi-Fi",
+          "Reading light",
+          "Private bathroom"
+        ],
+        "bedTypes": [
+          "bunk"
+        ],
+        "capacity": 4,
+        "name": "Family room",
+        "pictures": [
+          "https://images.unsplash.com/photo-1524758631624-e2822e304c36"
+        ],
+        "pricePerNight": {
+          "currency": "EUR",
+          "value": 250
+        },
+        "quantity": 1,
+        "type": "family"
+      }
+    ],
+    "startDate": {
+      "$date": "2025-10-06T22:00:00.000Z"
+    },
+    "type": "hotel"
+  },
+  "activities": [
+    {
+      "activityId": {
+        "$oid": "686e40a573d8487dad27d266"
+      },
+      "date": {
+        "$date": "2025-10-08T22:00:00.000Z"
+      },
+      "endTime": "13:00",
+      "mainPicture": "https://images.unsplash.com/photo-1640878840475-9a32bae6f360?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mjh8fGVpZmZlbGwlMjB0b3dlcnxlbnwwfDB8MHx8fDI%3D",
+      "name": "Eiffel Tower Guided Tour",
+      "price": {
+        "currency": "EUR",
+        "value": 35
+      },
+      "quantity": 4,
+      "startTime": "11:00",
+      "type": "tour"
+    }
+  ],
+  "agentInfo": {
+    "email": "maria.lopez@smart-travel.com",
+    "name": "Maria",
+    "surname": "López",
+    "userId": {
+      "$oid": "68d5c3ef71a5457626d03e45"
+    }
+  },
+  "creationDate": {
+    "$date": "2025-09-26T10:29:12.225Z"
+  },
+  "departureFlight": {
+    "airline": "Air France",
+    "airlineLogo": "https://upload.wikimedia.org/wikipedia/commons/4/44/Air_France_Logo.svg",
+    "arrivalTime": {
+      "$date": "2025-10-07T09:37:00.000Z"
+    },
+    "code": "AF2998",
+    "departureTime": {
+      "$date": "2025-10-07T08:02:00.000Z"
+    },
+    "flightId": {
+      "$oid": "68b5c6040456815d0b98cb33"
+    },
+    "from": {
+      "airportCode": "MXP",
+      "airportName": "Malpensa",
+      "city": "Milan",
+      "coordinates": {
+        "lat": 45.4642,
+        "lng": 9.19
+      },
+      "country": {
+        "code": "IT",
+        "name": "Italy"
+      },
+      "destinationId": {
+        "$oid": "680f7af8e634eef19a5e09a6"
+      },
+      "region": "Lombardy",
+      "timezone": "Europe/Rome"
+    },
+    "price": {
+      "currency": "EUR",
+      "value": 95.36
+    },
+    "quantity": 4,
+    "to": {
+      "airportCode": "CDG",
+      "airportName": "Charles de Gaulle",
+      "city": "Paris",
+      "coordinates": {
+        "lat": 48.8566,
+        "lng": 2.3522
+      },
+      "country": {
+        "code": "FR",
+        "name": "France"
+      },
+      "destinationId": {
+        "$oid": "68187dec1e54584b07f2f804"
+      },
+      "region": "Île-de-France",
+      "timezone": "Europe/Paris"
+    }
+  },
+  "description": "descrizione",
+  "destination": {
+    "city": "Paris",
+    "coordinates": {
+      "lat": 48.8566,
+      "lng": 2.3522
+    },
+    "country": {
+      "code": "FR",
+      "name": "France"
+    },
+    "destinationId": {
+      "$oid": "68187dec1e54584b07f2f804"
+    },
+    "region": "Île-de-France",
+    "timezone": "Europe/Paris"
+  },
+  "endDate": {
+    "$date": "2025-10-09T22:00:00.000Z"
+  },
+  "mainPicture": "https://images.unsplash.com/photo-1471874708433-acd480424946?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "name": "Paris",
+  "pictures": [
+    "https://images.unsplash.com/photo-1471874708433-acd480424946?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+  ],
+  "quantity": 4,
+  "returnFlight": {
+    "airline": "Air France",
+    "airlineLogo": "https://upload.wikimedia.org/wikipedia/commons/4/44/Air_France_Logo.svg",
+    "arrivalTime": {
+      "$date": "2025-10-10T17:46:00.000Z"
+    },
+    "code": "AF7130",
+    "departureTime": {
+      "$date": "2025-10-10T16:11:00.000Z"
+    },
+    "flightId": {
+      "$oid": "68b5c6040456815d0b98cb44"
+    },
+    "from": {
+      "airportCode": "CDG",
+      "airportName": "Charles de Gaulle",
+      "city": "Paris",
+      "coordinates": {
+        "lat": 48.8566,
+        "lng": 2.3522
+      },
+      "country": {
+        "code": "FR",
+        "name": "France"
+      },
+      "destinationId": {
+        "$oid": "68187dec1e54584b07f2f804"
+      },
+      "region": "Île-de-France",
+      "timezone": "Europe/Paris"
+    },
+    "price": {
+      "currency": "EUR",
+      "value": 118.7
+    },
+    "quantity": 4,
+    "to": {
+      "airportCode": "MXP",
+      "airportName": "Malpensa",
+      "city": "Milan",
+      "coordinates": {
+        "lat": 45.4642,
+        "lng": 9.19
+      },
+      "country": {
+        "code": "IT",
+        "name": "Italy"
+      },
+      "destinationId": {
+        "$oid": "680f7af8e634eef19a5e09a6"
+      },
+      "region": "Lombardy",
+      "timezone": "Europe/Rome"
+    }
+  },
+  "startDate": {
+    "$date": "2025-10-06T22:00:00.000Z"
+  },
+  "status": "PUBLISHED",
+  "tags": [
+    "romantic",
+    "luxury"
+  ],
+  "totalPrice": {
+    "currency": "EUR",
+    "value": 2000
+  }
+}]

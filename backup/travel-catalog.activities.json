@@ -1,0 +1,1205 @@
+[{
+  "_id": {
+    "$oid": "686d33efb091256a632ceafc"
+  },
+  "address": "Rue de Rivoli, 75001 Paris, France",
+  "coordinates": {
+    "lat": 48.8606,
+    "lng": 2.3376
+  },
+  "description": "Skip-the-line access to the world's largest art museum, including the Mona Lisa.",
+  "destination": {
+    "city": "Paris",
+    "coordinates": {
+      "lat": 48.8566,
+      "lng": 2.3522
+    },
+    "country": {
+      "code": "FR",
+      "name": "France"
+    },
+    "destinationId": {
+      "$oid": "68187dec1e54584b07f2f804"
+    },
+    "region": "Île-de-France",
+    "timezone": "Europe/Paris"
+  },
+  "languages": [
+    "english",
+    "french"
+  ],
+  "mainPicture": "https://images.unsplash.com/photo-1587648415693-4a5362b2ce41?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "name": "Louvre Museum Admission",
+  "notes": "Closed on Tuesdays. Photography allowed without flash.",
+  "pictures": [
+    "https://images.unsplash.com/photo-1587648415693-4a5362b2ce41?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+  ],
+  "price": {
+    "currency": "EUR",
+    "value": 15
+  },
+  "reviewsSummary": {
+    "avgRating": 0,
+    "totalCount": {
+      "$numberLong": "0"
+    }
+  },
+  "schedule": {
+    "durationMinutes": 240,
+    "endDate": {
+      "$date": "2025-10-03T22:00:00.000Z"
+    },
+    "recurrence": {
+      "daysOfWeek": [
+        "WEDNESDAY",
+        "MONDAY",
+        "FRIDAY"
+      ],
+      "endTime": "17:00",
+      "startTime": "10:00"
+    },
+    "startDate": {
+      "$date": "2025-02-03T22:00:00.000Z"
+    }
+  },
+  "tags": [
+    "art",
+    "museum",
+    "culture"
+  ],
+  "type": "museum"
+},
+{
+  "_id": {
+    "$oid": "686e40a573d8487dad27d266"
+  },
+  "address": "Champ de Mars, 5 Av. Anatole France, 75007 Paris, France",
+  "coordinates": {
+    "lat": 48.8584,
+    "lng": 2.2945
+  },
+  "description": "Climb to the summit with a guide and learn about the history of Paris’s most iconic monument.",
+  "destination": {
+    "city": "Paris",
+    "coordinates": {
+      "lat": 48.8566,
+      "lng": 2.3522
+    },
+    "country": {
+      "code": "FR",
+      "name": "France"
+    },
+    "destinationId": {
+      "$oid": "68187dec1e54584b07f2f804"
+    },
+    "region": "Île-de-France",
+    "timezone": "Europe/Paris"
+  },
+  "languages": [
+    "english",
+    "french"
+  ],
+  "mainPicture": "https://images.unsplash.com/photo-1640878840475-9a32bae6f360?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mjh8fGVpZmZlbGwlMjB0b3dlcnxlbnwwfDB8MHx8fDI%3D",
+  "name": "Eiffel Tower Guided Tour",
+  "notes": "Includes summit access. Wear comfortable shoes.",
+  "pictures": [
+    "https://images.unsplash.com/photo-1640878840475-9a32bae6f360?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mjh8fGVpZmZlbGwlMjB0b3dlcnxlbnwwfDB8MHx8fDI%3D"
+  ],
+  "price": {
+    "currency": "EUR",
+    "value": 35
+  },
+  "reviewsSummary": {
+    "avgRating": 0,
+    "totalCount": {
+      "$numberLong": "0"
+    }
+  },
+  "schedule": {
+    "durationMinutes": 90,
+    "endDate": {
+      "$date": "2025-12-31T22:00:00.000Z"
+    },
+    "recurrence": {
+      "daysOfWeek": [
+        "MONDAY",
+        "THURSDAY",
+        "SATURDAY"
+      ],
+      "endTime": "13:00",
+      "startTime": "11:00"
+    },
+    "startDate": {
+      "$date": "2025-07-08T22:00:00.000Z"
+    }
+  },
+  "tags": [
+    "romantic",
+    "culture",
+    "history"
+  ],
+  "type": "tour"
+},
+{
+  "_id": {
+    "$oid": "686e41a773d8487dad27d267"
+  },
+  "address": "Rue des Saules, 75018 Paris, France",
+  "coordinates": {
+    "lat": 48.8873,
+    "lng": 2.3401
+  },
+  "description": "Taste five classic French wines in a charming Montmartre wine cellar.",
+  "destination": {
+    "city": "Paris",
+    "coordinates": {
+      "lat": 48.8566,
+      "lng": 2.3522
+    },
+    "country": {
+      "code": "FR",
+      "name": "France"
+    },
+    "destinationId": {
+      "$oid": "68187dec1e54584b07f2f804"
+    },
+    "region": "Île-de-France",
+    "timezone": "Europe/Paris"
+  },
+  "languages": [
+    "german",
+    "english",
+    "french"
+  ],
+  "mainPicture": "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8d2luZSUyMHRhc3Rpbmd8ZW58MHwwfDB8fHwy",
+  "name": "Montmartre Wine Tasting",
+  "notes": "Participants must be 18+. Small groups only.",
+  "pictures": [
+    "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8d2luZSUyMHRhc3Rpbmd8ZW58MHwwfDB8fHwy"
+  ],
+  "price": {
+    "currency": "EUR",
+    "value": 28
+  },
+  "reviewsSummary": {
+    "avgRating": 0,
+    "totalCount": {
+      "$numberLong": "0"
+    }
+  },
+  "schedule": {
+    "durationMinutes": 120,
+    "endDate": {
+      "$date": "2025-09-30T22:00:00.000Z"
+    },
+    "recurrence": {
+      "daysOfWeek": [
+        "TUESDAY",
+        "FRIDAY"
+      ],
+      "endTime": "20:00",
+      "startTime": "10:00"
+    },
+    "startDate": {
+      "$date": "2025-07-08T22:00:00.000Z"
+    }
+  },
+  "tags": [
+    "culture",
+    "luxury",
+    "food"
+  ],
+  "type": "wine"
+},
+{
+  "_id": {
+    "$oid": "686e422d73d8487dad27d268"
+  },
+  "address": "29 Rue de Rivoli, 75004 Paris, France",
+  "coordinates": {
+    "lat": 48.8555,
+    "lng": 2.3574
+  },
+  "description": "See the city’s top sights on a relaxing and fun guided bike tour.",
+  "destination": {
+    "city": "Paris",
+    "coordinates": {
+      "lat": 48.8566,
+      "lng": 2.3522
+    },
+    "country": {
+      "code": "FR",
+      "name": "France"
+    },
+    "destinationId": {
+      "$oid": "68187dec1e54584b07f2f804"
+    },
+    "region": "Île-de-France",
+    "timezone": "Europe/Paris"
+  },
+  "languages": [
+    "english",
+    "french",
+    "dutch"
+  ],
+  "mainPicture": "https://images.unsplash.com/photo-1700740718984-d4dd716f06dc?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8YmlrZSUyMHRvdXIlMjBwYXJpc3xlbnwwfDB8MHx8fDI%3D",
+  "name": "Paris by Bike Tour",
+  "notes": "Bike and helmet included.",
+  "pictures": [
+    "https://images.unsplash.com/photo-1700740718984-d4dd716f06dc?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8YmlrZSUyMHRvdXIlMjBwYXJpc3xlbnwwfDB8MHx8fDI%3D"
+  ],
+  "price": {
+    "currency": "EUR",
+    "value": 25
+  },
+  "reviewsSummary": {
+    "avgRating": 0,
+    "totalCount": {
+      "$numberLong": "0"
+    }
+  },
+  "schedule": {
+    "durationMinutes": 150,
+    "endDate": {
+      "$date": "2025-11-01T22:00:00.000Z"
+    },
+    "recurrence": {
+      "daysOfWeek": [
+        "THURSDAY",
+        "TUESDAY",
+        "SATURDAY"
+      ],
+      "endTime": "16:00",
+      "startTime": "09:00"
+    },
+    "startDate": {
+      "$date": "2025-07-08T22:00:00.000Z"
+    }
+  },
+  "tags": [
+    "adventure",
+    "nature",
+    "family"
+  ],
+  "type": "cycling"
+},
+{
+  "_id": {
+    "$oid": "686e437373d8487dad27d26a"
+  },
+  "address": "10 Rue de la Grange aux Belles, 75010 Paris, France",
+  "coordinates": {
+    "lat": 48.8742,
+    "lng": 2.3633
+  },
+  "description": "Learn to make croissants and macarons with a professional pastry chef.",
+  "destination": {
+    "city": "Paris",
+    "coordinates": {
+      "lat": 48.8566,
+      "lng": 2.3522
+    },
+    "country": {
+      "code": "FR",
+      "name": "France"
+    },
+    "destinationId": {
+      "$oid": "68187dec1e54584b07f2f804"
+    },
+    "region": "Île-de-France",
+    "timezone": "Europe/Paris"
+  },
+  "languages": [
+    "english",
+    "italian",
+    "french",
+    "spanish"
+  ],
+  "mainPicture": "https://images.unsplash.com/photo-1652283305325-009cf368c0e1?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8RnJlbmNoJTIwUGFzdHJ5JTIwQ29va2luZyUyMENsYXNzfGVufDB8MHwwfHx8Mg%3D%3D\"",
+  "name": "French Pastry Cooking Class",
+  "notes": "All skill levels welcome. Aprons provided.",
+  "pictures": [
+    "https://images.unsplash.com/photo-1652283305325-009cf368c0e1?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8RnJlbmNoJTIwUGFzdHJ5JTIwQ29va2luZyUyMENsYXNzfGVufDB8MHwwfHx8Mg%3D%3D"
+  ],
+  "price": {
+    "currency": "EUR",
+    "value": 60
+  },
+  "reviewsSummary": {
+    "avgRating": 0,
+    "totalCount": {
+      "$numberLong": "0"
+    }
+  },
+  "schedule": {
+    "durationMinutes": 180,
+    "endDate": {
+      "$date": "2025-12-31T22:00:00.000Z"
+    },
+    "recurrence": {
+      "daysOfWeek": [
+        "MONDAY",
+        "FRIDAY"
+      ],
+      "endTime": "13:00",
+      "startTime": "10:00"
+    },
+    "startDate": {
+      "$date": "2025-07-08T22:00:00.000Z"
+    }
+  },
+  "tags": [
+    "culture",
+    "family",
+    "food"
+  ],
+  "type": "cooking"
+},
+{
+  "_id": {
+    "$oid": "686e44aa73d8487dad27d26c"
+  },
+  "address": "Rue des Lombards, 75001 Paris, France",
+  "coordinates": {
+    "lat": 48.8601,
+    "lng": 2.3469
+  },
+  "description": "Enjoy live jazz in a historic Parisian cellar with a complimentary drink.",
+  "destination": {
+    "city": "Paris",
+    "coordinates": {
+      "lat": 48.8566,
+      "lng": 2.3522
+    },
+    "country": {
+      "code": "FR",
+      "name": "France"
+    },
+    "destinationId": {
+      "$oid": "68187dec1e54584b07f2f804"
+    },
+    "region": "Île-de-France",
+    "timezone": "Europe/Paris"
+  },
+  "languages": [
+    "english",
+    "french"
+  ],
+  "mainPicture": "https://images.unsplash.com/photo-1658499923570-9c61c6151e47?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGphenolMjBuaWdodHxlbnwwfDB8MHx8fDI%3D",
+  "name": "Paris Jazz Night Experience",
+  "notes": "Arrive 15 minutes early. Dress code: smart casual.",
+  "pictures": [
+    "https://images.unsplash.com/photo-1658499923570-9c61c6151e47?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGphenolMjBuaWdodHxlbnwwfDB8MHx8fDI%3D"
+  ],
+  "price": {
+    "currency": "EUR",
+    "value": 22
+  },
+  "reviewsSummary": {
+    "avgRating": 0,
+    "totalCount": {
+      "$numberLong": "0"
+    }
+  },
+  "schedule": {
+    "durationMinutes": 120,
+    "endDate": {
+      "$date": "2025-12-31T22:00:00.000Z"
+    },
+    "recurrence": {
+      "daysOfWeek": [
+        "FRIDAY",
+        "SATURDAY"
+      ],
+      "endTime": "23:30",
+      "startTime": "21:30"
+    },
+    "startDate": {
+      "$date": "2025-07-08T22:00:00.000Z"
+    }
+  },
+  "tags": [
+    "music",
+    "romantic",
+    "nightlife"
+  ],
+  "type": "concert"
+},
+{
+  "_id": {
+    "$oid": "686e44da73d8487dad27d26d"
+  },
+  "address": "Quai Saint-Bernard, 75005 Paris, France",
+  "coordinates": {
+    "lat": 48.8471,
+    "lng": 2.3617
+  },
+  "description": "A relaxing guided walk along the Seine's greener banks, away from the crowds.",
+  "destination": {
+    "city": "Paris",
+    "coordinates": {
+      "lat": 48.8566,
+      "lng": 2.3522
+    },
+    "country": {
+      "code": "FR",
+      "name": "France"
+    },
+    "destinationId": {
+      "$oid": "68187dec1e54584b07f2f804"
+    },
+    "region": "Île-de-France",
+    "timezone": "Europe/Paris"
+  },
+  "languages": [
+    "english",
+    "italian",
+    "french"
+  ],
+  "mainPicture": "https://images.unsplash.com/photo-1677791296424-c2a2db67aa51?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8U2VpbmUlMjBSaXZlcnxlbnwwfDB8MHx8fDI%3D",
+  "name": "Seine River Nature Walk",
+  "notes": "Bring water and wear comfortable shoes.",
+  "pictures": [
+    "https://images.unsplash.com/photo-1677791296424-c2a2db67aa51?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8U2VpbmUlMjBSaXZlcnxlbnwwfDB8MHx8fDI%3D"
+  ],
+  "price": {
+    "currency": "EUR",
+    "value": 15
+  },
+  "reviewsSummary": {
+    "avgRating": 0,
+    "totalCount": {
+      "$numberLong": "0"
+    }
+  },
+  "schedule": {
+    "durationMinutes": 90,
+    "endDate": {
+      "$date": "2025-09-30T22:00:00.000Z"
+    },
+    "recurrence": {
+      "daysOfWeek": [
+        "WEDNESDAY",
+        "SUNDAY"
+      ],
+      "endTime": "10:00",
+      "startTime": "08:30"
+    },
+    "startDate": {
+      "$date": "2025-07-08T22:00:00.000Z"
+    }
+  },
+  "tags": [
+    "adventure",
+    "nature",
+    "relaxing"
+  ],
+  "type": "hiking"
+},
+{
+  "_id": {
+    "$oid": "686e451773d8487dad27d26e"
+  },
+  "address": "82 Bd de Clichy, 75018 Paris, France",
+  "coordinates": {
+    "lat": 48.8841,
+    "lng": 2.3324
+  },
+  "description": "An extravagant evening of music, dance, and costumes at a classic Paris cabaret.",
+  "destination": {
+    "city": "Paris",
+    "coordinates": {
+      "lat": 48.8566,
+      "lng": 2.3522
+    },
+    "country": {
+      "code": "FR",
+      "name": "France"
+    },
+    "destinationId": {
+      "$oid": "68187dec1e54584b07f2f804"
+    },
+    "region": "Île-de-France",
+    "timezone": "Europe/Paris"
+  },
+  "languages": [
+    "english",
+    "french"
+  ],
+  "mainPicture": "https://images.unsplash.com/photo-1741856803798-ce1eede30b5b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8UGFyaXNpYW4lMjBDYWJhcmV0JTIwTmlnaHQlMjBTaG93fGVufDB8MHwwfHx8Mg%3D%3D",
+  "name": "Parisian Cabaret Night Show",
+  "notes": "Dinner package available. No photography allowed.",
+  "pictures": [
+    "https://images.unsplash.com/photo-1741856803798-ce1eede30b5b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8UGFyaXNpYW4lMjBDYWJhcmV0JTIwTmlnaHQlMjBTaG93fGVufDB8MHwwfHx8Mg%3D%3D"
+  ],
+  "price": {
+    "currency": "EUR",
+    "value": 45
+  },
+  "reviewsSummary": {
+    "avgRating": 0,
+    "totalCount": {
+      "$numberLong": "0"
+    }
+  },
+  "schedule": {
+    "durationMinutes": 120,
+    "endDate": {
+      "$date": "2025-12-31T22:00:00.000Z"
+    },
+    "recurrence": {
+      "daysOfWeek": [
+        "THURSDAY",
+        "SATURDAY"
+      ],
+      "endTime": "23:00",
+      "startTime": "21:00"
+    },
+    "startDate": {
+      "$date": "2025-07-08T22:00:00.000Z"
+    }
+  },
+  "tags": [
+    "music",
+    "nightlife",
+    "luxury"
+  ],
+  "type": "show"
+},
+{
+  "_id": {
+    "$oid": "686e454a73d8487dad27d26f"
+  },
+  "address": "Jardin du Luxembourg, 75006 Paris, France",
+  "coordinates": {
+    "lat": 48.8462,
+    "lng": 2.3371
+  },
+  "description": "Start your day with a rejuvenating yoga session surrounded by nature.",
+  "destination": {
+    "city": "Paris",
+    "coordinates": {
+      "lat": 48.8566,
+      "lng": 2.3522
+    },
+    "country": {
+      "code": "FR",
+      "name": "France"
+    },
+    "destinationId": {
+      "$oid": "68187dec1e54584b07f2f804"
+    },
+    "region": "Île-de-France",
+    "timezone": "Europe/Paris"
+  },
+  "languages": [
+    "english",
+    "french"
+  ],
+  "mainPicture": "https://images.unsplash.com/photo-1573718542151-87287efa8d42?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8WW9nYSUyMGluJTIwdGhlJTIwTHV4ZW1ib3VyZyUyMEdhcmRlbnN8ZW58MHwwfDB8fHwy",
+  "name": "Morning Yoga in the Luxembourg Gardens",
+  "notes": "Bring your own mat. Cancelled in case of rain.",
+  "pictures": [
+    "https://images.unsplash.com/photo-1573718542151-87287efa8d42?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8WW9nYSUyMGluJTIwdGhlJTIwTHV4ZW1ib3VyZyUyMEdhcmRlbnN8ZW58MHwwfDB8fHwy"
+  ],
+  "price": {
+    "currency": "EUR",
+    "value": 10
+  },
+  "reviewsSummary": {
+    "avgRating": 0,
+    "totalCount": {
+      "$numberLong": "0"
+    }
+  },
+  "schedule": {
+    "durationMinutes": 60,
+    "endDate": {
+      "$date": "2025-10-31T22:00:00.000Z"
+    },
+    "recurrence": {
+      "daysOfWeek": [
+        "THURSDAY",
+        "TUESDAY"
+      ],
+      "endTime": "08:30",
+      "startTime": "07:30"
+    },
+    "startDate": {
+      "$date": "2025-07-08T22:00:00.000Z"
+    }
+  },
+  "tags": [
+    "nature",
+    "relaxing",
+    "wellness"
+  ],
+  "type": "wellness"
+},
+{
+  "_id": {
+    "$oid": "686e460173d8487dad27d270"
+  },
+  "address": "Le Marais, 75003 Paris, France",
+  "coordinates": {
+    "lat": 48.8607,
+    "lng": 2.3615
+  },
+  "description": "Discover Paris’s independent designers and concept stores on this curated fashion walk.",
+  "destination": {
+    "city": "Paris",
+    "coordinates": {
+      "lat": 48.8566,
+      "lng": 2.3522
+    },
+    "country": {
+      "code": "FR",
+      "name": "France"
+    },
+    "destinationId": {
+      "$oid": "68187dec1e54584b07f2f804"
+    },
+    "region": "Île-de-France",
+    "timezone": "Europe/Paris"
+  },
+  "languages": [
+    "german",
+    "english",
+    "french"
+  ],
+  "mainPicture": "https://images.unsplash.com/photo-1653060135141-41cded172792?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8aGlkZGVuJTIwYm91dGlxdWV8ZW58MHwwfDB8fHwy",
+  "name": "Hidden Boutiques Fashion Walk",
+  "notes": "Includes discount vouchers for select shops.",
+  "pictures": [
+    "https://images.unsplash.com/photo-1653060135141-41cded172792?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8aGlkZGVuJTIwYm91dGlxdWV8ZW58MHwwfDB8fHwy"
+  ],
+  "price": {
+    "currency": "EUR",
+    "value": 20
+  },
+  "reviewsSummary": {
+    "avgRating": 0,
+    "totalCount": {
+      "$numberLong": "0"
+    }
+  },
+  "schedule": {
+    "durationMinutes": 120,
+    "endDate": {
+      "$date": "2025-11-30T22:00:00.000Z"
+    },
+    "recurrence": {
+      "daysOfWeek": [
+        "WEDNESDAY",
+        "MONDAY",
+        "FRIDAY"
+      ],
+      "endTime": "17:00",
+      "startTime": "15:00"
+    },
+    "startDate": {
+      "$date": "2025-07-08T22:00:00.000Z"
+    }
+  },
+  "tags": [
+    "culture",
+    "shopping",
+    "fashion"
+  ],
+  "type": "shopping"
+},
+{
+  "_id": {
+    "$oid": "686e480c73d8487dad27d271"
+  },
+  "address": "Rue Lepic, 75018 Paris, France",
+  "coordinates": {
+    "lat": 48.8855,
+    "lng": 2.3386
+  },
+  "description": "Create your own painting with guidance from a local artist in a historic studio.",
+  "destination": {
+    "city": "Paris",
+    "coordinates": {
+      "lat": 48.8566,
+      "lng": 2.3522
+    },
+    "country": {
+      "code": "FR",
+      "name": "France"
+    },
+    "destinationId": {
+      "$oid": "68187dec1e54584b07f2f804"
+    },
+    "region": "Île-de-France",
+    "timezone": "Europe/Paris"
+  },
+  "languages": [
+    "english",
+    "french"
+  ],
+  "mainPicture": "https://images.unsplash.com/photo-1514195037031-83d60ed3b448?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8YXJ0JTIwV29ya3Nob3B8ZW58MHwwfDB8fHwy",
+  "name": "Impressionist Art Workshop",
+  "notes": "All materials provided.",
+  "pictures": [
+    "https://images.unsplash.com/photo-1514195037031-83d60ed3b448?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8YXJ0JTIwV29ya3Nob3B8ZW58MHwwfDB8fHwy"
+  ],
+  "price": {
+    "currency": "EUR",
+    "value": 40
+  },
+  "reviewsSummary": {
+    "avgRating": 0,
+    "totalCount": {
+      "$numberLong": "0"
+    }
+  },
+  "schedule": {
+    "durationMinutes": 180,
+    "endDate": {
+      "$date": "2025-10-01T22:00:00.000Z"
+    },
+    "recurrence": {
+      "daysOfWeek": [
+        "WEDNESDAY",
+        "SUNDAY"
+      ],
+      "endTime": "17:00",
+      "startTime": "14:00"
+    },
+    "startDate": {
+      "$date": "2025-07-08T22:00:00.000Z"
+    }
+  },
+  "tags": [
+    "art",
+    "romantic",
+    "culture"
+  ],
+  "type": "workshop"
+},
+{
+  "_id": {
+    "$oid": "68d5d76a4e12806ded44cb62"
+  },
+  "address": "Tower Hill, London EC3N 4AB, United Kingdom",
+  "coordinates": {
+    "lat": 51.5081,
+    "lng": -0.0759
+  },
+  "description": "Explore the historic Tower of London with a professional guide, learning about the Crown Jewels, medieval history, and famous stories of intrigue.",
+  "destination": {
+    "city": "London",
+    "coordinates": {
+      "lat": 51.509865,
+      "lng": -0.118092
+    },
+    "country": {
+      "code": "GB",
+      "name": "United Kingdom"
+    },
+    "destinationId": {
+      "$oid": "68401642411ed34eaeaa6a6e"
+    },
+    "region": "England",
+    "timezone": "Europe/London"
+  },
+  "languages": [
+    "english",
+    "french"
+  ],
+  "mainPicture": "https://images.unsplash.com/photo-1701866657323-e5197385c8b9?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "name": "Tower of London Guided Tour",
+  "notes": "Closed on Mondays. Wear comfortable shoes for walking. Photography allowed in most areas.",
+  "pictures": [
+    "https://images.unsplash.com/photo-1701866657323-e5197385c8b9?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+  ],
+  "price": {
+    "currency": "EUR",
+    "value": 25
+  },
+  "reviewsSummary": {
+    "avgRating": 0,
+    "totalCount": {
+      "$numberLong": "0"
+    }
+  },
+  "schedule": {
+    "durationMinutes": 120,
+    "endDate": {
+      "$date": "2025-11-01T00:00:00.000Z"
+    },
+    "recurrence": {
+      "daysOfWeek": [
+        "THURSDAY",
+        "TUESDAY",
+        "SATURDAY"
+      ],
+      "endTime": "16:30",
+      "startTime": "09:30"
+    },
+    "startDate": {
+      "$date": "2025-03-01T00:00:00.000Z"
+    }
+  },
+  "tags": [
+    "cultural",
+    "history"
+  ],
+  "type": "tour"
+},
+{
+  "_id": {
+    "$oid": "68d5d8194e12806ded44cb63"
+  },
+  "address": "Embankment Pier, Victoria Embankment, London WC2N 6ND, United Kingdom",
+  "coordinates": {
+    "lat": 51.5079,
+    "lng": -0.1237
+  },
+  "description": "Enjoy a scenic evening cruise along the River Thames, taking in iconic landmarks like the London Eye, Tower Bridge, and the Houses of Parliament.",
+  "destination": {
+    "city": "London",
+    "coordinates": {
+      "lat": 51.509865,
+      "lng": -0.118092
+    },
+    "country": {
+      "code": "GB",
+      "name": "United Kingdom"
+    },
+    "destinationId": {
+      "$oid": "68401642411ed34eaeaa6a6e"
+    },
+    "region": "England",
+    "timezone": "Europe/London"
+  },
+  "languages": [
+    "spanish",
+    "english"
+  ],
+  "mainPicture": "https://images.unsplash.com/photo-1598981234708-9c2f7b80d261?q=80&w=1172&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "name": "Thames Evening Boat Ride",
+  "notes": "Departs daily at sunset. Food and drinks available onboard. Life jackets provided for safety.",
+  "pictures": [
+    "https://images.unsplash.com/photo-1598981234708-9c2f7b80d261?q=80&w=1172&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+  ],
+  "price": {
+    "currency": "EUR",
+    "value": 30
+  },
+  "reviewsSummary": {
+    "avgRating": 0,
+    "totalCount": {
+      "$numberLong": "0"
+    }
+  },
+  "schedule": {
+    "durationMinutes": 90,
+    "endDate": {
+      "$date": "2025-11-01T00:00:00.000Z"
+    },
+    "recurrence": {
+      "daysOfWeek": [
+        "WEDNESDAY",
+        "MONDAY",
+        "SUNDAY",
+        "FRIDAY"
+      ],
+      "endTime": "20:00",
+      "startTime": "18:30"
+    },
+    "startDate": {
+      "$date": "2025-04-01T00:00:00.000Z"
+    }
+  },
+  "tags": [
+    "cultural",
+    "romantic",
+    "family"
+  ],
+  "type": "boat"
+},
+{
+  "_id": {
+    "$oid": "68d5d85a4e12806ded44cb64"
+  },
+  "address": "Great Russell St, London WC1B 3DG, United Kingdom",
+  "coordinates": {
+    "lat": 51.5194,
+    "lng": -0.127
+  },
+  "description": "Discover the world-famous British Museum with a guided tour covering ancient Egypt, Greece, and other iconic exhibits.",
+  "destination": {
+    "city": "London",
+    "coordinates": {
+      "lat": 51.509865,
+      "lng": -0.118092
+    },
+    "country": {
+      "code": "GB",
+      "name": "United Kingdom"
+    },
+    "destinationId": {
+      "$oid": "68401642411ed34eaeaa6a6e"
+    },
+    "region": "England",
+    "timezone": "Europe/London"
+  },
+  "languages": [
+    "english",
+    "french"
+  ],
+  "mainPicture": "https://images.unsplash.com/photo-1602522647889-a01c1d5bf21e?q=80&w=1908&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "name": "British Museum Highlights Tour",
+  "notes": "Closed on certain holidays. Photography allowed without flash in most galleries. Wear comfortable shoes for walking.",
+  "pictures": [
+    "https://images.unsplash.com/photo-1602522647889-a01c1d5bf21e?q=80&w=1908&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+  ],
+  "price": {
+    "currency": "EUR",
+    "value": 20
+  },
+  "reviewsSummary": {
+    "avgRating": 0,
+    "totalCount": {
+      "$numberLong": "0"
+    }
+  },
+  "schedule": {
+    "durationMinutes": 150,
+    "endDate": {
+      "$date": "2025-12-15T00:00:00.000Z"
+    },
+    "recurrence": {
+      "daysOfWeek": [
+        "THURSDAY",
+        "TUESDAY",
+        "SATURDAY"
+      ],
+      "endTime": "15:00",
+      "startTime": "10:00"
+    },
+    "startDate": {
+      "$date": "2025-03-15T00:00:00.000Z"
+    }
+  },
+  "tags": [
+    "cultural",
+    "history",
+    "family"
+  ],
+  "type": "museum"
+},
+{
+  "_id": {
+    "$oid": "68d5d8a84e12806ded44cb65"
+  },
+  "address": "15 Brick Lane, London E1 6PU, United Kingdom",
+  "coordinates": {
+    "lat": 51.5211,
+    "lng": -0.0715
+  },
+  "description": "Learn to prepare iconic London street food dishes with a professional chef in a hands-on workshop.",
+  "destination": {
+    "city": "London",
+    "coordinates": {
+      "lat": 51.509865,
+      "lng": -0.118092
+    },
+    "country": {
+      "code": "GB",
+      "name": "United Kingdom"
+    },
+    "destinationId": {
+      "$oid": "68401642411ed34eaeaa6a6e"
+    },
+    "region": "England",
+    "timezone": "Europe/London"
+  },
+  "languages": [
+    "spanish",
+    "english"
+  ],
+  "mainPicture": "https://images.unsplash.com/photo-1662714212971-059415b0c4d1?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "name": "London Street Food Cooking Class",
+  "notes": "Suitable for all skill levels. Wear comfortable clothes and shoes. Ingredients and utensils provided.",
+  "pictures": [
+    "https://images.unsplash.com/photo-1662714212971-059415b0c4d1?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+  ],
+  "price": {
+    "currency": "EUR",
+    "value": 50
+  },
+  "reviewsSummary": {
+    "avgRating": 0,
+    "totalCount": {
+      "$numberLong": "0"
+    }
+  },
+  "schedule": {
+    "durationMinutes": 180,
+    "endDate": {
+      "$date": "2025-09-30T00:00:00.000Z"
+    },
+    "recurrence": {
+      "daysOfWeek": [
+        "WEDNESDAY",
+        "SUNDAY",
+        "FRIDAY"
+      ],
+      "endTime": "17:00",
+      "startTime": "14:00"
+    },
+    "startDate": {
+      "$date": "2025-05-01T00:00:00.000Z"
+    }
+  },
+  "tags": [
+    "cultural",
+    "family",
+    "food"
+  ],
+  "type": "cooking"
+},
+{
+  "_id": {
+    "$oid": "68d5d8ea4e12806ded44cb66"
+  },
+  "address": "Hyde Park Corner, London W2 2UH, United Kingdom",
+  "coordinates": {
+    "lat": 51.501,
+    "lng": -0.1657
+  },
+  "description": "Take a guided cycling tour through London’s beautiful Royal Parks, including Hyde Park, Green Park, and St James's Park, while learning about their history and landmarks.",
+  "destination": {
+    "city": "London",
+    "coordinates": {
+      "lat": 51.509865,
+      "lng": -0.118092
+    },
+    "country": {
+      "code": "GB",
+      "name": "United Kingdom"
+    },
+    "destinationId": {
+      "$oid": "68401642411ed34eaeaa6a6e"
+    },
+    "region": "England",
+    "timezone": "Europe/London"
+  },
+  "languages": [
+    "german",
+    "english"
+  ],
+  "mainPicture": "https://images.unsplash.com/photo-1656676372573-43a8c6384394?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "name": "Royal Parks Cycling Tour",
+  "notes": "Helmets and bicycles provided. Suitable for all skill levels. Bring water and comfortable clothing.",
+  "pictures": [
+    "https://images.unsplash.com/photo-1656676372573-43a8c6384394?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+  ],
+  "price": {
+    "currency": "EUR",
+    "value": 40
+  },
+  "reviewsSummary": {
+    "avgRating": 0,
+    "totalCount": {
+      "$numberLong": "0"
+    }
+  },
+  "schedule": {
+    "durationMinutes": 180,
+    "endDate": {
+      "$date": "2025-11-15T00:00:00.000Z"
+    },
+    "recurrence": {
+      "daysOfWeek": [
+        "SUNDAY",
+        "SATURDAY"
+      ],
+      "endTime": "13:00",
+      "startTime": "10:00"
+    },
+    "startDate": {
+      "$date": "2025-04-15T00:00:00.000Z"
+    }
+  },
+  "tags": [
+    "adventure",
+    "nature",
+    "family"
+  ],
+  "type": "cycling"
+},
+{
+  "_id": {
+    "$oid": "68d5d9214e12806ded44cb67"
+  },
+  "address": "21 New Globe Walk, London SE1 9DT, United Kingdom",
+  "coordinates": {
+    "lat": 51.5081,
+    "lng": -0.0973
+  },
+  "description": "Participate in an interactive acting workshop at Shakespeare’s Globe, learning stage techniques and performing excerpts from classic plays.",
+  "destination": {
+    "city": "London",
+    "coordinates": {
+      "lat": 51.509865,
+      "lng": -0.118092
+    },
+    "country": {
+      "code": "GB",
+      "name": "United Kingdom"
+    },
+    "destinationId": {
+      "$oid": "68401642411ed34eaeaa6a6e"
+    },
+    "region": "England",
+    "timezone": "Europe/London"
+  },
+  "languages": [
+    "english",
+    "italian"
+  ],
+  "mainPicture": "https://images.unsplash.com/photo-1670992907643-38347d0bb6c6?q=80&w=1632&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "name": "Shakespeare’s Globe Theater Workshop",
+  "notes": "Recommended for ages 12 and up. Comfortable clothing and shoes required. Photography allowed in designated areas only.",
+  "pictures": [
+    "https://images.unsplash.com/photo-1670992907643-38347d0bb6c6?q=80&w=1632&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+  ],
+  "price": {
+    "currency": "EUR",
+    "value": 35
+  },
+  "reviewsSummary": {
+    "avgRating": 0,
+    "totalCount": {
+      "$numberLong": "0"
+    }
+  },
+  "schedule": {
+    "durationMinutes": 120,
+    "endDate": {
+      "$date": "2025-09-30T00:00:00.000Z"
+    },
+    "recurrence": {
+      "daysOfWeek": [
+        "THURSDAY",
+        "TUESDAY",
+        "SATURDAY"
+      ],
+      "endTime": "16:00",
+      "startTime": "14:00"
+    },
+    "startDate": {
+      "$date": "2025-05-01T00:00:00.000Z"
+    }
+  },
+  "tags": [
+    "cultural",
+    "history",
+    "family"
+  ],
+  "type": "workshop"
+}]

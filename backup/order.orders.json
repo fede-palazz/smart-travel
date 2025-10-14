@@ -1,0 +1,1770 @@
+[{
+  "_id": {
+    "$oid": "68d5e0879c8cd229a0cbfa14"
+  },
+  "customerInfo": {
+    "userId": {
+      "$oid": "68d5c51071a5457626d03e47"
+    },
+    "email": "caleb.johnson@gmail.com",
+    "name": "Caleb",
+    "surname": "Johnson"
+  },
+  "createdAt": {
+    "$date": "2025-07-12T00:38:31.293Z"
+  },
+  "type": "CUSTOM",
+  "items": {
+    "departureFlight": {
+      "flightId": {
+        "$oid": "688c67410c391c05ee703f37"
+      },
+      "code": "AF7739",
+      "quantity": 1,
+      "airline": "Air France",
+      "airlineLogo": "https://upload.wikimedia.org/wikipedia/commons/4/44/Air_France_Logo.svg",
+      "from": {
+        "airportCode": "MXP",
+        "airportName": "Malpensa",
+        "destinationId": {
+          "$oid": "680f7af8e634eef19a5e09a6"
+        },
+        "city": "Milan",
+        "region": "Lombardy",
+        "country": {
+          "name": "Italy",
+          "code": "IT"
+        },
+        "coordinates": {
+          "lat": 45.4642,
+          "lng": 9.19
+        },
+        "timezone": "Europe/Rome"
+      },
+      "to": {
+        "airportCode": "CDG",
+        "airportName": "Charles de Gaulle",
+        "destinationId": {
+          "$oid": "68187dec1e54584b07f2f804"
+        },
+        "city": "Paris",
+        "region": "Île-de-France",
+        "country": {
+          "name": "France",
+          "code": "FR"
+        },
+        "coordinates": {
+          "lat": 48.8566,
+          "lng": 2.3522
+        },
+        "timezone": "Europe/Paris"
+      },
+      "departureTime": {
+        "$date": "2025-07-26T17:30:00.000Z"
+      },
+      "arrivalTime": {
+        "$date": "2025-07-26T19:05:00.000Z"
+      },
+      "price": {
+        "value": 113.04,
+        "currency": "EUR"
+      }
+    },
+    "returnFlight": {
+      "flightId": {
+        "$oid": "688c67410c391c05ee703f48"
+      },
+      "code": "AF5432",
+      "quantity": 1,
+      "airline": "Air France",
+      "airlineLogo": "https://upload.wikimedia.org/wikipedia/commons/4/44/Air_France_Logo.svg",
+      "from": {
+        "airportCode": "CDG",
+        "airportName": "Charles de Gaulle",
+        "destinationId": {
+          "$oid": "68187dec1e54584b07f2f804"
+        },
+        "city": "Paris",
+        "region": "Île-de-France",
+        "country": {
+          "name": "France",
+          "code": "FR"
+        },
+        "coordinates": {
+          "lat": 48.8566,
+          "lng": 2.3522
+        },
+        "timezone": "Europe/Paris"
+      },
+      "to": {
+        "airportCode": "MXP",
+        "airportName": "Malpensa",
+        "destinationId": {
+          "$oid": "680f7af8e634eef19a5e09a6"
+        },
+        "city": "Milan",
+        "region": "Lombardy",
+        "country": {
+          "name": "Italy",
+          "code": "IT"
+        },
+        "coordinates": {
+          "lat": 45.4642,
+          "lng": 9.19
+        },
+        "timezone": "Europe/Rome"
+      },
+      "departureTime": {
+        "$date": "2025-07-28T05:46:00.000Z"
+      },
+      "arrivalTime": {
+        "$date": "2025-07-28T07:21:00.000Z"
+      },
+      "price": {
+        "value": 119.01,
+        "currency": "EUR"
+      }
+    },
+    "accommodation": {
+      "accommodationId": {
+        "$oid": "6846ab16746baa6313378891"
+      },
+      "name": "Montmartre Suites",
+      "type": "apartment",
+      "mainPicture": "https://images.unsplash.com/photo-1723465308831-29da05e011f3?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8aG90ZWwlMjBmcm9udHxlbnwwfDB8MHx8fDI%3D",
+      "rooms": [
+        {
+          "name": "Studio Suite",
+          "type": "studio",
+          "capacity": 2,
+          "pricePerNight": {
+            "value": 85,
+            "currency": "EUR"
+          },
+          "quantity": 1,
+          "amenities": [
+            "Kitchenette",
+            "Wi-Fi",
+            "Balcony",
+            "Flat-screen TV"
+          ],
+          "bedTypes": [
+            "double"
+          ],
+          "pictures": [
+            "https://images.unsplash.com/photo-1590490350333-6025f16b7fbb"
+          ]
+        }
+      ],
+      "startDate": {
+        "$date": "2025-07-25T22:00:00.000Z"
+      },
+      "endDate": {
+        "$date": "2025-07-27T22:00:00.000Z"
+      }
+    }
+  },
+  "payment": {
+    "status": "CONFIRMED",
+    "paidAt": {
+      "$date": "2025-07-12T00:38:49.196Z"
+    },
+    "amount": {
+      "value": 402.05,
+      "currency": "EUR"
+    },
+    "token": "3CY391617X830270M",
+    "payerId": "DNUESZ87BBFSA"
+  },
+  "_class": "com.certimetergroup.smart_travel.ordersapi.model.Order"
+},
+{
+  "_id": {
+    "$oid": "68d5e19c9c8cd229a0cbfa16"
+  },
+  "customerInfo": {
+    "userId": {
+      "$oid": "68d5c51071a5457626d03e47"
+    },
+    "email": "caleb.johnson@gmail.com",
+    "name": "Caleb",
+    "surname": "Johnson"
+  },
+  "createdAt": {
+    "$date": "2025-09-26T00:43:08.256Z"
+  },
+  "type": "SINGLE",
+  "items": {
+    "departureFlight": {
+      "flightId": {
+        "$oid": "68b5c6040456815d0b98cb50"
+      },
+      "code": "AZ4195",
+      "quantity": 2,
+      "airline": "ITA Airways",
+      "airlineLogo": "https://upload.wikimedia.org/wikipedia/commons/7/75/ITA_Airways_Logo.svg",
+      "from": {
+        "airportCode": "VCE",
+        "airportName": "Marco Polo",
+        "destinationId": {
+          "$oid": "680f7af8e634eef19a5e09a1"
+        },
+        "city": "Venice",
+        "region": "Veneto",
+        "country": {
+          "name": "Italy",
+          "code": "IT"
+        },
+        "coordinates": {
+          "lat": 45.4408,
+          "lng": 12.3155
+        },
+        "timezone": "Europe/Rome"
+      },
+      "to": {
+        "airportCode": "MXP",
+        "airportName": "Malpensa",
+        "destinationId": {
+          "$oid": "680f7af8e634eef19a5e09a6"
+        },
+        "city": "Milan",
+        "region": "Lombardy",
+        "country": {
+          "name": "Italy",
+          "code": "IT"
+        },
+        "coordinates": {
+          "lat": 45.4642,
+          "lng": 9.19
+        },
+        "timezone": "Europe/Rome"
+      },
+      "departureTime": {
+        "$date": "2025-10-13T09:34:00.000Z"
+      },
+      "arrivalTime": {
+        "$date": "2025-10-13T10:34:00.000Z"
+      },
+      "price": {
+        "value": 98.49,
+        "currency": "EUR"
+      }
+    },
+    "returnFlight": {
+      "flightId": {
+        "$oid": "68b5c6040456815d0b98cb67"
+      },
+      "code": "AZ3751",
+      "quantity": 2,
+      "airline": "ITA Airways",
+      "airlineLogo": "https://upload.wikimedia.org/wikipedia/commons/7/75/ITA_Airways_Logo.svg",
+      "from": {
+        "airportCode": "MXP",
+        "airportName": "Malpensa",
+        "destinationId": {
+          "$oid": "680f7af8e634eef19a5e09a6"
+        },
+        "city": "Milan",
+        "region": "Lombardy",
+        "country": {
+          "name": "Italy",
+          "code": "IT"
+        },
+        "coordinates": {
+          "lat": 45.4642,
+          "lng": 9.19
+        },
+        "timezone": "Europe/Rome"
+      },
+      "to": {
+        "airportCode": "VCE",
+        "airportName": "Marco Polo",
+        "destinationId": {
+          "$oid": "680f7af8e634eef19a5e09a1"
+        },
+        "city": "Venice",
+        "region": "Veneto",
+        "country": {
+          "name": "Italy",
+          "code": "IT"
+        },
+        "coordinates": {
+          "lat": 45.4408,
+          "lng": 12.3155
+        },
+        "timezone": "Europe/Rome"
+      },
+      "departureTime": {
+        "$date": "2025-10-19T13:29:00.000Z"
+      },
+      "arrivalTime": {
+        "$date": "2025-10-19T14:29:00.000Z"
+      },
+      "price": {
+        "value": 95.98,
+        "currency": "EUR"
+      }
+    }
+  },
+  "payment": {
+    "status": "CONFIRMED",
+    "paidAt": {
+      "$date": "2025-09-26T00:43:15.700Z"
+    },
+    "amount": {
+      "value": 388.94,
+      "currency": "EUR"
+    },
+    "token": "5TB5942331887820N",
+    "payerId": "DNUESZ87BBFSA"
+  },
+  "_class": "com.certimetergroup.smart_travel.ordersapi.model.Order"
+},
+{
+  "_id": {
+    "$oid": "68d5e1f09c8cd229a0cbfa18"
+  },
+  "customerInfo": {
+    "userId": {
+      "$oid": "68d5c51071a5457626d03e47"
+    },
+    "email": "caleb.johnson@gmail.com",
+    "name": "Caleb",
+    "surname": "Johnson"
+  },
+  "createdAt": {
+    "$date": "2025-05-28T00:44:32.627Z"
+  },
+  "type": "AGENCY",
+  "items": {
+    "departureFlight": {
+      "flightId": {
+        "$oid": "688c67410c391c05ee703f37"
+      },
+      "code": "AF7739",
+      "quantity": 4,
+      "airline": "Air France",
+      "airlineLogo": "https://upload.wikimedia.org/wikipedia/commons/4/44/Air_France_Logo.svg",
+      "from": {
+        "airportCode": "MXP",
+        "airportName": "Malpensa",
+        "destinationId": {
+          "$oid": "680f7af8e634eef19a5e09a6"
+        },
+        "city": "Milan",
+        "region": "Lombardy",
+        "country": {
+          "name": "Italy",
+          "code": "IT"
+        },
+        "coordinates": {
+          "lat": 45.4642,
+          "lng": 9.19
+        },
+        "timezone": "Europe/Rome"
+      },
+      "to": {
+        "airportCode": "CDG",
+        "airportName": "Charles de Gaulle",
+        "destinationId": {
+          "$oid": "68187dec1e54584b07f2f804"
+        },
+        "city": "Paris",
+        "region": "Île-de-France",
+        "country": {
+          "name": "France",
+          "code": "FR"
+        },
+        "coordinates": {
+          "lat": 48.8566,
+          "lng": 2.3522
+        },
+        "timezone": "Europe/Paris"
+      },
+      "departureTime": {
+        "$date": "2025-06-26T17:30:00.000Z"
+      },
+      "arrivalTime": {
+        "$date": "2025-06-26T19:05:00.000Z"
+      },
+      "price": {
+        "value": 113.04,
+        "currency": "EUR"
+      }
+    },
+    "returnFlight": {
+      "flightId": {
+        "$oid": "688c67410c391c05ee703f50"
+      },
+      "code": "AF1738",
+      "quantity": 4,
+      "airline": "Air France",
+      "airlineLogo": "https://upload.wikimedia.org/wikipedia/commons/4/44/Air_France_Logo.svg",
+      "from": {
+        "airportCode": "CDG",
+        "airportName": "Charles de Gaulle",
+        "destinationId": {
+          "$oid": "68187dec1e54584b07f2f804"
+        },
+        "city": "Paris",
+        "region": "Île-de-France",
+        "country": {
+          "name": "France",
+          "code": "FR"
+        },
+        "coordinates": {
+          "lat": 48.8566,
+          "lng": 2.3522
+        },
+        "timezone": "Europe/Paris"
+      },
+      "to": {
+        "airportCode": "MXP",
+        "airportName": "Malpensa",
+        "destinationId": {
+          "$oid": "680f7af8e634eef19a5e09a6"
+        },
+        "city": "Milan",
+        "region": "Lombardy",
+        "country": {
+          "name": "Italy",
+          "code": "IT"
+        },
+        "coordinates": {
+          "lat": 45.4642,
+          "lng": 9.19
+        },
+        "timezone": "Europe/Rome"
+      },
+      "departureTime": {
+        "$date": "2025-06-30T16:01:00.000Z"
+      },
+      "arrivalTime": {
+        "$date": "2025-06-30T17:36:00.000Z"
+      },
+      "price": {
+        "value": 101.81,
+        "currency": "EUR"
+      }
+    },
+    "accommodation": {
+      "accommodationId": {
+        "$oid": "6846ab78746baa6313378892"
+      },
+      "name": "Seine River Hotel",
+      "type": "hotel",
+      "mainPicture": "https://images.unsplash.com/photo-1653280675477-878425ecb5f9?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NTd8fGhvdGVsJTIwZnJvbnR8ZW58MHwwfDB8fHwy",
+      "rooms": [
+        {
+          "name": "Family room",
+          "type": "family",
+          "capacity": 4,
+          "pricePerNight": {
+            "value": 250,
+            "currency": "EUR"
+          },
+          "quantity": 1,
+          "amenities": [
+            "Locker",
+            "Wi-Fi",
+            "Reading light",
+            "Private bathroom"
+          ],
+          "bedTypes": [
+            "bunk"
+          ],
+          "pictures": [
+            "https://images.unsplash.com/photo-1524758631624-e2822e304c36"
+          ]
+        }
+      ],
+      "startDate": {
+        "$date": "2025-06-25T22:00:00.000Z"
+      },
+      "endDate": {
+        "$date": "2025-06-29T22:00:00.000Z"
+      }
+    },
+    "activities": [
+      {
+        "activityId": {
+          "$oid": "686e40a573d8487dad27d266"
+        },
+        "name": "Eiffel Tower Guided Tour",
+        "type": "tour",
+        "mainPicture": "https://images.unsplash.com/photo-1640878840475-9a32bae6f360?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mjh8fGVpZmZlbGwlMjB0b3dlcnxlbnwwfDB8MHx8fDI%3D",
+        "date": {
+          "$date": "2025-06-26T22:00:00.000Z"
+        },
+        "quantity": 4,
+        "price": {
+          "value": 35,
+          "currency": "EUR"
+        },
+        "startTime": "11:00",
+        "endTime": "13:00"
+      },
+      {
+        "activityId": {
+          "$oid": "686d33efb091256a632ceafc"
+        },
+        "name": "Louvre Museum Admission",
+        "type": "museum",
+        "mainPicture": "https://images.unsplash.com/photo-1587648415693-4a5362b2ce41?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "date": {
+          "$date": "2025-06-27T22:00:00.000Z"
+        },
+        "quantity": 4,
+        "price": {
+          "value": 15,
+          "currency": "EUR"
+        },
+        "startTime": "10:00",
+        "endTime": "17:00"
+      }
+    ]
+  },
+  "payment": {
+    "status": "CONFIRMED",
+    "paidAt": {
+      "$date": "2025-05-28T00:44:38.764Z"
+    },
+    "amount": {
+      "value": 2200,
+      "currency": "EUR"
+    },
+    "token": "0YG0207950405941U",
+    "payerId": "DNUESZ87BBFSA"
+  },
+  "agencyPackageId": "68d5c77c4e12806ded44cb5b",
+  "_class": "com.certimetergroup.smart_travel.ordersapi.model.Order"
+},
+{
+  "_id": {
+    "$oid": "68d5e3e49c8cd229a0cbfa1a"
+  },
+  "customerInfo": {
+    "userId": {
+      "$oid": "68d5c58171a5457626d03e48"
+    },
+    "email": "charlotte.williams@gmail.com",
+    "name": "Charlotte",
+    "surname": "Williams"
+  },
+  "createdAt": {
+    "$date": "2025-09-26T00:52:52.557Z"
+  },
+  "type": "AGENCY",
+  "items": {
+    "departureFlight": {
+      "flightId": {
+        "$oid": "68b5c6040456815d0b98cb31"
+      },
+      "code": "BA6929",
+      "quantity": 2,
+      "airline": "British Airways",
+      "airlineLogo": "https://upload.wikimedia.org/wikipedia/it/4/42/British_Airways_Logo.svg",
+      "from": {
+        "airportCode": "MXP",
+        "airportName": "Malpensa",
+        "destinationId": {
+          "$oid": "680f7af8e634eef19a5e09a6"
+        },
+        "city": "Milan",
+        "region": "Lombardy",
+        "country": {
+          "name": "Italy",
+          "code": "IT"
+        },
+        "coordinates": {
+          "lat": 45.4642,
+          "lng": 9.19
+        },
+        "timezone": "Europe/Rome"
+      },
+      "to": {
+        "airportCode": "LHR",
+        "airportName": "Heathrow Airport",
+        "destinationId": {
+          "$oid": "68401642411ed34eaeaa6a6e"
+        },
+        "city": "London",
+        "region": "England",
+        "country": {
+          "name": "United Kingdom",
+          "code": "GB"
+        },
+        "coordinates": {
+          "lat": 51.509865,
+          "lng": -0.118092
+        },
+        "timezone": "Europe/London"
+      },
+      "departureTime": {
+        "$date": "2025-10-07T05:42:00.000Z"
+      },
+      "arrivalTime": {
+        "$date": "2025-10-07T07:32:00.000Z"
+      },
+      "price": {
+        "value": 126.67,
+        "currency": "EUR"
+      }
+    },
+    "returnFlight": {
+      "flightId": {
+        "$oid": "68b5c6040456815d0b98cb42"
+      },
+      "code": "BA4611",
+      "quantity": 2,
+      "airline": "British Airways",
+      "airlineLogo": "https://upload.wikimedia.org/wikipedia/it/4/42/British_Airways_Logo.svg",
+      "from": {
+        "airportCode": "LHR",
+        "airportName": "Heathrow Airport",
+        "destinationId": {
+          "$oid": "68401642411ed34eaeaa6a6e"
+        },
+        "city": "London",
+        "region": "England",
+        "country": {
+          "name": "United Kingdom",
+          "code": "GB"
+        },
+        "coordinates": {
+          "lat": 51.509865,
+          "lng": -0.118092
+        },
+        "timezone": "Europe/London"
+      },
+      "to": {
+        "airportCode": "MXP",
+        "airportName": "Malpensa",
+        "destinationId": {
+          "$oid": "680f7af8e634eef19a5e09a6"
+        },
+        "city": "Milan",
+        "region": "Lombardy",
+        "country": {
+          "name": "Italy",
+          "code": "IT"
+        },
+        "coordinates": {
+          "lat": 45.4642,
+          "lng": 9.19
+        },
+        "timezone": "Europe/Rome"
+      },
+      "departureTime": {
+        "$date": "2025-10-10T18:34:00.000Z"
+      },
+      "arrivalTime": {
+        "$date": "2025-10-10T20:24:00.000Z"
+      },
+      "price": {
+        "value": 97.35,
+        "currency": "EUR"
+      }
+    },
+    "accommodation": {
+      "accommodationId": {
+        "$oid": "68d5cd994e12806ded44cb5e"
+      },
+      "name": "Riverside View Apartment",
+      "type": "apartment",
+      "mainPicture": "https://images.unsplash.com/photo-1665424305668-2c6dc28f2613?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "rooms": [
+        {
+          "name": "Deluxe Double Room",
+          "type": "double",
+          "capacity": 2,
+          "pricePerNight": {
+            "value": 100,
+            "currency": "EUR"
+          },
+          "quantity": 1,
+          "amenities": [
+            "Air conditioning",
+            "TV",
+            "Mini bar"
+          ],
+          "bedTypes": [
+            "double"
+          ],
+          "pictures": [
+            "https://images.unsplash.com/photo-1613977257363-707ba9348220",
+            "https://images.unsplash.com/photo-1560347876-aeef00ee58a1"
+          ]
+        }
+      ],
+      "startDate": {
+        "$date": "2025-10-06T22:00:00.000Z"
+      },
+      "endDate": {
+        "$date": "2025-10-09T22:00:00.000Z"
+      }
+    },
+    "activities": [
+      {
+        "activityId": {
+          "$oid": "68d5d76a4e12806ded44cb62"
+        },
+        "name": "Tower of London Guided Tour",
+        "type": "tour",
+        "mainPicture": "https://images.unsplash.com/photo-1701866657323-e5197385c8b9?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "date": {
+          "$date": "2025-10-08T22:00:00.000Z"
+        },
+        "quantity": 2,
+        "price": {
+          "value": 25,
+          "currency": "EUR"
+        },
+        "startTime": "09:30",
+        "endTime": "16:30"
+      },
+      {
+        "activityId": {
+          "$oid": "68d5d8194e12806ded44cb63"
+        },
+        "name": "Thames Evening Boat Ride",
+        "type": "boat",
+        "mainPicture": "https://images.unsplash.com/photo-1598981234708-9c2f7b80d261?q=80&w=1172&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "date": {
+          "$date": "2025-10-07T22:00:00.000Z"
+        },
+        "quantity": 2,
+        "price": {
+          "value": 30,
+          "currency": "EUR"
+        },
+        "startTime": "18:30",
+        "endTime": "20:00"
+      }
+    ]
+  },
+  "payment": {
+    "status": "CONFIRMED",
+    "paidAt": {
+      "$date": "2025-09-26T00:52:58.068Z"
+    },
+    "amount": {
+      "value": 1000,
+      "currency": "EUR"
+    },
+    "token": "6BH056328L776913P",
+    "payerId": "DNUESZ87BBFSA"
+  },
+  "agencyPackageId": "68d5e3aa4e12806ded44cb68",
+  "_class": "com.certimetergroup.smart_travel.ordersapi.model.Order"
+},
+{
+  "_id": {
+    "$oid": "68d5e4d1a66668064989b633"
+  },
+  "customerInfo": {
+    "userId": {
+      "$oid": "68d5c58171a5457626d03e48"
+    },
+    "email": "charlotte.williams@gmail.com",
+    "name": "Charlotte",
+    "surname": "Williams"
+  },
+  "createdAt": {
+    "$date": "2025-01-26T00:56:49.275Z"
+  },
+  "type": "SINGLE",
+  "items": {
+    "departureFlight": {
+      "flightId": {
+        "$oid": "68b5c6040456815d0b98cb3e"
+      },
+      "code": "AZ4436",
+      "quantity": 2,
+      "airline": "ITA Airways",
+      "airlineLogo": "https://upload.wikimedia.org/wikipedia/commons/7/75/ITA_Airways_Logo.svg",
+      "from": {
+        "airportCode": "FLR",
+        "airportName": "Amerigo Vespucci",
+        "destinationId": {
+          "$oid": "680f7af8e634eef19a5e09a0"
+        },
+        "city": "Florence",
+        "region": "Tuscany",
+        "country": {
+          "name": "Italy",
+          "code": "IT"
+        },
+        "coordinates": {
+          "lat": 43.7696,
+          "lng": 11.2558
+        },
+        "timezone": "Europe/Rome"
+      },
+      "to": {
+        "airportCode": "MXP",
+        "airportName": "Malpensa",
+        "destinationId": {
+          "$oid": "680f7af8e634eef19a5e09a6"
+        },
+        "city": "Milan",
+        "region": "Lombardy",
+        "country": {
+          "name": "Italy",
+          "code": "IT"
+        },
+        "coordinates": {
+          "lat": 45.4642,
+          "lng": 9.19
+        },
+        "timezone": "Europe/Rome"
+      },
+      "departureTime": {
+        "$date": "2025-01-10T10:38:00.000Z"
+      },
+      "arrivalTime": {
+        "$date": "2025-01-10T11:38:00.000Z"
+      },
+      "price": {
+        "value": 141.57,
+        "currency": "EUR"
+      }
+    }
+  },
+  "payment": {
+    "status": "CONFIRMED",
+    "paidAt": {
+      "$date": "2025-01-26T00:57:12.761Z"
+    },
+    "amount": {
+      "value": 283.14,
+      "currency": "EUR"
+    },
+    "token": "62X48295YK853890B",
+    "payerId": "DNUESZ87BBFSA"
+  },
+  "_class": "com.certimetergroup.smart_travel.ordersapi.model.Order"
+},
+{
+  "_id": {
+    "$oid": "68d5e568a66668064989b635"
+  },
+  "customerInfo": {
+    "userId": {
+      "$oid": "68d5c58171a5457626d03e48"
+    },
+    "email": "charlotte.williams@gmail.com",
+    "name": "Charlotte",
+    "surname": "Williams"
+  },
+  "createdAt": {
+    "$date": "2025-09-26T00:59:20.470Z"
+  },
+  "type": "CUSTOM",
+  "items": {
+    "departureFlight": {
+      "flightId": {
+        "$oid": "68b5c6040456815d0b98cba3"
+      },
+      "code": "AF9194",
+      "quantity": 2,
+      "airline": "Air France",
+      "airlineLogo": "https://upload.wikimedia.org/wikipedia/commons/4/44/Air_France_Logo.svg",
+      "from": {
+        "airportCode": "MXP",
+        "airportName": "Malpensa",
+        "destinationId": {
+          "$oid": "680f7af8e634eef19a5e09a6"
+        },
+        "city": "Milan",
+        "region": "Lombardy",
+        "country": {
+          "name": "Italy",
+          "code": "IT"
+        },
+        "coordinates": {
+          "lat": 45.4642,
+          "lng": 9.19
+        },
+        "timezone": "Europe/Rome"
+      },
+      "to": {
+        "airportCode": "CDG",
+        "airportName": "Charles de Gaulle",
+        "destinationId": {
+          "$oid": "68187dec1e54584b07f2f804"
+        },
+        "city": "Paris",
+        "region": "Île-de-France",
+        "country": {
+          "name": "France",
+          "code": "FR"
+        },
+        "coordinates": {
+          "lat": 48.8566,
+          "lng": 2.3522
+        },
+        "timezone": "Europe/Paris"
+      },
+      "departureTime": {
+        "$date": "2025-10-28T10:21:00.000Z"
+      },
+      "arrivalTime": {
+        "$date": "2025-10-28T11:56:00.000Z"
+      },
+      "price": {
+        "value": 133.24,
+        "currency": "EUR"
+      }
+    },
+    "returnFlight": {
+      "flightId": {
+        "$oid": "68b5c6040456815d0b98cbac"
+      },
+      "code": "AF2332",
+      "quantity": 2,
+      "airline": "Air France",
+      "airlineLogo": "https://upload.wikimedia.org/wikipedia/commons/4/44/Air_France_Logo.svg",
+      "from": {
+        "airportCode": "CDG",
+        "airportName": "Charles de Gaulle",
+        "destinationId": {
+          "$oid": "68187dec1e54584b07f2f804"
+        },
+        "city": "Paris",
+        "region": "Île-de-France",
+        "country": {
+          "name": "France",
+          "code": "FR"
+        },
+        "coordinates": {
+          "lat": 48.8566,
+          "lng": 2.3522
+        },
+        "timezone": "Europe/Paris"
+      },
+      "to": {
+        "airportCode": "MXP",
+        "airportName": "Malpensa",
+        "destinationId": {
+          "$oid": "680f7af8e634eef19a5e09a6"
+        },
+        "city": "Milan",
+        "region": "Lombardy",
+        "country": {
+          "name": "Italy",
+          "code": "IT"
+        },
+        "coordinates": {
+          "lat": 45.4642,
+          "lng": 9.19
+        },
+        "timezone": "Europe/Rome"
+      },
+      "departureTime": {
+        "$date": "2025-10-30T19:34:00.000Z"
+      },
+      "arrivalTime": {
+        "$date": "2025-10-30T21:09:00.000Z"
+      },
+      "price": {
+        "value": 131.76,
+        "currency": "EUR"
+      }
+    },
+    "activities": [
+      {
+        "activityId": {
+          "$oid": "686e437373d8487dad27d26a"
+        },
+        "name": "French Pastry Cooking Class",
+        "type": "cooking",
+        "mainPicture": "https://images.unsplash.com/photo-1652283305325-009cf368c0e1?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8RnJlbmNoJTIwUGFzdHJ5JTIwQ29va2luZyUyMENsYXNzfGVufDB8MHwwfHx8Mg%3D%3D\"",
+        "date": {
+          "$date": "2025-10-28T23:00:00.000Z"
+        },
+        "quantity": 2,
+        "price": {
+          "value": 60,
+          "currency": "EUR"
+        },
+        "startTime": "10:00",
+        "endTime": "13:00"
+      }
+    ]
+  },
+  "payment": {
+    "status": "CONFIRMED",
+    "paidAt": {
+      "$date": "2025-09-26T00:59:26.405Z"
+    },
+    "amount": {
+      "value": 650,
+      "currency": "EUR"
+    },
+    "token": "38X26932CJ515262G",
+    "payerId": "DNUESZ87BBFSA"
+  },
+  "_class": "com.certimetergroup.smart_travel.ordersapi.model.Order"
+},
+{
+  "_id": {
+    "$oid": "68d6694ea66668064989b638"
+  },
+  "customerInfo": {
+    "userId": {
+      "$oid": "68d5c51071a5457626d03e47"
+    },
+    "email": "caleb.johnson@gmail.com",
+    "name": "Caleb",
+    "surname": "Johnson"
+  },
+  "createdAt": {
+    "$date": "2025-09-26T10:22:06.052Z"
+  },
+  "type": "CUSTOM",
+  "items": {
+    "departureFlight": {
+      "flightId": {
+        "$oid": "688c67410c391c05ee703f3d"
+      },
+      "code": "BA9800",
+      "quantity": 2,
+      "airline": "British Airways",
+      "airlineLogo": "https://upload.wikimedia.org/wikipedia/it/4/42/British_Airways_Logo.svg",
+      "from": {
+        "airportCode": "MXP",
+        "airportName": "Malpensa",
+        "destinationId": {
+          "$oid": "680f7af8e634eef19a5e09a6"
+        },
+        "city": "Milan",
+        "region": "Lombardy",
+        "country": {
+          "name": "Italy",
+          "code": "IT"
+        },
+        "coordinates": {
+          "lat": 45.4642,
+          "lng": 9.19
+        },
+        "timezone": "Europe/Rome"
+      },
+      "to": {
+        "airportCode": "LHR",
+        "airportName": "Heathrow Airport",
+        "destinationId": {
+          "$oid": "68401642411ed34eaeaa6a6e"
+        },
+        "city": "London",
+        "region": "England",
+        "country": {
+          "name": "United Kingdom",
+          "code": "GB"
+        },
+        "coordinates": {
+          "lat": 51.509865,
+          "lng": -0.118092
+        },
+        "timezone": "Europe/London"
+      },
+      "departureTime": {
+        "$date": "2025-09-27T14:15:00.000Z"
+      },
+      "arrivalTime": {
+        "$date": "2025-09-27T16:05:00.000Z"
+      },
+      "price": {
+        "value": 64.87,
+        "currency": "EUR"
+      }
+    },
+    "returnFlight": {
+      "flightId": {
+        "$oid": "688c67410c391c05ee703f4e"
+      },
+      "code": "BA9418",
+      "quantity": 2,
+      "airline": "British Airways",
+      "airlineLogo": "https://upload.wikimedia.org/wikipedia/it/4/42/British_Airways_Logo.svg",
+      "from": {
+        "airportCode": "LHR",
+        "airportName": "Heathrow Airport",
+        "destinationId": {
+          "$oid": "68401642411ed34eaeaa6a6e"
+        },
+        "city": "London",
+        "region": "England",
+        "country": {
+          "name": "United Kingdom",
+          "code": "GB"
+        },
+        "coordinates": {
+          "lat": 51.509865,
+          "lng": -0.118092
+        },
+        "timezone": "Europe/London"
+      },
+      "to": {
+        "airportCode": "MXP",
+        "airportName": "Malpensa",
+        "destinationId": {
+          "$oid": "680f7af8e634eef19a5e09a6"
+        },
+        "city": "Milan",
+        "region": "Lombardy",
+        "country": {
+          "name": "Italy",
+          "code": "IT"
+        },
+        "coordinates": {
+          "lat": 45.4642,
+          "lng": 9.19
+        },
+        "timezone": "Europe/Rome"
+      },
+      "departureTime": {
+        "$date": "2025-09-30T10:10:00.000Z"
+      },
+      "arrivalTime": {
+        "$date": "2025-09-30T12:00:00.000Z"
+      },
+      "price": {
+        "value": 145.2,
+        "currency": "EUR"
+      }
+    },
+    "accommodation": {
+      "accommodationId": {
+        "$oid": "68d5d0c74e12806ded44cb60"
+      },
+      "name": "The Victoria Grand Hotel",
+      "type": "hotel",
+      "mainPicture": "https://images.unsplash.com/photo-1579609702272-cf5e2f260ab7?q=80&w=1633&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "rooms": [
+        {
+          "name": "Deluxe Double Room",
+          "type": "double",
+          "capacity": 2,
+          "pricePerNight": {
+            "value": 250,
+            "currency": "EUR"
+          },
+          "quantity": 1,
+          "amenities": [
+            "Air conditioning",
+            "TV",
+            "Mini bar"
+          ],
+          "bedTypes": [
+            "double"
+          ],
+          "pictures": [
+            "https://images.unsplash.com/photo-1613977257363-707ba9348220",
+            "https://images.unsplash.com/photo-1560347876-aeef00ee58a1"
+          ]
+        }
+      ],
+      "startDate": {
+        "$date": "2025-09-26T22:00:00.000Z"
+      },
+      "endDate": {
+        "$date": "2025-09-29T22:00:00.000Z"
+      }
+    },
+    "activities": [
+      {
+        "activityId": {
+          "$oid": "68d5d8194e12806ded44cb63"
+        },
+        "name": "Thames Evening Boat Ride",
+        "type": "boat",
+        "mainPicture": "https://images.unsplash.com/photo-1598981234708-9c2f7b80d261?q=80&w=1172&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "date": {
+          "$date": "2025-09-28T22:00:00.000Z"
+        },
+        "quantity": 2,
+        "price": {
+          "value": 30,
+          "currency": "EUR"
+        },
+        "startTime": "18:30",
+        "endTime": "20:00"
+      },
+      {
+        "activityId": {
+          "$oid": "68d5d85a4e12806ded44cb64"
+        },
+        "name": "British Museum Highlights Tour",
+        "type": "museum",
+        "mainPicture": "https://images.unsplash.com/photo-1602522647889-a01c1d5bf21e?q=80&w=1908&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "date": {
+          "$date": "2025-09-27T22:00:00.000Z"
+        },
+        "quantity": 2,
+        "price": {
+          "value": 20,
+          "currency": "EUR"
+        },
+        "startTime": "10:00",
+        "endTime": "15:00"
+      }
+    ]
+  },
+  "payment": {
+    "status": "CONFIRMED",
+    "paidAt": {
+      "$date": "2025-09-26T10:22:32.156Z"
+    },
+    "amount": {
+      "value": 1270.1399999999999,
+      "currency": "EUR"
+    },
+    "token": "37B74176RN856110S",
+    "payerId": "DNUESZ87BBFSA"
+  },
+  "_class": "com.certimetergroup.smart_travel.ordersapi.model.Order"
+},
+{
+  "_id": {
+    "$oid": "68d66b32a66668064989b63a"
+  },
+  "customerInfo": {
+    "userId": {
+      "$oid": "68d5c51071a5457626d03e47"
+    },
+    "email": "caleb.johnson@gmail.com",
+    "name": "Caleb",
+    "surname": "Johnson"
+  },
+  "createdAt": {
+    "$date": "2025-09-26T10:30:10.606Z"
+  },
+  "type": "AGENCY",
+  "items": {
+    "departureFlight": {
+      "flightId": {
+        "$oid": "68b5c6040456815d0b98cb33"
+      },
+      "code": "AF2998",
+      "quantity": 4,
+      "airline": "Air France",
+      "airlineLogo": "https://upload.wikimedia.org/wikipedia/commons/4/44/Air_France_Logo.svg",
+      "from": {
+        "airportCode": "MXP",
+        "airportName": "Malpensa",
+        "destinationId": {
+          "$oid": "680f7af8e634eef19a5e09a6"
+        },
+        "city": "Milan",
+        "region": "Lombardy",
+        "country": {
+          "name": "Italy",
+          "code": "IT"
+        },
+        "coordinates": {
+          "lat": 45.4642,
+          "lng": 9.19
+        },
+        "timezone": "Europe/Rome"
+      },
+      "to": {
+        "airportCode": "CDG",
+        "airportName": "Charles de Gaulle",
+        "destinationId": {
+          "$oid": "68187dec1e54584b07f2f804"
+        },
+        "city": "Paris",
+        "region": "Île-de-France",
+        "country": {
+          "name": "France",
+          "code": "FR"
+        },
+        "coordinates": {
+          "lat": 48.8566,
+          "lng": 2.3522
+        },
+        "timezone": "Europe/Paris"
+      },
+      "departureTime": {
+        "$date": "2025-10-07T08:02:00.000Z"
+      },
+      "arrivalTime": {
+        "$date": "2025-10-07T09:37:00.000Z"
+      },
+      "price": {
+        "value": 95.36,
+        "currency": "EUR"
+      }
+    },
+    "returnFlight": {
+      "flightId": {
+        "$oid": "68b5c6040456815d0b98cb44"
+      },
+      "code": "AF7130",
+      "quantity": 4,
+      "airline": "Air France",
+      "airlineLogo": "https://upload.wikimedia.org/wikipedia/commons/4/44/Air_France_Logo.svg",
+      "from": {
+        "airportCode": "CDG",
+        "airportName": "Charles de Gaulle",
+        "destinationId": {
+          "$oid": "68187dec1e54584b07f2f804"
+        },
+        "city": "Paris",
+        "region": "Île-de-France",
+        "country": {
+          "name": "France",
+          "code": "FR"
+        },
+        "coordinates": {
+          "lat": 48.8566,
+          "lng": 2.3522
+        },
+        "timezone": "Europe/Paris"
+      },
+      "to": {
+        "airportCode": "MXP",
+        "airportName": "Malpensa",
+        "destinationId": {
+          "$oid": "680f7af8e634eef19a5e09a6"
+        },
+        "city": "Milan",
+        "region": "Lombardy",
+        "country": {
+          "name": "Italy",
+          "code": "IT"
+        },
+        "coordinates": {
+          "lat": 45.4642,
+          "lng": 9.19
+        },
+        "timezone": "Europe/Rome"
+      },
+      "departureTime": {
+        "$date": "2025-10-10T16:11:00.000Z"
+      },
+      "arrivalTime": {
+        "$date": "2025-10-10T17:46:00.000Z"
+      },
+      "price": {
+        "value": 118.7,
+        "currency": "EUR"
+      }
+    },
+    "accommodation": {
+      "accommodationId": {
+        "$oid": "6846ab78746baa6313378892"
+      },
+      "name": "Seine River Hotel",
+      "type": "hotel",
+      "mainPicture": "https://images.unsplash.com/photo-1653280675477-878425ecb5f9?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NTd8fGhvdGVsJTIwZnJvbnR8ZW58MHwwfDB8fHwy",
+      "rooms": [
+        {
+          "name": "Family room",
+          "type": "family",
+          "capacity": 4,
+          "pricePerNight": {
+            "value": 250,
+            "currency": "EUR"
+          },
+          "quantity": 1,
+          "amenities": [
+            "Locker",
+            "Wi-Fi",
+            "Reading light",
+            "Private bathroom"
+          ],
+          "bedTypes": [
+            "bunk"
+          ],
+          "pictures": [
+            "https://images.unsplash.com/photo-1524758631624-e2822e304c36"
+          ]
+        }
+      ],
+      "startDate": {
+        "$date": "2025-10-06T22:00:00.000Z"
+      },
+      "endDate": {
+        "$date": "2025-10-09T22:00:00.000Z"
+      }
+    },
+    "activities": [
+      {
+        "activityId": {
+          "$oid": "686e40a573d8487dad27d266"
+        },
+        "name": "Eiffel Tower Guided Tour",
+        "type": "tour",
+        "mainPicture": "https://images.unsplash.com/photo-1640878840475-9a32bae6f360?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mjh8fGVpZmZlbGwlMjB0b3dlcnxlbnwwfDB8MHx8fDI%3D",
+        "date": {
+          "$date": "2025-10-08T22:00:00.000Z"
+        },
+        "quantity": 4,
+        "price": {
+          "value": 35,
+          "currency": "EUR"
+        },
+        "startTime": "11:00",
+        "endTime": "13:00"
+      }
+    ]
+  },
+  "payment": {
+    "status": "CONFIRMED",
+    "paidAt": {
+      "$date": "2025-09-26T10:30:16.987Z"
+    },
+    "amount": {
+      "value": 2000,
+      "currency": "EUR"
+    },
+    "token": "5AK499812D735781P",
+    "payerId": "DNUESZ87BBFSA"
+  },
+  "agencyPackageId": "68d66af8b8c8503118ef9580",
+  "_class": "com.certimetergroup.smart_travel.ordersapi.model.Order"
+},
+{
+  "_id": {
+    "$oid": "68e8c43c3fb8b32191f9afb7"
+  },
+  "customerInfo": {
+    "userId": {
+      "$oid": "68d5c51071a5457626d03e47"
+    },
+    "email": "caleb.johnson@gmail.com",
+    "name": "Caleb",
+    "surname": "Johnson"
+  },
+  "createdAt": {
+    "$date": "2025-10-10T08:30:52.482Z"
+  },
+  "type": "CUSTOM",
+  "items": {
+    "departureFlight": {
+      "flightId": {
+        "$oid": "68b5c6040456815d0b98cb5b"
+      },
+      "code": "AF9506",
+      "quantity": 2,
+      "airline": "Air France",
+      "airlineLogo": "https://upload.wikimedia.org/wikipedia/commons/4/44/Air_France_Logo.svg",
+      "from": {
+        "airportCode": "MXP",
+        "airportName": "Malpensa",
+        "destinationId": {
+          "$oid": "680f7af8e634eef19a5e09a6"
+        },
+        "city": "Milan",
+        "region": "Lombardy",
+        "country": {
+          "name": "Italy",
+          "code": "IT"
+        },
+        "coordinates": {
+          "lat": 45.4642,
+          "lng": 9.19
+        },
+        "timezone": "Europe/Rome"
+      },
+      "to": {
+        "airportCode": "CDG",
+        "airportName": "Charles de Gaulle",
+        "destinationId": {
+          "$oid": "68187dec1e54584b07f2f804"
+        },
+        "city": "Paris",
+        "region": "Île-de-France",
+        "country": {
+          "name": "France",
+          "code": "FR"
+        },
+        "coordinates": {
+          "lat": 48.8566,
+          "lng": 2.3522
+        },
+        "timezone": "Europe/Paris"
+      },
+      "departureTime": {
+        "$date": "2025-10-15T06:03:00.000Z"
+      },
+      "arrivalTime": {
+        "$date": "2025-10-15T07:38:00.000Z"
+      },
+      "price": {
+        "value": 134.12,
+        "currency": "EUR"
+      }
+    },
+    "returnFlight": {
+      "flightId": {
+        "$oid": "68b5c6040456815d0b98cb64"
+      },
+      "code": "AF6721",
+      "quantity": 2,
+      "airline": "Air France",
+      "airlineLogo": "https://upload.wikimedia.org/wikipedia/commons/4/44/Air_France_Logo.svg",
+      "from": {
+        "airportCode": "CDG",
+        "airportName": "Charles de Gaulle",
+        "destinationId": {
+          "$oid": "68187dec1e54584b07f2f804"
+        },
+        "city": "Paris",
+        "region": "Île-de-France",
+        "country": {
+          "name": "France",
+          "code": "FR"
+        },
+        "coordinates": {
+          "lat": 48.8566,
+          "lng": 2.3522
+        },
+        "timezone": "Europe/Paris"
+      },
+      "to": {
+        "airportCode": "MXP",
+        "airportName": "Malpensa",
+        "destinationId": {
+          "$oid": "680f7af8e634eef19a5e09a6"
+        },
+        "city": "Milan",
+        "region": "Lombardy",
+        "country": {
+          "name": "Italy",
+          "code": "IT"
+        },
+        "coordinates": {
+          "lat": 45.4642,
+          "lng": 9.19
+        },
+        "timezone": "Europe/Rome"
+      },
+      "departureTime": {
+        "$date": "2025-10-17T04:23:00.000Z"
+      },
+      "arrivalTime": {
+        "$date": "2025-10-17T05:58:00.000Z"
+      },
+      "price": {
+        "value": 105.84,
+        "currency": "EUR"
+      }
+    },
+    "accommodation": {
+      "accommodationId": {
+        "$oid": "6846abca746baa6313378893"
+      },
+      "name": "Champs-Élysées Luxury Stay",
+      "type": "hotel",
+      "mainPicture": "https://images.unsplash.com/photo-1668802117202-a256a84d6daa?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NjF8fGhvdGVsJTIwZnJvbnR8ZW58MHwwfDB8fHwy",
+      "rooms": [
+        {
+          "name": "Prestige Suite",
+          "type": "suite",
+          "capacity": 2,
+          "pricePerNight": {
+            "value": 420,
+            "currency": "EUR"
+          },
+          "quantity": 1,
+          "amenities": [
+            "Terrace",
+            "Smart TV",
+            "Room service",
+            "Jacuzzi"
+          ],
+          "bedTypes": [
+            "king"
+          ],
+          "pictures": [
+            "https://images.unsplash.com/photo-1582719478181-dc47a03ba807"
+          ]
+        }
+      ],
+      "startDate": {
+        "$date": "2025-10-14T22:00:00.000Z"
+      },
+      "endDate": {
+        "$date": "2025-10-16T22:00:00.000Z"
+      }
+    },
+    "activities": [
+      {
+        "activityId": {
+          "$oid": "686e40a573d8487dad27d266"
+        },
+        "name": "Eiffel Tower Guided Tour",
+        "type": "tour",
+        "mainPicture": "https://images.unsplash.com/photo-1640878840475-9a32bae6f360?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mjh8fGVpZmZlbGwlMjB0b3dlcnxlbnwwfDB8MHx8fDI%3D",
+        "date": {
+          "$date": "2025-10-16T22:00:00.000Z"
+        },
+        "quantity": 2,
+        "price": {
+          "value": 35,
+          "currency": "EUR"
+        },
+        "startTime": "11:00",
+        "endTime": "13:00"
+      }
+    ]
+  },
+  "payment": {
+    "status": "CONFIRMED",
+    "paidAt": {
+      "$date": "2025-10-10T08:31:06.779Z"
+    },
+    "amount": {
+      "value": 1389.92,
+      "currency": "EUR"
+    },
+    "token": "89247903ES552603L",
+    "payerId": "DNUESZ87BBFSA"
+  },
+  "_class": "com.certimetergroup.smart_travel.ordersapi.model.Order"
+},
+{
+  "_id": {
+    "$oid": "68e8c49f3fb8b32191f9afb9"
+  },
+  "customerInfo": {
+    "userId": {
+      "$oid": "68d5c51071a5457626d03e47"
+    },
+    "email": "caleb.johnson@gmail.com",
+    "name": "Caleb",
+    "surname": "Johnson"
+  },
+  "createdAt": {
+    "$date": "2025-10-10T08:32:31.006Z"
+  },
+  "type": "SINGLE",
+  "items": {
+    "departureFlight": {
+      "flightId": {
+        "$oid": "68b5c6040456815d0b98cb59"
+      },
+      "code": "BA3692",
+      "quantity": 2,
+      "airline": "British Airways",
+      "airlineLogo": "https://upload.wikimedia.org/wikipedia/it/4/42/British_Airways_Logo.svg",
+      "from": {
+        "airportCode": "MXP",
+        "airportName": "Malpensa",
+        "destinationId": {
+          "$oid": "680f7af8e634eef19a5e09a6"
+        },
+        "city": "Milan",
+        "region": "Lombardy",
+        "country": {
+          "name": "Italy",
+          "code": "IT"
+        },
+        "coordinates": {
+          "lat": 45.4642,
+          "lng": 9.19
+        },
+        "timezone": "Europe/Rome"
+      },
+      "to": {
+        "airportCode": "LHR",
+        "airportName": "Heathrow Airport",
+        "destinationId": {
+          "$oid": "68401642411ed34eaeaa6a6e"
+        },
+        "city": "London",
+        "region": "England",
+        "country": {
+          "name": "United Kingdom",
+          "code": "GB"
+        },
+        "coordinates": {
+          "lat": 51.509865,
+          "lng": -0.118092
+        },
+        "timezone": "Europe/London"
+      },
+      "departureTime": {
+        "$date": "2025-10-15T17:21:00.000Z"
+      },
+      "arrivalTime": {
+        "$date": "2025-10-15T19:11:00.000Z"
+      },
+      "price": {
+        "value": 129.82,
+        "currency": "EUR"
+      }
+    },
+    "returnFlight": {
+      "flightId": {
+        "$oid": "68b5c6040456815d0b98cb6a"
+      },
+      "code": "BA9684",
+      "quantity": 2,
+      "airline": "British Airways",
+      "airlineLogo": "https://upload.wikimedia.org/wikipedia/it/4/42/British_Airways_Logo.svg",
+      "from": {
+        "airportCode": "LHR",
+        "airportName": "Heathrow Airport",
+        "destinationId": {
+          "$oid": "68401642411ed34eaeaa6a6e"
+        },
+        "city": "London",
+        "region": "England",
+        "country": {
+          "name": "United Kingdom",
+          "code": "GB"
+        },
+        "coordinates": {
+          "lat": 51.509865,
+          "lng": -0.118092
+        },
+        "timezone": "Europe/London"
+      },
+      "to": {
+        "airportCode": "MXP",
+        "airportName": "Malpensa",
+        "destinationId": {
+          "$oid": "680f7af8e634eef19a5e09a6"
+        },
+        "city": "Milan",
+        "region": "Lombardy",
+        "country": {
+          "name": "Italy",
+          "code": "IT"
+        },
+        "coordinates": {
+          "lat": 45.4642,
+          "lng": 9.19
+        },
+        "timezone": "Europe/Rome"
+      },
+      "departureTime": {
+        "$date": "2025-10-19T07:26:00.000Z"
+      },
+      "arrivalTime": {
+        "$date": "2025-10-19T09:16:00.000Z"
+      },
+      "price": {
+        "value": 136.4,
+        "currency": "EUR"
+      }
+    }
+  },
+  "payment": {
+    "status": "CONFIRMED",
+    "paidAt": {
+      "$date": "2025-10-10T08:32:38.692Z"
+    },
+    "amount": {
+      "value": 532.44,
+      "currency": "EUR"
+    },
+    "token": "8UT37428FW631053S",
+    "payerId": "DNUESZ87BBFSA"
+  },
+  "_class": "com.certimetergroup.smart_travel.ordersapi.model.Order"
+}]
