@@ -1,4 +1,4 @@
-# SmartTravel: Your trip, just a click away
+# Smart Travel: Your trip, just a click away
 
 [![Angular](https://img.shields.io/badge/Angular-17.3.0-DD0031?style=flat&logo=angular&logoColor=white)](https://angular.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.8.3-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
