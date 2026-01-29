@@ -53,7 +53,7 @@ The system follows a cloud-native **Microservices Architecture** to ensure modul
 
 ### **Data & Messaging**
 
-* **Database:** **MongoDB** (NoSQL) for flexible storage of multilingual travel descriptions and variable destination details.
+* **Database:** **MongoDB** (NoSQL) for flexible storage of variable destination details.
 * **Message Broker:** **RabbitMQ**.
 
 ### **DevOps & Infrastructure**
