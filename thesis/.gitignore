@@ -12,6 +12,7 @@
 *.synctex.gz
 *.synctex(busy)
 *.pdfsync
+*.glo-abr
 
 # --- Bibliography & Citations ---
 *.bbl
@@ -42,11 +43,6 @@
 .texpadtmp
 *.fmt
 *.fot
-
-# --- Final Output (PDF) ---
-# Di solito non si committano i PDF generati perché cambiano a ogni compilazione.
-# Se invece VUOI salvare il PDF nel repo, metti un '#' davanti alla riga qui sotto.
-*.pdf
 
 # --- Docker & MikTeX Cache ---
 # Se hai mappato la cache di MikTeX in una cartella locale invece che in un volume Docker
