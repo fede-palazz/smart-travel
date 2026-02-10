@@ -1,0 +1,35 @@
+{
+    "latex-workshop.latex.tools": [
+        {
+            "name": "docker_pdflatex",
+            "command": "docker",
+            "args": [
+                "run",
+                "--rm",
+                "-v",
+                "%DIR%:/workdir",
+                "-w",
+                "/workdir",
+                "texlive/texlive",
+                "pdflatex",
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "%DOCFILE%"
+            ],
+            "env": {}
+        }
+    ],
+    "latex-workshop.latex.recipes": [
+        {
+            "name": "Docker Compile",
+            "tools": [
+                "docker_pdflatex"
+            ]
+        }
+    ],
+    "latex-workshop.latex.recipe.default": "Docker Compile",
+    "[latex]": {
+        "editor.formatOnSave": false
+    }
+}

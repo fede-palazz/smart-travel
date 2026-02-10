@@ -1,0 +1,78 @@
+# --- Core LaTeX Auxiliary Files ---
+*.aux
+*.log
+*.out
+*.toc
+*.lot
+*.lof
+*.dvi
+*.ps
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.synctex(busy)
+*.pdfsync
+
+# --- Bibliography & Citations ---
+*.bbl
+*.blg
+*.brf
+*.bcf
+*.run.xml
+
+# --- Glossaries, Indices & Nomenclatures ---
+*.glg
+*.glo
+*.gls
+*.glsdefs
+*.ist
+*.idx
+*.ilg
+*.ind
+*.nlo
+*.nls
+
+# --- Beamer Presentation Files ---
+*.nav
+*.snm
+*.vrb
+
+# --- LaTeX Workshop (VS Code Extension) specific ---
+# Questi file vengono generati spesso dall'estensione
+.texpadtmp
+*.fmt
+*.fot
+
+# --- Final Output (PDF) ---
+# Di solito non si committano i PDF generati perché cambiano a ogni compilazione.
+# Se invece VUOI salvare il PDF nel repo, metti un '#' davanti alla riga qui sotto.
+*.pdf
+
+# --- Docker & MikTeX Cache ---
+# Se hai mappato la cache di MikTeX in una cartella locale invece che in un volume Docker
+miktex-cache/
+miktex/
+.miktex/
+
+# --- IDE & Editors ---
+
+
+# Altri editor comuni (giusto per sicurezza)
+*.sublime-project
+*.sublime-workspace
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+*~
+
+# --- OS Generated Files ---
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
