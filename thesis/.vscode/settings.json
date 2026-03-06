@@ -34,6 +34,22 @@
         "%DOCFILE%"
       ],
       "env": {}
+    },
+    {
+      "name": "docker_makeglossaries",
+      "command": "docker",
+      "args": [
+        "run",
+        "--rm",
+        "-v",
+        "%DIR%:/workdir",
+        "-w",
+        "/workdir",
+        "texlive/texlive",
+        "makeglossaries",
+        "%DOCFILE%"
+      ],
+      "env": {}
     }
   ],
   "latex-workshop.latex.recipes": [
@@ -41,6 +57,7 @@
       "name": "Docker Compile",
       "tools": [
         "docker_pdflatex"
+        // "docker_makeglossaries",
         // "docker_biber",
         // "docker_pdflatex",
         // "docker_pdflatex"

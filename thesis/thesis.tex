@@ -14,7 +14,7 @@
     cucitura=7mm, % for printing, 7mm should be enough
     %dvipsnames, % for compatibility with xcolor, it does not work
 ]{toptesi}
-
+   
 \input{common/packages}
 
 \input{common/package_config}
@@ -29,7 +29,8 @@
 
 % to load the glossaries, not needed if using bib2gls
 \input{glossaries.tex}
-\makeglossaries
+%\makeglossaries
+\makenoidxglossaries
 
 \begin{document}
 
@@ -93,8 +94,10 @@
 % here we are printing only abbreviations
 % printunsrtglossary if using record, otherwise printglossary is ok
 \paginavuota
-\printunsrtglossary[style=altlist,title=Glossary,type=\glsxtrabbrvtype]
-
+%\printunsrtglossary[style=altlist,title=Glossary,type=\glsxtrabbrvtype]
+%\printglossary[style=altlist,title=Glossary,type=\glsxtrabbrvtype]
+\printnoidxglossary[style=altlist,title=Glossary,type=\glsxtrabbrvtype]
+ 
 % also list of symbols here if needed
 
 \input{common/post_summary_config.tex}
