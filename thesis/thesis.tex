@@ -47,7 +47,7 @@
 % either a blank page or a back is needed to have double-sided printing
 % pay attention to leave the space for the page
 
-%\paginavuota % clears a page
+\paginavuota % clears a page
 
 \frontmatter % not strictly needed, as toptesi takes care of it already
 
@@ -55,6 +55,8 @@
 \begin{abstract}
     \input{content/abstract.tex}
 \end{abstract}
+
+\paginavuota 
 
 % to create blank pages for openright in frontmatter
 % use one of the following two methods
@@ -66,12 +68,12 @@
 \paginavuota % to manually create a blank page
 
 % summary (uncomment until "end summary" if needed)
-%\sommario
-%\input{content/summary}
+% \sommario
+% \input{content/abstract}
 
-%\phantom{0}
-%\cleardoublepage
-%\thispagestyle{empty}
+% \phantom{0}
+% \cleardoublepage
+% \thispagestyle{empty}
 % end summary
 
 \ringraziamenti % acknowledgements
@@ -90,8 +92,8 @@
 % style overrides the global style
 % here we are printing only abbreviations
 % printunsrtglossary if using record, otherwise printglossary is ok
-%\paginavuota
-%\printunsrtglossary[style=altlist,title=Glossario,type=\glsxtrabbrvtype]
+\paginavuota
+\printunsrtglossary[style=altlist,title=Glossary,type=\glsxtrabbrvtype]
 
 % also list of symbols here if needed
 
