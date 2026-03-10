@@ -53,11 +53,123 @@ Despite its significant advantages, adopting a microservices architecture introd
     \item \textbf{Data Consistency:} Because each service maintains its own database, achieving data consistency across the system becomes a major challenge. Traditional \texttt{\gls{ACID}} transactions that span multiple tables are no longer feasible. Instead, developers must rely on complex distributed transaction patterns and embrace \textit{eventual consistency}.
 \end{itemize}
 
-2.2 Programming Paradigms: Imperative vs. Reactive programming models.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 2.2 Programming Paradigms %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-2.3 Event-Driven Architecture: Asynchronous communication and message brokers (focus on RabbitMQ).
+\section{Imperative vs. Reactive paradigm}
+\label{sec:programming_paradigms}
 
-2.4 Backend Technologies: Spring Boot and Quarkus
+The choice of programming paradigm fundamentally dictates how an application manages system resources, handles concurrency, and scales under load. In the context of modern Java microservices, understanding the underlying thread management of both approaches is crucial for evaluating their suitability for high-concurrency, I/O-bound applications.
+
+\subsection{The Imperative Model}
+
+Traditional applications use blocking I/O and an imperative (sequential) execution model. In a web application context - such as a traditional Spring MVC application - this paradigm relies on the \textit{Thread-per-Request} concurrency model \cite{devglan_reactive}.
+
+When a new HTTP request arrives, the server allocates a dedicated thread from a pre-configured thread pool to handle the entire lifecycle of that request. If the application needs to interact with an external resource, such as querying a database or calling a third-party API, the thread initiates the I/O operation and then completely halts execution (blocks) until it receives a response.
+
+While this model is straightforward to write, debug, and reason about, it is highly inefficient for I/O-bound microservices. During the waiting period, the blocked thread consumes valuable memory and CPU cycles via context switching, doing absolutely no useful work. Under sudden spikes in traffic, the thread pool can quickly become exhausted. Once all threads are blocked waiting for slow external services, the application becomes unresponsive to new user requests, severely limiting scalability.
+
+\begin{figure}[H]
+	\centering
+    \includegraphics[width=0.6\textwidth]{images/ch2/2_1_blocking-threads.png}
+	\caption[Thread-per-Request model in an imperative application.]{Thread-per-Request model in an imperative application. \textit{Source: \cite{quarkus_reactive_architecture}}}
+    \label{fig:blocking-threads}
+\end{figure}
+
+\subsection{The Reactive Model}
+
+The reactive model was designed to build non-blocking applications that are highly responsive, resilient, and resource-efficient. Instead of the Thread-per-Request model, reactive frameworks utilize an \textit{Event Loop} architecture. In this model, a very small number of threads known as \texttt{event loop threads} continuously loop to process incoming requests. 
+
+When an I/O operation is required, the thread does not block. Instead, it delegates the task to a non-blocking I/O handler, registers a callback, and immediately returns to the event queue to process the next incoming HTTP request. Once the external database or \gls{API} finishes its processing, it pushes an event back to the event loop, which then resumes the original request and sends the response to the client \cite{quarkus_reactive_architecture}.
+
+\begin{figure}[H]
+	\centering
+    \includegraphics[width=0.6\textwidth]{images/ch2/2_2_reactive-thread.png}
+	\caption[Reactive model in a non-blocking application.]{Reactive model in a non-blocking application. \textit{Source: \cite{quarkus_reactive_architecture}}}
+    \label{fig:reactive-threads}
+\end{figure}
+
+The key advantages of the reactive model include:
+\begin{itemize}
+    \item \textbf{Resource Efficiency:} By eliminating blocked threads, the system can handle thousands of concurrent connections using a fraction of the memory and CPU.
+    \item \textbf{Data as Streams:} Data is not pulled sequentially but pushed asynchronously. Frameworks like Spring WebFlux and Quarkus Mutiny provide rich APIs to compose and transform these data streams without blocking the main execution flow.
+\end{itemize}
+
+The primary advantage of the reactive concurrency model is its resource efficiency and scalability. By ensuring that threads are never blocked waiting for external I/O operations, the system can sustain thousands of concurrent connections using a fraction of the memory and CPU required by a traditional imperative system. This architectural shift makes the reactive model particularly well-suited for I/O-bound microservices, allowing them to remain highly responsive and maintain stable performance even under massive, sudden surges in network traffic.
+
+However, this model introduces significant complexities regarding development and operational debugging. The most critical is the inclusion of a blocking operation — such as a legacy JDBC database query, a synchronous HTTP call, or a heavy CPU-bound computation — directly on the event loop. Because the system relies on a small pool of threads, blocking even a single one can immediately bottleneck the application. Furthermore, the non-linear execution flow fragments traditional stack traces. When an exception occurs, the stack trace often only reflects the point of failure within the asynchronous callback, losing the historical context of the original user request and making root-cause analysis considerably more difficult than in the linear imperative model.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 2.3 Event-Driven Architectures %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Event-Driven Architectures}
+\label{sec:event_driven_architectures}
+
+As microservices ecosystems expand, the method by which these independent services communicate becomes a critical architectural decision. While traditional web architectures rely heavily on synchronous, point-to-point interactions, the inherent limitations of this approach at scale have led to the widespread adoption of \textit{Event-Driven Architectures} (\gls{EDA}) \cite{ibm_eda_2024}. 
+
+\subsection{Synchronous vs. Asynchronous Communication}
+
+In a synchronous communication model, typically implemented via HTTP and REST APIs, a service sends a request to another service and blocks its own execution until it receives a direct response. While conceptually simple and easy to trace, this tightly coupled approach creates cascading bottlenecks. If the receiving service is slow, overwhelmed, or offline, the calling service is forced to wait, consuming resources and potentially causing system-wide performance degradation \cite{microsoft_async_messaging}.
+
+On the other hand, asynchronous communication decouples the sender from the receiver. In an Event-Driven Architecture, services communicate by producing and consuming \textit{events} - lightweight messages that represent a significant change in state or a specific occurrence within the business domain (e.g., "user registered" or "order placed"). The service producing the event simply broadcasts it and immediately resumes its own operations, entirely unaware of who will consume the event or when it will be processed \cite{ibm_eda_2024}. 
+
+\subsection{The Role of Message Brokers}
+
+To facilitate this asynchronous exchange without requiring services to know each other's network locations or IP addresses, \gls{EDA} relies on a centralized intermediary known as a message broker \cite{redhat_eda_essentials}. 
+
+This architecture generally relies on three primary components:
+\begin{itemize}
+    \item \textbf{Producers (Publishers):} The microservices that generate events when a specific business action occurs. Their only responsibility is to format the event data and safely push it to the broker.
+    \item \textbf{Message Brokers:} The middleware infrastructure that receives, stores, and routes the events. The broker ensures reliable message delivery, managing queues or topics so that events are safely held even if the intended downstream recipients are currently offline or busy.
+    \item \textbf{Consumers (Subscribers):} The microservices that continuously listen to the broker for specific types of events. Upon receiving an event, the consumer processes the data and executes its own independent business logic.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+    \includegraphics[width=0.6\textwidth]{images/ch2/2_3_event-driven-architecture.png}
+	\caption[Event-Driven Architecture]{Event-Driven Architecture}
+    \label{fig:eda}
+\end{figure}
+
+
+This publish/subscribe (\gls{Pub/Sub}) model allows multiple different consumers to react to a single event simultaneously and independently.
+
+\subsection{Benefits and Challenges}
+
+Implementing an Event-Driven Architecture provides different advantages. The decoupling of services enables exceptional scalability, as individual components can be scaled up or down based on their specific event processing loads. Furthermore, it significantly enhances overall system resilience: if a consumer service crashes, the message broker simply retains the pending events in a queue until the service is restored, guaranteeing no data loss during the outage \cite{microsoft_async_messaging}.
+
+However, this paradigm introduces unique complexities regarding distributed data. Because communication is fundamentally asynchronous, achieving immediate transactional data consistency across the entire platform is impossible. Instead, developers must design applications around the concept of \textit{eventual consistency}, where the system state reconciles over time. Additionally, tracking the flow of a single user action across multiple asynchronously triggered microservices requires sophisticated distributed tracing mechanisms and centralized logging \cite{redhat_eda_essentials}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 2.4 Backend Technologies %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Backend Technologies}
+\label{sec:backend_technologies}
+
+Java has been the cornerstone of enterprise backend development for decades, favored for its robustness, mature ecosystem, and platform independence. However, as the industry transitioned from monolithic architectures running on heavy application servers to containerized microservices orchestrated by Kubernetes, traditional Java frameworks faced significant challenges. They often suffered from slow startup times and high memory footprints, characteristics misaligned with the rapid scaling and high-density deployment needs of cloud-native environments \cite{redhat_quarkus_kubernetes}.
+
+To address these challenges, the Java ecosystem has evolved significantly. During the development of this thesis' project, two distinct frameworks were selected to build the backend microservices: the established industry standard Spring Boot and the modern cloud-native Quarkus.
+
+\subsection{Spring Boot: The Industry Standard}
+
+Introduced by Pivotal Software (now VMware Tanzu) in 2014, Spring Boot revolutionized Java enterprise development. It was designed to simplify the bootstrapping and development of new Spring applications by adhering to the \textit{convention over configuration} principle. Before Spring Boot, developers spent hours configuring XML files and managing complex application server deployments. Spring Boot eliminated this friction by providing auto-configuration, opinionated dependency management, and embedded web servers (such as Tomcat or Netty), allowing developers to package an entire microservice into a single, easily deployable \texttt{fat JAR} \cite{spring_microservices_official}.
+
+Today, Spring Boot is the de facto standard for building Java microservices. It can count on an enormous ecosystem, with out-of-the-box integrations for almost every conceivable database, message broker, and cloud provider. While its traditional roots lie in the synchronous, imperative programming model (\textit{Spring MVC}), the framework has actively modernized. With the introduction of \textit{Spring WebFlux}, it now fully supports the reactive, event-loop programming paradigm discussed in Section \ref{sec:programming_paradigms}, enabling high concurrency without the overhead of thread-per-request blocking.
+
+\subsection{Quarkus: The Cloud-Native Challenger}
+
+While Spring Boot adapted to the cloud era, Quarkus was born entirely within it. Created by Red Hat and released in 2019, Quarkus describes itself as a "Kubernetes Native Java framework tailored for GraalVM and HotSpot." Its primary mission is to optimize Java for containerized and serverless environments, where fast startup times (measured in milliseconds) and minimal memory consumption are critical for reducing cloud infrastructure costs and enabling rapid auto-scaling \cite{redhat_quarkus_kubernetes}.
+
+Quarkus achieves this extreme efficiency by fundamentally changing the Java build process. Traditional frameworks like Spring heavily rely on reflection, dynamic class loading, and classpath scanning at runtime (processes that consume significant memory and slow down the boot time). Quarkus, instead, utilizes a \textit{compile-time boot} technique. It shifts the vast majority of framework initialization and configuration parsing to the build phase (\textit{Ahead-Of-Time} processing). 
+
+Furthermore, Quarkus is built from the ground up on a reactive core powered by Eclipse Vert.x \cite{vertx}. This unified architecture allows developers to seamlessly blend standard imperative code and non-blocking reactive code within the exact same application, dynamically optimizing the underlying execution thread model without requiring the developer to switch between entirely different API stacks.
+
+\subsection{The Rationale for Comparison}
+
+The decision to utilize both Spring Boot and Quarkus within the Smart Travel platform was driven by the desire to evaluate the state of the art in Java microservices. Implementing identical business logic - such as reactive database queries and asynchronous RabbitMQ event publishing/consuming - using both frameworks provides a valuable lens through which to assess their respective developer experiences, syntactic clarity, and ease of configuration. While Spring Boot offers the safety and familiarity of a massive, mature ecosystem, Quarkus promises a leaner, faster, and easier approach to cloud-native development \cite{brilworks_framework_comparison}.
 
 2.5 Frontend Technologies: Single Page Applications (SPA), Angular, RxJS, and PrimeNG.
 
