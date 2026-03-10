@@ -3,21 +3,42 @@
 
 \section[Context]{Context}
 
-The industry shift from monolithic architectures to cloud-native microservices.
-Overview of the company, the Agile methodology used, and the goal of the "Smart Travel" project.
+The rapid evolution of enterprise web applications over the last decade has driven a significant paradigm shift in software engineering, moving away from traditional monolithic architectures towards cloud-native microservices solutions. 
+
+Historically, monolithic applications were the industry standard and they integrated user interface, business logic, and data access layers into a single deployable unit.
+They offered simplicity during the early stages of development, straightforward local testing, and centralized debugging. However, as applications grow in size, complexity, and user base, the inherent limitations of the monolithic approach become increasingly apparent \cite{moving_from_monolithic_to_microservices}.
+
+A monolithic design relies on tightly coupled components. Consequently, a minor update, a new feature addition, or a simple bug fix requires the entire massive codebase to be recompiled, tested, and redeployed. This rigid structure often leads to development bottlenecks and significantly increases the risk of system-wide failures during deployments. Furthermore, scaling a monolith is inherently inefficient; if a single specific component (such as the payment processing module) experiences a surge in traffic, the entire monolithic application must be scaled horizontally, leading to unnecessary resource consumption and inflated operational costs. 
+
+To overcome these scalability and maintainability challenges, the industry has widely adopted the microservices architecture. This modern paradigm decomposes a large application into a suite of small, autonomous, and loosely coupled services. Each microservice is organized around a specific business capability, encapsulates its own data, and communicates with other services through lightweight, well-defined application programming interfaces (APIs) or asynchronous message brokers. This decentralized approach offers superior modularity, improved fault isolation - the failure of one service does not inevitably crash the entire system - and the agility to deploy and scale individual services independently based on their specific demand. 
+
+However, the transition to microservices is not without its own set of complexities. It introduces challenges such as increased operational overhead, the need for sophisticated monitoring and logging solutions, and the complexity of managing distributed transactions and data consistency across services. Despite these challenges, the microservices architecture has become the de facto standard for building scalable, resilient, and maintainable enterprise applications in the cloud era.
+
+\begin{figure}[ht]
+	\centering
+    \includegraphics[width=\textwidth]{images/ch1/1_monolith-vs-microservices.png}
+	\caption[Monolithic vs. Microservices architecture]{Monolithic vs. Microservices architecture. \textit{Source: \cite{monolith_vs_microservices}}}
+    \label{fig:monolith_vs_microservices}
+\end{figure}
+ 
 
 \section[Goal]{Goal}
 
-Developing a Proof of Concept (POC) e-commerce platform while critically evaluating modern Java frameworks (Spring Boot vs. Quarkus).
+The primary objective of this thesis is to explore, apply, and critically evaluate modern cloud-native technologies and microservices architectures. To achieve this, the "\textit{Smart Travel}" platform was designed and developed as a proof of concept (\gls{PoC}). Rather than simply focusing on the implementation of functional business requirements, this project serves primarily as a practical testbed to analyze the complexities, challenges, and benefits of building a modern, distributed software system. The project was conducted during an internship at a software company, situated directly within the industry's broader context of architectural modernization. 
 
+As the chosen vehicle for this research, the Smart Travel application was designed as a comprehensive e-commerce platform dedicated to the sale of travel packages. The system manages the entire customer journey, from the public consultation of a catalog containing flights, hotels, and organized tours, to the execution of the purchasing process, order history management, and the automated dispatch of email notifications.
+
+A central technical goal of this research is the critical evaluation and comparative analysis of two leading Java ecosystems used to build the platform's microservices: the established Spring Boot framework and the newer cloud-native Quarkus framework. Specifically, the project adopts a fully reactive programming paradigm for both frameworks, utilizing Spring WebFlux and Quarkus Reactive capabilities. This enables non-blocking, asynchronous execution, allowing the system to handle a massive number of concurrent requests with a highly optimized thread pool.
+
+Furthermore, this thesis aims to explore the "industrialization" of software through the adoption of DevOps practices. The objective is to move beyond local execution by implementing a robust Continuous Integration and Continuous Delivery (\gls{CI/CD}) pipeline. By automating the entire delivery chain - from code checkout and compilation to container image creation and pushing to a private registry - the project demonstrates how to bridge the gap between development and operations. Finally, the thesis details the deployment and orchestration of these containerized microservices within an OKD cluster (the community distribution of Red Hat OpenShift), managing critical operational aspects such as service discovery, route exposure, and configuration management.
 
 \section[Thesis structure]{Thesis structure}
 
 The thesis is structured as follows:
 \begin{itemize}
-    \item \textbf{Chapter 2: Background and Technologies} - Overview of microservices, reactive programming, and DevOps practices.
-    \item \textbf{Chapter 3: System Architecture} - Architectural decisions, technology stack, and design patterns used in the Smart Travel project.
-    \item \textbf{Chapter 4: Application Design and Implementation} - Detailed description of the development process, including code snippets and explanations of key components.
-    \item \textbf{Chapter 5: Infrastructure Automation and Cloud Deployment} - Description of the CI/CD pipeline, Jenkins configuration, and deployment on OKD.
-    \item \textbf{Chapter 6: Conclusion} - Summary of findings, limitations of the study, and future work directions.
+    \item \textbf{Chapter 2: Background and Technologies} - Provides an overview of the core concepts and technologies underpinning the project, including microservices and event-driven architectures, reactive programming paradigms, backend and frontend frameworks (Spring Boot, Quarkus, Angular), NoSQL databases (MongoDB), and API communication models (REST vs. GraphQL).
+    \item \textbf{Chapter 3: System Architecture} - Details the architectural decisions, technology stack, and design patterns used in the Smart Travel project. It covers the microservices decomposition, the event-driven communication via message brokers, and the frontend design.
+    \item \textbf{Chapter 4: Application Design and Implementation} - Offers a detailed description of the development process. This includes data modeling, API contract definitions, and explanations of key software components, accompanied by code snippets comparing the Spring Boot and Quarkus implementations.
+    \item \textbf{Chapter 5: Infrastructure Automation and Cloud Deployment} - Describes the different steps of the CI/CD pipeline, Jenkins automation configurations, and the final orchestration of containerized applications within the OKD cluster environment.
+    \item \textbf{Chapter 6: Conclusion} - Summarizes the project findings, evaluates the results of the technology comparison, discusses the limitations encountered during development, and outlines future work directions for the platform.
 \end{itemize}

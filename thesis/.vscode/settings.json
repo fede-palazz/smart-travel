@@ -56,10 +56,9 @@
     {
       "name": "Docker Compile",
       "tools": [
+        "docker_pdflatex",
+        "docker_biber",
         "docker_pdflatex"
-        // "docker_makeglossaries",
-        // "docker_biber",
-        // "docker_pdflatex",
         // "docker_pdflatex"
       ]
     }
