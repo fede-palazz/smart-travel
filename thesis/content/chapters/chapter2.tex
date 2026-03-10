@@ -151,7 +151,7 @@ However, this paradigm introduces unique complexities regarding distributed data
 
 Java has been the cornerstone of enterprise backend development for decades, favored for its robustness, mature ecosystem, and platform independence. However, as the industry transitioned from monolithic architectures running on heavy application servers to containerized microservices orchestrated by Kubernetes, traditional Java frameworks faced significant challenges. They often suffered from slow startup times and high memory footprints, characteristics misaligned with the rapid scaling and high-density deployment needs of cloud-native environments \cite{redhat_quarkus_kubernetes}.
 
-To address these challenges, the Java ecosystem has evolved significantly. During the development of this thesis' project, two distinct frameworks were selected to build the backend microservices: the established industry standard Spring Boot and the modern cloud-native Quarkus.
+To address these challenges, the Java ecosystem has evolved significantly. During the development of this thesis' project, two distinct frameworks were selected to build the backend microservices: the established Spring Boot and the modern cloud-native Quarkus.
 
 \subsection{Spring Boot: The Industry Standard}
 
@@ -159,9 +159,9 @@ Introduced by Pivotal Software (now VMware Tanzu) in 2014, Spring Boot revolutio
 
 Today, Spring Boot is the de facto standard for building Java microservices. It can count on an enormous ecosystem, with out-of-the-box integrations for almost every conceivable database, message broker, and cloud provider. While its traditional roots lie in the synchronous, imperative programming model (\textit{Spring MVC}), the framework has actively modernized. With the introduction of \textit{Spring WebFlux}, it now fully supports the reactive, event-loop programming paradigm discussed in Section \ref{sec:programming_paradigms}, enabling high concurrency without the overhead of thread-per-request blocking.
 
-\subsection{Quarkus: The Cloud-Native Challenger}
+\subsection{Quarkus: The Cloud-Native Framework}
 
-While Spring Boot adapted to the cloud era, Quarkus was born entirely within it. Created by Red Hat and released in 2019, Quarkus describes itself as a "Kubernetes Native Java framework tailored for GraalVM and HotSpot." Its primary mission is to optimize Java for containerized and serverless environments, where fast startup times (measured in milliseconds) and minimal memory consumption are critical for reducing cloud infrastructure costs and enabling rapid auto-scaling \cite{redhat_quarkus_kubernetes}.
+While Spring Boot adapted to the cloud era, Quarkus was born entirely within it. Created by Red Hat and released in 2019, Quarkus describes itself as a "Kubernetes Native Java framework tailored for GraalVM and HotSpot". Its primary mission is to optimize Java for containerized and serverless environments, where fast startup times (measured in milliseconds) and minimal memory consumption are critical for reducing cloud infrastructure costs and enabling rapid auto-scaling \cite{redhat_quarkus_kubernetes}.
 
 Quarkus achieves this extreme efficiency by fundamentally changing the Java build process. Traditional frameworks like Spring heavily rely on reflection, dynamic class loading, and classpath scanning at runtime (processes that consume significant memory and slow down the boot time). Quarkus, instead, utilizes a \textit{compile-time boot} technique. It shifts the vast majority of framework initialization and configuration parsing to the build phase (\textit{Ahead-Of-Time} processing). 
 
@@ -171,8 +171,141 @@ Furthermore, Quarkus is built from the ground up on a reactive core powered by E
 
 The decision to utilize both Spring Boot and Quarkus within the Smart Travel platform was driven by the desire to evaluate the state of the art in Java microservices. Implementing identical business logic - such as reactive database queries and asynchronous RabbitMQ event publishing/consuming - using both frameworks provides a valuable lens through which to assess their respective developer experiences, syntactic clarity, and ease of configuration. While Spring Boot offers the safety and familiarity of a massive, mature ecosystem, Quarkus promises a leaner, faster, and easier approach to cloud-native development \cite{brilworks_framework_comparison}.
 
-2.5 Frontend Technologies: Single Page Applications (SPA), Angular, RxJS, and PrimeNG.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 2.5 Frontend Technologies %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-2.6 Database Technologies: NoSQL concepts and MongoDB.
+\section{Frontend Technologies}
+\label{sec:frontend_technologies}
 
-2.7 API Paradigms: REST vs. GraphQL.
+Just as backend architectures have evolved to handle greater scale and complexity, frontend development has undergone a massive transformation. The traditional web paradigm, where the server renders and delivers completely new HTML pages for every user interaction, has largely been superseded by the \textit{Single Page Application} (\gls{SPA}) model. This shift was driven by the need for more dynamic, responsive, and app-like user experiences that could not be achieved with full-page reloads. To implement this modern frontend architecture, the \textit{Angular} framework was selected for the project, leveraging its powerful component-based structure and native support for reactive programming with the \textit{RxJS} library.
+ 
+\subsection{Single Page Application Architecture}
+
+Historically, web applications were built as Multi-Page Applications (\gls{MPA}s). In an \gls{MPA}, every time a user clicks a link or submits a form, the browser discards the current page, sends a request to the server, waits for the server to process the logic, and then downloads an entirely new HTML document to render. While this approach is straightforward and naturally optimized for \textit{Search Engine Optimization} (\gls{SEO}), it is highly inefficient for complex interactive applications. The constant full-page reloads lead to latency, wasted bandwidth, and a disjointed user experience \cite{adobe_spa_benefits}.
+
+A Single Page Application flips this paradigm. As the name suggests, an \gls{SPA} loads only a single foundational HTML web page upon the user's initial visit. This initial payload includes all the necessary static assets - such as HTML scaffolding, CSS stylesheets, and the core JavaScript application bundle. 
+
+Once the application is loaded into the browser, the page is never reloaded again during the user's session. Instead, when the user interacts with the application (e.g., searching for a flight or filtering hotel results), JavaScript intercepts the action and dynamically rewrites the current \gls{DOM} (\textit{Document Object Model}). If new data is required, the SPA makes asynchronous requests (via \texttt{\gls{AJAX}} or the \texttt{Fetch API}) to backend APIs. The server responds with lightweight \gls{JSON} data rather than heavy HTML markup. The frontend then processes this data and injects it directly into the existing page structure \cite{adobe_spa_benefits}.
+
+This architecture provides several significant advantages:
+\begin{itemize}
+    \item \textbf{Fluid User Experience:} By eliminating the disruptive "white flash" of page reloads, \gls{SPA}s provide a continuous, fluid experience that closely mimics a native desktop or mobile application.
+    \item \textbf{High Performance and Speed:} After the initial load, subsequent interactions are nearly instantaneous because only raw data is transmitted over the network, drastically reducing bandwidth consumption and server load.
+    \item \textbf{Clear Separation of Concerns:} The \gls{SPA} architecture perfectly complements a microservices backend. The frontend becomes a completely independent application that only cares about consuming data via standardized APIs, allowing frontend and backend teams to develop, deploy, and scale their codebases independently.
+\end{itemize}
+
+Despite its benefits, the \gls{SPA} model introduces challenges, particularly regarding the initial loading time - since the browser must download a large JavaScript bundle upfront - and the complexity of managing client-side routing and browser history. To address these complexities, robust frontend frameworks are required.
+
+\subsection{The Angular Framework}
+
+To implement the SPA architecture for the Smart Travel platform, Angular was selected. Maintained by Google, Angular is a comprehensive, enterprise-grade framework specifically designed for building scalable single-page applications \cite{angular_dev_overview}. 
+
+Unlike lightweight libraries that focus solely on rendering views (such as \textit{React}), Angular provides a highly opinionated, all-encompassing toolset. It enforces a strict architectural pattern, requiring developers to write code using TypeScript—a superset of JavaScript that introduces static typing, interfaces, and advanced object-oriented features. This ensures greater code reliability and maintainability in large-scale projects.
+
+Angular applications are built upon a \textit{Component-based architecture}. The \gls{UI} is divided into encapsulated, reusable building blocks called components. Each component strictly separates its concerns into three parts: a TypeScript class that manages the business logic and state, an HTML template that defines the view, and a CSS file scoped exclusively to that component's styling.
+
+Furthermore, Angular features a powerful \textit{Dependency Injection} (\gls{DI}) system, which allows components to easily request shared services (like an HTTP client to fetch catalog data) without needing to instantiate them manually, promoting highly modular and testable code \cite{angular_dev_overview}.
+
+\begin{figure}[H]
+	\centering
+    \includegraphics[width=0.5\textwidth]{images/ch2/2_4_angular_architecture.jpg}
+	\caption[Angular Architecture]{Angular Architecture. \textit{Source: \cite{angular_besant}}}
+    \label{fig:angular_architecture}
+\end{figure}
+
+\subsection{Frontend Reactive Programming}
+
+Because SPAs heavily rely on asynchronous events — such as user inputs, delayed API responses, and routing changes — managing this complex flow of data is a major challenge. To handle this, Angular natively integrates the RxJS library.
+
+RxJS brings the reactive programming paradigm (discussed in Section \ref{sec:programming_paradigms}) directly into the browser. It introduces the concept of \textit{Observables}, which represent continuous streams of asynchronous data or events over time \cite{reactivex_intro}. 
+
+Instead of relying on traditional JavaScript \texttt{Promises}, which can only handle a single future value and cannot be cancelled, Observables can emit multiple values over time and can be closed or cancelled at any moment. For example, when performing a search query, the Angular HTTP client returns an Observable. Using RxJS operators (like \texttt{map}, \texttt{filter}, or \texttt{debounceTime}), the frontend can gracefully transform the incoming data, ignore rapid repeated clicks from the user, and seamlessly update the \gls{UI} state without resorting to convoluted, heavily nested callback functions \cite{reactivex_intro}. By leveraging RxJS, the frontend achieves the same non-blocking, event-driven resilience as the reactive backend microservices.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 2.6 Database Technologies %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Database Technologies}
+\label{sec:database_technologies}
+
+As modern applications demand greater flexibility, performance, and the ability to handle massive volumes of unstructured or semi-structured data, traditional \textit{Relational Database Management Systems} (\gls{RDBMS}) often face significant limitations. The rigid, tabular schema of SQL databases requires careful upfront planning and costly migrations when data requirements change. Furthermore, scaling a relational database is typically restricted to vertical scaling (adding more CPU or RAM to a single server), which eventually hits a hardware ceiling \cite{datacamp_nosql_2023}. To address these challenges, \textit{\gls{NoSQL}} databases emerged as a powerful alternative, offering distributed architectures and highly adaptable data models.
+
+\subsection{NoSQL Concepts and Classifications}
+
+NoSQL databases depart from the fixed table-and-row model, prioritizing horizontal scalability, high availability, and agility over strict \gls{ACID} compliance. Instead of forcing data into rigid relational structures, NoSQL systems allow data to be stored in formats that more closely align with the objects used in modern application code \cite{medium_mongodb_architecture}.
+
+NoSQL databases are generally categorized into four primary models:
+\begin{itemize}
+    \item \textbf{Key-Value Stores:} The simplest NoSQL model, where data is stored as a collection of unique keys and associated values (e.g., Redis). They are highly optimized for fast lookups and caching.
+    \item \textbf{Wide-Column Stores:} Data is organized into tables, rows, and dynamic columns, allowing each row to have different columns. They excel at handling massive, predictable query workloads (e.g., Cassandra).
+    \item \textbf{Graph Databases:} Designed to store and traverse relationships between entities using nodes and edges (e.g., Neo4j). They are ideal for social networks, fraud detection, or recommendation engines.
+    \item \textbf{Document Databases:} Data is stored in flexible, JSON-like documents. Each document contains pairs of fields and values, which can include nested arrays and objects. This is the category to which MongoDB belongs \cite{datacamp_nosql_2023}.
+\end{itemize}
+ 
+\begin{figure}[H]
+	\centering
+    \includegraphics[width=0.6\textwidth]{images/ch2/2_5_nosql-dbs.png}
+	\caption[NoSQL Database Types]{NoSQL Database Types}
+    \label{fig:nosql_types}
+\end{figure}
+
+\subsection{MongoDB Architecture and Flexible Schema}
+
+The Smart Travel application leverages MongoDB as the primary data store. MongoDB is the leading NoSQL document database, natively designed to handle modern application data with superior flexibility and scalability .
+
+Instead of tables and rows, MongoDB organizes data into \textit{Collections} and \textit{Documents}. Under the hood, documents are stored in a binary format called \texttt{\gls{BSON}} (Binary JSON), which extends standard JSON with additional data types like dates, decimals, and raw binary data. This document-oriented architecture natively maps to the object-oriented structures in Java or TypeScript, completely eliminating the need for complex \textit{Object-Relational Mapping} (\gls{ORM}) layers and expensive SQL \texttt{JOIN} operations \cite{medium_mongodb_architecture}.
+
+A core advantage of MongoDB is its flexible Schema (often referred to as dynamic schema). In a traditional SQL database, adding a new feature—such as introducing a "discount" or "dietary requirements" field to only a subset of travel packages—requires an expensive \texttt{ALTER TABLE} migration that can lock the database. In MongoDB, documents within the same collection do not need to have identical structures. A new field can simply be appended to a new document without affecting existing records . This schema flexibility significantly accelerates the development lifecycle and perfectly accommodates the diverse, evolving attributes of different travel products in the Smart Travel catalog.
+\subsection{Scalability and High Availability}
+
+Beyond its data model, MongoDB's architecture is built for distributed environments:
+\begin{itemize}
+    \item \textbf{Replica Sets:} To ensure high availability, MongoDB uses Replica Sets — a cluster of nodes (typically one Primary and multiple Secondaries) that maintain identical copies of the data. If the Primary node fails, the system automatically elects a new Primary, providing seamless failover and redundancy \cite{medium_mongodb_architecture}.
+    \item \textbf{Sharding:} When the data volume exceeds the capacity of a single machine, MongoDB handles horizontal scaling through Sharding. The data is partitioned across multiple servers based on a designated "Shard Key," allowing the database to manage massive datasets without degrading query performance.
+\end{itemize}
+
+While MongoDB offers immense freedom, it still requires careful data modeling. Developers must strategically choose between \textit{embedding} related data (storing it within the same document for faster read operations) and \textit{referencing} it (linking separate documents via IDs to avoid duplicating large amounts of data). This decision is crucial for optimizing query performance and ensuring data integrity, especially in a complex domain like travel where entities such as flights, hotels, and user profiles have intricate relationships.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 2.7 API Paradigms: REST vs. GraphQL %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{API Paradigms: REST vs. GraphQL}
+\label{sec:api_paradigms}
+
+In a decoupled architecture where the frontend is separated from the backend microservices, the API serves as the fundamental communication bridge. The design of these APIs dictates how efficiently data is transferred over the network. For the "Smart Travel" platform, evaluating the right API paradigm was essential for optimizing the interaction between the Angular frontend and the Java backend. The two dominant paradigms in modern web development are \textit{REST} and \textit{GraphQL}.
+
+\subsection{REST (Representational State Transfer)}
+
+REST has been the undisputed standard for web APIs for over a decade. Introduced by Roy Fielding in 2000, it is an architectural style rather than a strict protocol. RESTful APIs are built around the concept of "resources" (e.g., users, flights, orders), which are identified by standard URLs. Clients interact with these resources using standard HTTP methods such as \texttt{GET} (to retrieve data), \texttt{POST} (to create data), \texttt{PUT} (to update), and \texttt{DELETE} \cite{aws_rest_api}.
+
+A well-designed REST API is stateless, meaning each client request must contain all the information the server needs to fulfill it, and the server does not store any client context between requests. This statelessness makes REST highly scalable and cacheable, which is why it remains the default choice for general-purpose microservice communication.
+
+However, as frontend applications (like SPAs) have become more complex, REST has revealed significant limitations regarding data fetching:
+\begin{itemize}
+    \item \textbf{Over-fetching:} A REST endpoint typically returns a fixed data structure. If the Smart Travel frontend only needs the names and prices of available flights to display a simple list, a \texttt{GET /flights} request might still return massive JSON objects containing seating charts, airline details, and baggage rules that the client must download but ultimately discard \cite{ibm_rest_vs_graphql}.
+    \item \textbf{Under-fetching (the N+1 problem):} If a view requires data from multiple related resources — such as a user's profile and their past order history — the client is often forced to make multiple sequential HTTP requests to different endpoints (e.g., \texttt{GET /users/123} followed by \texttt{GET /users/123/orders}). This significantly increases network latency and degrades the user experience.
+\end{itemize}
+
+\subsection{GraphQL: The Client-Driven Alternative}
+
+To solve the inefficiencies of over-fetching and under-fetching, Facebook developed GraphQL, open-sourcing it in 2015. Unlike REST, which exposes multiple URLs for different resources, a GraphQL API typically exposes only a single endpoint (e.g., \texttt{/graphql}) \cite{apollo_graphql_basics}.
+
+Instead of the server dictating the structure of the response, GraphQL transfers control to the client. It is a strictly typed query language that allows the frontend to explicitly ask for exactly the data it needs, and nothing more. The client sends a specific query document in the body of an HTTP \texttt{POST} request, and the server responds with a JSON object that exactly mirrors the shape of the requested query.
+
+For example, a single GraphQL query can simultaneously fetch a user's name, their last three orders, and the specific hotel names associated with those orders. The backend GraphQL engine acts as an orchestrator, resolving the disparate data points from various underlying databases or microservices and assembling them into a single, highly optimized response \cite{ibm_rest_vs_graphql}.
+
+\begin{figure}[H]
+	\centering
+    \includegraphics[width=\textwidth]{images/ch2/2_6_rest_vs_graphql.jpg}
+	\caption[REST vs. GraphQL]{REST vs. GraphQL}
+    \label{fig:rest_vs_graphql}
+\end{figure}
+
+\subsection{Choosing the Right Paradigm}
+
+While GraphQL offers unparalleled efficiency for frontend data fetching, it introduces significant complexity on the backend. Developing a GraphQL server requires defining a rigorous schema, implementing complex resolver functions, and carefully managing database queries to prevent malicious or overly deep queries from exhausting server resources. Furthermore, traditional HTTP caching mechanisms are much harder to implement with GraphQL than with REST \cite{apollo_graphql_basics}.
+
+In the context of modern platforms like Smart Travel, the two paradigms are often not mutually exclusive. REST remains highly effective for server-to-server microservice communication and simple CRUD (Create, Read, Update, Delete) operations, while GraphQL is increasingly favored as an API Gateway layer to serve perfectly tailored data payloads to frontend applications.

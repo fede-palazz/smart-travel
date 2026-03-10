@@ -55,7 +55,7 @@
   "latex-workshop.latex.recipes": [
     {
       "name": "Docker Compile",
-      "tools": ["docker_pdflatex", "docker_biber", "docker_pdflatex", "docker_pdflatex"]
+      "tools": ["docker_pdflatex"] //, "docker_biber", "docker_pdflatex", "docker_pdflatex"]
     }
   ],
   "latex-workshop.latex.recipe.default": "Docker Compile",
