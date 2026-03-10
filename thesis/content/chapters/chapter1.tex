@@ -13,13 +13,6 @@ A monolithic design relies on tightly coupled components. Consequently, a minor 
 To overcome these scalability and maintainability challenges, the industry has widely adopted the microservices architecture \cite{moving_from_monolithic_to_microservices}. This modern paradigm decomposes a large application into a suite of small, autonomous, and loosely coupled services. Each microservice is organized around a specific business capability, encapsulates its own data, and communicates with other services through lightweight, well-defined application programming interfaces (APIs) or asynchronous message brokers. This decentralized approach offers superior modularity, improved fault isolation - the failure of one service does not inevitably crash the entire system - and the agility to deploy and scale individual services independently based on their specific demand. 
 
 However, the transition to microservices is not without its own set of complexities. It introduces challenges such as increased operational overhead, the need for sophisticated monitoring and logging solutions, and the complexity of managing distributed transactions and data consistency across services. Despite these challenges, the microservices architecture has become the de facto standard for building scalable, resilient, and maintainable enterprise applications in the cloud era.
-
-\begin{figure}[ht]
-	\centering
-    \includegraphics[width=\textwidth]{images/ch1/1_monolith-vs-microservices.png}
-	\caption[Monolithic vs. Microservices architecture]{Monolithic vs. Microservices architecture. \textit{Source: \cite{monolith_vs_microservices}}}
-    \label{fig:monolith_vs_microservices}
-\end{figure}
  
 
 \section[Goal]{Goal}
@@ -44,6 +37,8 @@ The execution of this thesis work is expected to produce both concrete technical
     \item From an operational perspective, the expected result is the successful demonstration of a fully automated DevOps lifecycle. By delivering a working \gls{CI/CD} pipeline via Jenkins that culminates in a live deployment on an OKD cluster, the project will prove the viability and necessity of infrastructure automation. This includes the ability to manage containerized applications at scale, handle configuration and secrets management effectively, and ensure seamless service discovery and routing in a production-like environment.
 \end{enumerate} 
 
+
+\clearpage
 \section[Thesis structure]{Thesis structure}
 
 The thesis is structured as follows:
