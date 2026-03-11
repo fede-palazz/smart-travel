@@ -3,7 +3,9 @@
 
 This chapter provides a comprehensive overview of the core concepts and technologies underpinning the project. It begins by exploring the architectural shift from traditional monolithic systems to decentralized microservices, then moving to the main differences between imperative and reactive programming models, highlighting how the latter addresses the high-concurrency demands of modern cloud infrastructure.
 
-Furthermore, it examines the project's technological stack and the different communication paradigms adopted to allow the system's components to interact with each other.
+Furthermore, it examines the specific technological stack selected for the application, including the frontend framework, backend environments, and NoSQL database management. It details the different communication paradigms adopted — spanning from synchronous REST and GraphQL APIs to asynchronous Event-Driven Architectures — to allow the system's isolated components to seamlessly interact with each other.
+
+Finally, it introduces the core principles of DevOps and Continuous Integration/Continuous Deployment pipelines, establishing the necessity of automated infrastructure for managing and deploying modern microservices at scale.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% 2.1 Microservices Architecture %%%
@@ -25,9 +27,9 @@ The foundational principles of this architecture include:
     \item \textbf{Decentralized Data Management:} Rather than relying on a single shared database schema, each microservice manages its own database, choosing the \gls{DBMS} technology best suited to its specific data access patterns.
 \end{itemize}
  
-\begin{figure}[ht]
+\begin{figure}[H]
 	\centering
-    \includegraphics[width=\textwidth]{images/ch1/1_monolith-vs-microservices.png}
+    \includegraphics[width=0.8\textwidth]{images/ch1/1_monolith-vs-microservices.png}
 	\caption[Monolithic vs. Microservices architecture]{Monolithic vs. Microservices architecture. \textit{Source: \cite{coderco_monoliths_vs_microservices}}}
     \label{fig:monolith_vs_microservices}
 \end{figure}
@@ -109,11 +111,22 @@ However, this model introduces significant complexities regarding development an
 
 As microservices ecosystems expand, the method by which these independent services communicate becomes a critical architectural decision. While traditional web architectures rely heavily on synchronous, point-to-point interactions, the inherent limitations of this approach at scale have led to the widespread adoption of \textit{Event-Driven Architectures} (\gls{EDA}) \cite{ibm_eda_2024}. 
 
+In a tightly coupled microservices environment, relying solely on direct HTTP/REST calls can quickly result in a fragile "distributed monolith." As the number of services grows, point-to-point communication creates a complex, tangled web of dependencies. If a single core service experiences downtime or network latency, the effects can cascade throughout the dependency chain, potentially bringing down the entire platform. Furthermore, this approach introduces strict \textit{temporal coupling}: both the calling service and the receiving service must be online, available, and responsive at the exact same moment for a transaction to succeed.
+
+To mitigate these risks, \gls{EDA} introduces a fundamental paradigm shift. Instead of services directly commanding one another to perform actions, they broadcast "events" — immutable records indicating that a significant change in state or a specific business action has already occurred (for example, a \texttt{PaymentProcessed} or \texttt{UserRegistered} event). Other autonomous services within the ecosystem can then asynchronously listen for and react to these events at their own pace. This decoupling transforms the architecture from a rigid, command-driven model into a highly reactive system, vastly improving overall resilience and allowing individual components to scale independently based on event volume.
+
 \subsection{Synchronous vs. Asynchronous Communication}
 
 In a synchronous communication model, typically implemented via HTTP and REST APIs, a service sends a request to another service and blocks its own execution until it receives a direct response. While conceptually simple and easy to trace, this tightly coupled approach creates cascading bottlenecks. If the receiving service is slow, overwhelmed, or offline, the calling service is forced to wait, consuming resources and potentially causing system-wide performance degradation \cite{microsoft_async_messaging}.
 
-On the other hand, asynchronous communication decouples the sender from the receiver. In an Event-Driven Architecture, services communicate by producing and consuming \textit{events} - lightweight messages that represent a significant change in state or a specific occurrence within the business domain (e.g., "user registered" or "order placed"). The service producing the event simply broadcasts it and immediately resumes its own operations, entirely unaware of who will consume the event or when it will be processed \cite{ibm_eda_2024}. 
+On the other hand, asynchronous communication decouples the sender from the receiver. In an Event-Driven Architecture, services communicate by producing and consuming \textit{events} - lightweight messages that represent a significant change in state or a specific occurrence within the business domain (e.g., "user registered" or "order placed"). The service producing the event simply broadcasts it and immediately resumes its own operations, entirely unaware of who will consume the event or when it will be processed \cite{ibm_eda_2024}.
+
+\begin{figure}[H]
+	\centering
+    \includegraphics[width=0.8\textwidth]{images/ch2/2_8_http-vs-event-driven.jpg}
+	\caption[Synchronous vs. Asynchronous communication]{Synchronous vs. Asynchronous communication. \textit{Source: \cite{synchronous_vs_asynchronous}}}
+    \label{fig:http_vs_event_driven}
+\end{figure}
 
 \subsection{The Role of Message Brokers}
 
@@ -132,7 +145,6 @@ This architecture generally relies on three primary components:
 	\caption[Event-Driven Architecture]{Event-Driven Architecture}
     \label{fig:eda}
 \end{figure}
-
 
 This publish/subscribe (\gls{Pub/Sub}) model allows multiple different consumers to react to a single event simultaneously and independently.
 
@@ -199,18 +211,26 @@ Despite its benefits, the \gls{SPA} model introduces challenges, particularly re
 
 \subsection{The Angular Framework}
 
-To implement the SPA architecture for the Smart Travel platform, Angular was selected. Maintained by Google, Angular is a comprehensive, enterprise-grade framework specifically designed for building scalable single-page applications \cite{angular_dev_overview}. 
+To implement the \gls{SPA} architecture for the Smart Travel platform, Angular was selected. Maintained by Google, Angular is a comprehensive, enterprise-grade framework specifically designed for building scalable single-page applications \cite{angular_dev_overview}. 
 
-Unlike lightweight libraries that focus solely on rendering views (such as \textit{React}), Angular provides a highly opinionated, all-encompassing toolset. It enforces a strict architectural pattern, requiring developers to write code using TypeScript—a superset of JavaScript that introduces static typing, interfaces, and advanced object-oriented features. This ensures greater code reliability and maintainability in large-scale projects.
+Unlike lightweight libraries that focus solely on rendering views (such as React), Angular provides a highly opinionated, all-encompassing toolset. It enforces a strict architectural pattern, requiring developers to write code using TypeScript — a statically typed superset of JavaScript that introduces interfaces, classes, and advanced object-oriented features. This ensures greater code reliability, earlier error detection during compilation, and improved maintainability in large-scale projects.
 
-Angular applications are built upon a \textit{Component-based architecture}. The \gls{UI} is divided into encapsulated, reusable building blocks called components. Each component strictly separates its concerns into three parts: a TypeScript class that manages the business logic and state, an HTML template that defines the view, and a CSS file scoped exclusively to that component's styling.
+At its core, the Angular framework is built upon several fundamental concepts that work together to create a cohesive architecture:
 
-Furthermore, Angular features a powerful \textit{Dependency Injection} (\gls{DI}) system, which allows components to easily request shared services (like an HTTP client to fetch catalog data) without needing to instantiate them manually, promoting highly modular and testable code \cite{angular_dev_overview}.
+\begin{itemize}
+    \item \textbf{Modules:} Angular applications are inherently modular. An \texttt{NgModule} is a container that groups related components, directives, pipes, and services into cohesive blocks of functionality. Every application has at least one root module (typically \texttt{AppModule}) that bootstraps the application. Enterprise applications often utilize numerous "feature modules" that allow for \textit{lazy-loading} — loading specific parts of the application only when the user navigates to them, thereby significantly reducing the initial JavaScript payload.
+
+    \item \textbf{Components and Templates:} The \gls{UI} is divided into encapsulated, reusable building blocks called components. Each component strictly separates its concerns: a TypeScript class manages the state and behavior, an HTML template defines the view, and a CSS/SCSS file scopes styling exclusively to that component. The connection between the class and the template is managed through powerful \textit{data binding} mechanisms (such as string interpolation, property binding, and event binding), which automatically synchronize the \gls{UI} with the underlying application state.
+
+    \item \textbf{Directives:} While components define custom \gls{DOM} elements, directives are classes that add additional behavior to elements in the Angular application. They are primarily divided into \textit{structural directives}, which alter the layout of the \gls{DOM} by adding, replacing, or removing elements (such as \texttt{*ngIf} for conditional rendering and \texttt{*ngFor} for list iteration), and \textit{attribute directives}, which alter the appearance or behavior of an existing element (such as dynamically applying CSS classes with \texttt{ngClass}).
+    
+    \item \textbf{Services and Dependency Injection (DI):} To ensure components remain lean and focused solely on presenting data, business logic and data fetching are delegated to \textit{Services}. Angular features a robust, hierarchical \textit{Dependency Injection} (\gls{DI}) system. Instead of a component manually instantiating a class to fetch data, it declares a dependency in its constructor. The \gls{DI} framework then automatically provides a singleton instance of the requested service—such as an HTTP client used to query the catalog microservice. This pattern promotes loosely coupled, highly modular, and easily testable code \cite{angular_dev_overview}.
+\end{itemize}
 
 \begin{figure}[H]
-	\centering
+    \centering
     \includegraphics[width=0.5\textwidth]{images/ch2/2_4_angular_architecture.jpg}
-	\caption[Angular Architecture]{Angular Architecture. \textit{Source: \cite{angular_besant}}}
+    \caption[Angular Architecture]{Angular Architecture. \textit{Source: \cite{angular_besant}}}
     \label{fig:angular_architecture}
 \end{figure}
 
@@ -250,13 +270,41 @@ NoSQL databases are generally categorized into four primary models:
     \label{fig:nosql_types}
 \end{figure}
 
-\subsection{MongoDB Architecture and Flexible Schema}
+\subsection{MongoDB Architecture: Collections vs. Tables}
 
-The Smart Travel application leverages MongoDB as the primary data store. MongoDB is the leading NoSQL document database, natively designed to handle modern application data with superior flexibility and scalability .
+The Smart Travel application leverages MongoDB as its primary data store. MongoDB is the leading NoSQL document database, natively designed to handle modern application data with superior flexibility and scalability. Its fundamental departure from traditional relational databases lies in how it structures and stores records.
 
-Instead of tables and rows, MongoDB organizes data into \textit{Collections} and \textit{Documents}. Under the hood, documents are stored in a binary format called \texttt{\gls{BSON}} (Binary JSON), which extends standard JSON with additional data types like dates, decimals, and raw binary data. This document-oriented architecture natively maps to the object-oriented structures in Java or TypeScript, completely eliminating the need for complex \textit{Object-Relational Mapping} (\gls{ORM}) layers and expensive SQL \texttt{JOIN} operations \cite{medium_mongodb_architecture}.
+In a traditional \gls{RDBMS}, data is structured into \textit{tables} consisting of \textit{columns} (attributes) and \textit{rows} (records). Every row in a table must adhere strictly to the predefined columns. Representing complex, hierarchical data — such as a travel order containing multiple passengers, nested payment details, and a list of booked activities — requires "normalizing" the data. This means splitting the information across multiple distinct tables and reassembling it at query time using computationally expensive \texttt{JOIN} operations.
 
-A core advantage of MongoDB is its flexible Schema (often referred to as dynamic schema). In a traditional SQL database, adding a new feature—such as introducing a "discount" or "dietary requirements" field to only a subset of travel packages—requires an expensive \texttt{ALTER TABLE} migration that can lock the database. In MongoDB, documents within the same collection do not need to have identical structures. A new field can simply be appended to a new document without affecting existing records . This schema flexibility significantly accelerates the development lifecycle and perfectly accommodates the diverse, evolving attributes of different travel products in the Smart Travel catalog.
+On the other hand, MongoDB organizes data into \textit{Collections} (the conceptual equivalent of tables) and \textit{Documents} (the equivalent of rows). 
+
+\begin{itemize}
+    \item \textbf{Documents:} A document is a self-contained unit of data. Under the hood, MongoDB stores these documents in a binary format called \texttt{\gls{BSON}} (Binary JSON), which extends standard JSON with additional data types like dates, decimals, and raw binary data. Unlike a flat SQL row, a BSON document can store rich, hierarchical data structures, including nested sub-documents and arrays. This means an entire "Order" can be retrieved in a single, highly efficient database read operation. Furthermore, this document-oriented architecture natively maps to the object-oriented structures used in Java or TypeScript, largely eliminating the need for complex \textit{Object-Relational Mapping} (\gls{ORM}) layers \cite{medium_mongodb_architecture}.
+    
+    \item \textbf{Collections:} Documents are grouped together into Collections. However, unlike SQL tables, collections enforce a \textit{flexible schema} (or dynamic schema). In a relational database, adding a new feature — such as introducing a "discount\_code" or "dietary\_requirements" field to only a subset of travel packages — requires an expensive \texttt{ALTER TABLE} migration that can temporarily lock the database and force null values upon all existing rows. In MongoDB, documents within the same collection do not need to have identical structures. A new field can simply be appended to a new document without affecting existing records.
+\end{itemize} 
+
+\begin{figure}[H]
+	\centering
+    \includegraphics[width=0.6\textwidth]{images/ch2/2_7_sql-vs-mongodb.png}
+	\caption[SQL vs. MongoDB concepts]{SQL vs. MongoDB concepts. \textit{Source: \cite{sql_vs_nosql}}}
+    \label{fig:sql_vs_mongodb}
+\end{figure}
+
+This schema flexibility significantly accelerates the development lifecycle and perfectly accommodates the diverse, constantly evolving attributes of different travel products within the Smart Travel catalog.
+
+\subsection{Data Processing and Advanced Features}
+
+MongoDB provides a highly capable and expressive query ecosystem to manipulate and retrieve data efficiently:
+
+\begin{itemize}
+    \item \textbf{Aggregation Framework:} To perform complex data processing operations — such as filtering, sorting, grouping, and calculating totals — MongoDB utilizes the Aggregation Pipeline. Modeled on the concept of data processing pipelines in Unix, documents enter a multi-stage pipeline where each stage transforms the data as it passes through. Stages like \texttt{\$match} (filtering), \texttt{\$group} (aggregating data), and \texttt{\$project} (reshaping the output document) allow developers to perform advanced analytics directly within the database engine without needing to transfer massive datasets to the application layer \cite{mongodb_aggregation}.
+     
+    \item \textbf{Indexing Capabilities:} Despite its flexible schema, MongoDB relies heavily on indexes to ensure high query performance. Like traditional RDBMS, it uses \texttt{B-tree} structures to prevent the database from performing full collection scans. It supports secondary indexes, compound indexes, and highly specialized index types such as geospatial indexes (crucial for location-based travel searches) and text-search indexes.
+    
+    \item \textbf{ACID Transactions:} Historically, a major criticism of NoSQL databases was their lack of transactional guarantees across multiple records. However, since version 4.0, MongoDB has introduced full support for multi-document \gls{ACID} transactions across replica sets and sharded clusters. This allows developers to execute complex, multi-step operations (such as processing a payment and simultaneously updating an order status) with the guarantee that either all changes are applied successfully, or none are, bridging the reliability gap between relational and document databases \cite{mongodb_transactions}.
+\end{itemize}
+
 \subsection{Scalability and High Availability}
 
 Beyond its data model, MongoDB's architecture is built for distributed environments:
@@ -279,14 +327,39 @@ In a decoupled architecture where the frontend is separated from the backend mic
 
 \subsection{REST (Representational State Transfer)}
 
-REST has been the undisputed standard for web APIs for over a decade. Introduced by Roy Fielding in 2000, it is an architectural style rather than a strict protocol. RESTful APIs are built around the concept of "resources" (e.g., users, flights, orders), which are identified by standard URLs. Clients interact with these resources using standard HTTP methods such as \texttt{GET} (to retrieve data), \texttt{POST} (to create data), \texttt{PUT} (to update), and \texttt{DELETE} \cite{aws_rest_api}.
+REST has been the undisputed standard for web APIs for over a decade. Introduced by Roy Fielding in 2000, it is an architectural style rather than a strict protocol. RESTful APIs are built around the concept of "resources" (e.g., users, flights, orders), which are identified by standard URLs. Clients interact with these resources using standard HTTP methods such as \texttt{GET} (to retrieve data), \texttt{POST} (to create data), \texttt{PUT} (to update), and \texttt{DELETE} to remove data \cite{aws_rest_api}.
 
-A well-designed REST API is stateless, meaning each client request must contain all the information the server needs to fulfill it, and the server does not store any client context between requests. This statelessness makes REST highly scalable and cacheable, which is why it remains the default choice for general-purpose microservice communication.
+\subsubsection{Core Principles of REST}
 
-However, as frontend applications (like SPAs) have become more complex, REST has revealed significant limitations regarding data fetching:
+To be considered truly RESTful, an application's API must adhere to several guiding architectural constraints:
 \begin{itemize}
-    \item \textbf{Over-fetching:} A REST endpoint typically returns a fixed data structure. If the Smart Travel frontend only needs the names and prices of available flights to display a simple list, a \texttt{GET /flights} request might still return massive JSON objects containing seating charts, airline details, and baggage rules that the client must download but ultimately discard \cite{ibm_rest_vs_graphql}.
-    \item \textbf{Under-fetching (the N+1 problem):} If a view requires data from multiple related resources — such as a user's profile and their past order history — the client is often forced to make multiple sequential HTTP requests to different endpoints (e.g., \texttt{GET /users/123} followed by \texttt{GET /users/123/orders}). This significantly increases network latency and degrades the user experience.
+    \item \textbf{Client-Server Separation:} The user interface concerns (the client) are strictly separated from the data storage and business logic concerns (the server). This decoupling allows the frontend (e.g., the Angular SPA) and the backend microservices to evolve and scale independently.
+    \item \textbf{Statelessness:} Each client request to the server must contain all the information necessary to understand and process it. The server does not store any client context or session state between requests. This stateless nature makes REST highly scalable, as any server replica within a cluster can handle any incoming request without needing to synchronize session data.
+    \item \textbf{Cacheability:} Responses must explicitly define themselves as cacheable or non-cacheable. If a response is cacheable, the client or a network intermediary can reuse the data for equivalent later requests, significantly improving network efficiency and reducing server load.
+    \item \textbf{Layered System:} A client cannot ordinarily tell whether it is connected directly to the end server or to an intermediary (like a load balancer, an API Gateway, or a proxy). This enables load balancing and shared caches without altering the client's behavior.
+    \item \textbf{Uniform Interface:} This is the fundamental feature that distinguishes a REST API. It simplifies the architecture by enforcing a standard, uniform way to interact with the system, relying heavily on standard HTTP specifications.
+\end{itemize}
+
+\subsubsection{Resources and Representations}
+
+In REST, the primary abstraction of information is a \textit{resource}. A resource can be any concept, entity, or collection within the business domain — such as a user, a flight, or an order. Resources are uniquely identified by standard \gls{URL}s, often referred to as endpoints \cite{aws_rest_api}. For example, the endpoint \texttt{/flights} might represent the collection of all flight resources, while \texttt{/flights/123} would represent a specific flight with the ID of \texttt{123}.
+
+It is important to note that when a client requests a resource, the server does not send the actual internal database record; instead, it sends a \textit{representation} of the resource's state at that specific moment. In modern web development, this representation is almost exclusively formatted in lightweight \gls{JSON} objects.
+
+Clients manipulate these resources using standard HTTP verbs, which map directly to traditional database CRUD (Create, Read, Update, Delete) operations:
+\begin{itemize}
+    \item \texttt{GET} (Read): Retrieves a representation of the resource. It is a safe and idempotent operation, meaning it does not alter the state of the server.
+    \item \texttt{POST} (Create): Submits a new payload to the server to create a new subordinate resource.
+    \item \texttt{PUT} (Update): Updates an entire existing resource with a new representation, or creates it if it does not exist.
+    \item \texttt{DELETE} (Delete): Removes the specified resource from the server.
+\end{itemize}
+
+\subsubsection{Limitations of REST in Modern SPAs}
+
+While REST's statelessness and uniform interface make it the default choice for general-purpose microservice-to-microservice communication, it has revealed significant limitations regarding data fetching as frontend applications have grown more complex:
+\begin{itemize}
+    \item \textbf{Over-fetching:} A REST endpoint typically returns a fixed data structure. If the Smart Travel frontend only needs the names and prices of available flights to display a simple list, a \texttt{GET /flights} request might still return massive JSON objects containing seating charts, airline details, and baggage rules that the client must download over the network but ultimately discard \cite{ibm_rest_vs_graphql}.
+    \item \textbf{Under-fetching (the N+1 problem):} If a view requires data from multiple related resources—such as a user's profile and their past order history—the client is often forced to make multiple sequential HTTP requests to different endpoints (e.g., \texttt{GET /users/123} followed by \texttt{GET /users/123/orders}). This significantly increases network latency and degrades the overall user experience.
 \end{itemize}
 
 \subsection{GraphQL: The Client-Driven Alternative}
@@ -304,8 +377,84 @@ For example, a single GraphQL query can simultaneously fetch a user's name, thei
     \label{fig:rest_vs_graphql}
 \end{figure}
 
+\subsubsection{Schema and Type System}
+
+At the core of every GraphQL server is a strictly defined contract known as the \textit{Schema}, written in the \textit{Schema Definition Language} (\gls{SDL}). The schema defines every piece of data that can be queried or modified, explicitly declaring the types of objects, their fields, and the relationships between them \cite{apollo_graphql_basics}.
+
+At the foundational level of this type system are the primitive data types, known in GraphQL as \textit{Scalars}. Scalars represent the leaves of any query — they are the concrete data values that resolve to a single point and cannot be queried any further. GraphQL provides five default scalar types out of the box:
+\begin{itemize}
+    \item \texttt{Int}: A signed 32-bit integer.
+    \item \texttt{Float}: A signed double-precision floating-point value.
+    \item \texttt{String}: A UTF-8 character sequence.
+    \item \texttt{Boolean}: A standard \texttt{true} or \texttt{false} value.
+    \item \texttt{ID}: A unique identifier, typically used to refetch an object or as a key for a cache. While it is serialized as a String, defining a field as an \texttt{ID} signifies that it is not intended to be human-readable.
+\end{itemize}
+
+Beyond these defaults, the GraphQL specification allows developers to define \textit{Custom Scalars}. This is particularly helpful for platforms like Smart Travel, where domain-specific data types such as "Flight", "Accommodation", or "Activity" can be represented as custom scalars with their own validation rules and serialization logic.
+
+Because GraphQL is strongly typed, the server validates every incoming client request against this schema before attempting to execute it. This guarantees that the client only asks for data that actually exists and provides a massive boost to the developer experience, as frontend tooling can automatically generate code and provide real-time auto-completion based on the schema's exact structure.
+
+\subsubsection{Core Operations: Queries, Mutations, and Subscriptions}
+
+While REST relies on HTTP methods to define the intent of an operation, GraphQL handles all requests via \texttt{HTTP POST} and defines intent using three distinct operation types:
+
+\begin{itemize}
+    \item \textbf{Query:} The equivalent of a REST \texttt{GET} request. Queries are used by the client to fetch data without causing any side effects on the server. A major feature of a Query is that the structure of the returned JSON data perfectly mirrors the nested structure of the requested query. For example, a single Query can simultaneously fetch a user's name, their last three orders, and the specific hotel names associated with those orders, entirely avoiding the N+1 request problem.
+
+    \item \textbf{Mutation:} The equivalent of REST \texttt{POST}, \texttt{PUT}, and \texttt{DELETE} requests. Mutations are used to write data to the server — such as creating a new user, booking a flight, or cancelling an order. In GraphQL, a Mutation not only performs the intended write operation but can also return the newly modified object in the exact same request, allowing the frontend application to instantly update its local state.
+    
+    \item \textbf{Subscription:} While Queries and Mutations follow a standard request-response cycle, Subscriptions establish a persistent, long-lasting connection between the client and the server, typically using WebSockets. Subscriptions are used to push real-time updates from the server to the client whenever a specific event occurs (e.g., pushing a notification when a flight's price suddenly drops).
+\end{itemize}
+
+By relying on a single endpoint, a strongly typed schema, and flexible operations, GraphQL provides a highly efficient and declarative data-fetching paradigm perfectly suited for modern Single Page Applications.
+
 \subsection{Choosing the Right Paradigm}
 
 While GraphQL offers unparalleled efficiency for frontend data fetching, it introduces significant complexity on the backend. Developing a GraphQL server requires defining a rigorous schema, implementing complex resolver functions, and carefully managing database queries to prevent malicious or overly deep queries from exhausting server resources. Furthermore, traditional HTTP caching mechanisms are much harder to implement with GraphQL than with REST \cite{apollo_graphql_basics}.
 
 In the context of modern platforms like Smart Travel, the two paradigms are often not mutually exclusive. REST remains highly effective for server-to-server microservice communication and simple CRUD (Create, Read, Update, Delete) operations, while GraphQL is increasingly favored as an API Gateway layer to serve perfectly tailored data payloads to frontend applications.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 2.8 DevOps and CI/CD Pipelines %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{DevOps and CI/CD Pipelines}
+\label{sec:devops_cicd}
+
+The architectural transition from monolithic applications to distributed microservices fundamentally changes not only how software is written but also how it is delivered. Managing, testing, and deploying dozens of independent services manually is highly prone to human error and operationally unsustainable. To address this bottleneck, the software industry has widely adopted DevOps practices and automated deployment pipelines \cite{aws_devops_what_is}.
+
+\subsection{The DevOps Philosophy}
+
+Traditionally, software development and IT operations functioned in isolated silos. Developers wrote the code and pass it to operations teams, who were then responsible for deploying and maintaining it. This often led to misaligned incentives: developers wanted to push new features rapidly, while operations teams prioritized system stability, naturally resisting frequent changes \cite{atlassian_devops}.
+
+DevOps is a cultural and technical movement that merges these two disciplines (Development and Operations). It promotes a collaborative environment where cross-functional teams take full ownership of the entire application lifecycle — from initial planning and writing code to deploying it into production and monitoring its live performance. The core objective of DevOps is to shorten the development lifecycle, increase deployment frequency, and achieve highly dependable releases \cite{aws_devops_what_is}.
+
+\begin{figure}[H]
+	\centering
+    \includegraphics[width=0.6\textwidth]{images/ch2/2_9_devops.png}
+	\caption[DevOps]{DevOps}
+    \label{fig:devops}
+\end{figure}
+
+\subsection{Continuous Integration and Continuous Deployment (CI/CD)}
+
+The technical engine that drives the DevOps philosophy is the \gls{CI/CD} pipeline. A pipeline is a sequence of automated steps that source code must pass through before it reaches the end user. It enforces strict quality gates and removes manual intervention from the software release process \cite{redhat_cicd_explained}.
+
+\begin{itemize}
+    \item \textbf{Continuous Integration (CI):} In a microservices environment, multiple developers frequently commit code changes to a shared version control repository (such as Git). CI is the practice of automatically triggering a build process every time a new commit is pushed. The CI server automatically compiles the code and runs a suite of unit and integration tests. This rapid feedback loop ensures that new code seamlessly integrates with the existing codebase and that bugs are caught immediately, rather than during a massive release at the end of the month.
+    
+    \item \textbf{Continuous Delivery and Deployment (CD):} Once the code passes the CI phase, the CD phase automates the release process. In \textit{Continuous Delivery}, the built artifact (such as a Docker container image) is automatically prepared and pushed to a staging environment, awaiting a manual trigger for final production release. In \textit{Continuous Deployment}, even this manual trigger is removed: every change that passes all automated tests is deployed directly to production without human intervention \cite{gitlab_cicd_concepts}.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+    \includegraphics[width=\textwidth]{images/ch2/2_10_ci-cd.jpg}
+	\caption[CI/CD pipeline]{CI/CD pipeline}
+    \label{fig:cicd}
+\end{figure}
+
+\subsection{The Necessity of Automation at Scale}
+
+Implementing robust CI/CD pipelines is not merely a convenience for cloud-native applications, but a structural necessity. Because a platform like Smart Travel is composed of multiple independent services (e.g., Users, Travel Catalog, Orders, Notification) built with varying technologies (Angular, Spring Boot, Quarkus), each service requires its own distinct lifecycle and pipeline. 
+
+Automation guarantees repeatability. By defining the infrastructure and deployment steps as code, a pipeline ensures that a microservice will be compiled, tested, packaged into a container, and deployed in the exact same manner every single time. This eliminates configuration drift, drastically reduces the downtime associated with manual deployments, and provides the agility required to roll back seamlessly if a critical defect is detected in production \cite{redhat_cicd_explained}.
