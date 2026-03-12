@@ -1,12 +1,185 @@
 \chapter{System Architecture}
 \label{sec:architecture}
 
-3.1 Requirements Analysis: Functional and non-functional requirements of the Smart Travel platform.
+This chapter begins by establishing the business context and user roles of the Smart Travel domain, followed by an analysis of its functional and non-functional requirements. It then explores the high-level architecture, detailing the decomposition of the monolithic domain into bounded, autonomous microservices (Users, Travel Catalog, Orders, and Notifications). 
 
-3.2 High-Level Architecture: Decomposing the system into microservices (Users, Catalog, Orders, Notifications).
+It proceeds to examine the data modeling strategy, highlighting how MongoDB's flexible schema accommodates the diverse structures of travel products. 
+
+Finally, the chapter outlines the communication patterns employed to orchestrate these services, contrasting synchronous API gateways with the asynchronous event-driven mechanisms powered by RabbitMQ and Debezium.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 3.1 Application Domain Overview %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Application Domain Overview}
+\label{sec:domain_overview}
+
+Before diving into the technical requirements and the architectural topology of the system, it is essential to establish the business context and the primary objectives of the application. 
+
+Smart Travel was conceived as a full-stack e-commerce application dedicated to the tourism sector. Its primary business goal is to provide a centralized hub where users can search, compose, and purchase complete travel experiences — spanning flights, accommodations, local activities, and travel packages. From a software engineering perspective, the platform serves as a (\gls{PoC}) to validate the implementation of cloud-native microservices, reactive programming paradigms, and event-driven communication.
+
+\subsection{User Roles and Objectives}
+
+To satisfy diverse business needs, the platform was designed to support multiple distinct user profiles, each with specific permissions, workflows, and end goals. The system identifies four primary actors:
+
+\begin{itemize}
+    \item \textbf{Guest (Unregistered User):} Guests can freely navigate the platform to explore the catalog of travel packages and search for flights, accommodation and activities on specific dates. However, they are restricted from executing financial transactions or composing custom packages until they authenticate.
+    
+    \item \textbf{Customer (Registered User):} Once authenticated, a Customer aims to plan and purchase their travel itinerary. Beyond the capabilities of a Guest, Customers can compose personalized travel packages by aggregating distinct catalog components, proceed to secure checkout and manage a personal dashboard containing their order history.
+    
+    \item \textbf{Travel Agent:} A business-oriented user responsible for enriching the platform's catalog. The Travel Agent's primary goal is to curate and compose new travel packages. They have access to dedicated interfaces where they can bundle flights, hotels, and activities into fixed "Agency Packages," manage their publication status (draft, published, or archived), and view historical data on the packages they have created.
+    
+    \item \textbf{Administrator:} The Administrator possess the highest level of authorization, granting them access to the user management system and the ability to oversee all travel packages (including those created by Travel Agents). The Administrator's role is to maintain the integrity of the platform by managing users' accounts and permissions.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 3.2 Requirements Analysis %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Requirements Analysis}
+\label{sec:requirements_analysis}
+
+Before defining the technical architecture, a rigorous requirements analysis was conducted to establish the scope and expected behavior of the application. The requirements were divided into functional — detailing what the system must do—and non-functional, dictating how the system should perform under various conditions.
+
+\subsection{Functional Requirements}
+
+The functional requirements were categorized by business domain and mapped to specific user roles (Guest, Customer, Travel Agent, and Administrator). The following table outlines the comprehensive list of functional features expected from the platform, translated from the initial Italian specification document.
+
+\begin{longtable}{@{} p{0.15\textwidth} p{0.75\textwidth} @{}}
+\caption{Smart Travel Functional Requirements} \label{tab:functional_requirements} \\
+\toprule
+\textbf{ID} & \textbf{Description} \\
+\midrule
+\endfirsthead
+
+\multicolumn{2}{c}%
+{{\bfseries \tablename\ \thetable{} -- continued from previous page}} \\
+\toprule
+\textbf{ID} & \textbf{Description} \\
+\midrule
+\endhead
+
+\midrule
+\multicolumn{2}{r}{{Continued on next page}} \\
+\endfoot
+
+\bottomrule
+\endlastfoot
+
+\textbf{FR1} & \textbf{Authentication and Authorization} \\
+FR1.1 & User login and logout \\
+FR1.2 & Account creation (Sign up) \\
+FR1.3 & Account management (Edit details, Delete account) \\
+\midrule
+
+\textbf{FR2} & \textbf{Flights} \\
+FR2.1 & Search flights by destination and date range \\
+FR2.2 & Filter search results \\
+FR2.3 & Sort search results \\
+FR2.4 & View flight details (e.g., layovers, airlines) \\
+FR2.5 & Flight payment processing (Summary, Total calculation) \\
+\midrule
+
+\textbf{FR3} & \textbf{Accommodations} \\
+FR3.1 & Search accommodations by destination and date range \\
+FR3.2 & Filter search results \\
+FR3.3 & Sort search results \\
+FR3.4 & View accommodation details (e.g., available rooms, amenities) \\
+FR3.5 & Save accommodation to favorites for quick reference \\
+FR3.6 & Payment processing for one or multiple rooms \\
+FR3.7 & View accommodation location on an interactive geographic map \\
+FR3.8 & View nearby accommodations and their prices on the map \\
+\midrule
+
+\textbf{FR4} & \textbf{Activities} \\
+FR4.1 & Search activities by destination and date range \\
+FR4.2 & Filter search results \\
+FR4.3 & Sort search results \\
+FR4.4 & View activity details (e.g., location, schedule) \\
+FR4.5 & Save activity to favorites for quick reference \\
+FR4.6 & Activity payment processing \\
+FR4.7 & View activity location on an interactive geographic map \\
+\midrule
+
+\textbf{FR5} & \textbf{Travel Packages (Agency Curated)} \\
+FR5.1 & Search existing agency packages by destination and date range \\
+FR5.2 & Filter search results \\
+FR5.3 & Sort search results \\
+FR5.4 & View package details (Flights, Accommodation, Activities) \\
+FR5.5 & Save package to favorites for quick reference \\
+FR5.6 & Package payment processing \\
+FR5.7 & View recommended travel packages on the homepage \\
+\midrule
+
+\textbf{FR6} & \textbf{Custom Travel Packages (Customer Created)} \\
+FR6.1 & Search individual components to build a custom package \\
+FR6.2 & Select components and compose the custom package \\
+FR6.3 & Custom package payment processing \\
+\midrule
+
+\textbf{FR7} & \textbf{Reviews} \\
+FR7.1 & View user reviews for a package, accommodation, or activity \\
+FR7.2 & Create a review for a purchased package, accommodation, or activity \\
+FR7.3 & Edit or delete an existing review \\
+FR7.4 & View aggregate score and total number of reviews \\
+\midrule
+
+\textbf{FR8} & \textbf{Customer Personal Area} \\
+FR8.1 & View order history and specific order details \\
+FR8.2 & View upcoming orders (Future travel packages) \\
+FR8.3 & View and manage account details \\
+FR8.4 & View saved favorites (Accommodations, Activities, Packages) \\
+FR8.5 & Remove an item from favorites \\
+\midrule
+
+\textbf{FR9} & \textbf{Notifications} \\
+FR9.1 & Send an automated summary email to the customer for every purchase \\
+\midrule
+
+\textbf{FR10} & \textbf{Package Management (Travel Agent)} \\
+FR10.1 & Add a new travel package (Draft / Unpublished) \\
+FR10.2 & Publish a previously created draft package \\
+FR10.3 & Delete an unpublished travel package \\
+FR10.4 & View history of created travel packages \\
+\midrule
+
+\textbf{FR11} & \textbf{Statistics \& Analytics} \\
+FR11.1 & View aggregate statistics on an Agent/Admin dashboard \\
+FR11.2 & View data visualizations and statistical graphs \\
+
+\end{longtable}
+
+\subsection{Non-Functional Requirements}
+
+While the functional requirements dictate the platform's features, the non-functional requirements (\gls{NFR}) establish the systemic qualities necessary for the application to succeed in a cloud-native production environment. Based on the project goals, the following constraints were prioritized:
+
+\begin{itemize}
+    \item \textbf{Scalability:} The system must gracefully handle varying loads. By adopting a microservices architecture, individual domains (such as the Catalog service during heavy search traffic) must be able to scale horizontally and independently without requiring the entire platform to be duplicated.
+    \item \textbf{Performance and Responsiveness:} To provide a fluid user experience, the frontend \gls{SPA} must minimize full-page reloads. On the backend, services should leverage reactive programming (via Spring WebFlux and Quarkus Mutiny) to ensure high throughput and minimize blocking operations, keeping API response times consistently low even under concurrent load.
+    \item \textbf{Resilience and Fault Tolerance:} The failure of a single component must not trigger a system-wide outage. The architecture must employ asynchronous communication (Event-Driven messaging via RabbitMQ) to decouple critical write operations—such as processing an order and sending a confirmation email—ensuring that temporary downstream unavailability does not result in data loss.
+    \item \textbf{Maintainability and Automation:} The codebase must be highly modular, allowing separate development teams to work on the frontend, catalog, and order services simultaneously. Furthermore, the deployment lifecycle must be entirely automated via CI/CD pipelines to ensure consistent, repeatable, and testable releases into the target Kubernetes/OKD cluster.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 3.2 High-Level Architecture %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{High-Level Architecture}
+\label{sec:high_level_architecture}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 3.3 Data Modeling %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\section{Requirements Analysis}
+\section{Data Modeling}
+\label{sec:data_modeling}
 
 3.3 Data Modeling: Designing the MongoDB collections and handling flexible schemas.
 
-3.4 Communication Patterns: * 3.4.1 Synchronous communication (REST/GraphQL)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 3.4 Communication Patterns %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Communication Patterns}
+\label{sec:communication_patterns}
 
-3.4.2 Asynchronous communication (RabbitMQ events)
+3.4.1 Synchronous communication (REST/GraphQL)
+
+3.4.2 Asynchronous communication (RabbitMQ events, Debezium event streaming, Mailpit as fake SMTP server)

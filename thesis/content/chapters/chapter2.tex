@@ -181,11 +181,11 @@ Furthermore, Quarkus is built from the ground up on a reactive core powered by E
 
 \subsection{Programming Models and Data Access Paradigms}
 
-At their core, both Spring Boot and Quarkus serve the exact same fundamental purpose: they are comprehensive Java frameworks designed to build robust, production-ready backend web applications and microservices. They abstract away the complex infrastructure required for enterprise software—such as exposing HTTP endpoints, managing database connection pools, and orchestrating dependency injection—allowing developers to focus strictly on domain-specific business logic. 
+At their core, both Spring Boot and Quarkus serve the exact same fundamental purpose: they are comprehensive Java frameworks designed to build robust, production-ready backend web applications and microservices. They abstract away the complex infrastructure required for enterprise software — such as exposing HTTP endpoints, managing database connection pools, and orchestrating dependency injection—allowing developers to focus strictly on domain-specific business logic. 
 
 However, while their end goals are identical, they take fundamentally different approaches to their internal programming models and data access paradigms. 
 
-From an API and dependency injection perspective, Spring Boot relies heavily on its own proprietary, highly mature ecosystem. Developers utilize Spring-specific annotations (such as \texttt{@RestController}, \texttt{@Autowired}, and \texttt{@Service}) to wire the application together. Conversely, Quarkus was designed to leverage existing industry standards. It relies on MicroProfile and Jakarta EE specifications, utilizing CDI (Contexts and Dependency Injection) with \texttt{@Inject} for bean management and JAX-RS (Java API for RESTful Web Services) with annotations like \texttt{@Path} and \texttt{@GET} for defining network endpoints. 
+From an API and dependency injection perspective, Spring Boot relies heavily on its own proprietary, highly mature ecosystem. Developers utilize Spring-specific annotations (such as \texttt{@RestController}, \texttt{@Autowired}, and \texttt{@Service}) to wire the application together. Conversely, Quarkus was designed to leverage existing industry standards. It relies on MicroProfile and Jakarta EE specifications, utilizing CDI (Contexts and Dependency Injection) with \texttt{@Inject} for bean management and JAX-RS (Java API for RESTful Web Services) with annotations like \texttt{@Path} and \texttt{@GET} for defining network endpoints.
 
 The most striking architectural difference, however, lies in how the two frameworks handle data access and domain modeling:
 
