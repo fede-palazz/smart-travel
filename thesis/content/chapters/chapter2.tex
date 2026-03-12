@@ -179,6 +179,22 @@ Quarkus achieves this extreme efficiency by fundamentally changing the Java buil
 
 Furthermore, Quarkus is built from the ground up on a reactive core powered by Eclipse Vert.x \cite{vertx}. This unified architecture allows developers to seamlessly blend standard imperative code and non-blocking reactive code within the exact same application, dynamically optimizing the underlying execution thread model without requiring the developer to switch between entirely different API stacks.
 
+\subsection{Programming Models and Data Access Paradigms}
+
+At their core, both Spring Boot and Quarkus serve the exact same fundamental purpose: they are comprehensive Java frameworks designed to build robust, production-ready backend web applications and microservices. They abstract away the complex infrastructure required for enterprise software—such as exposing HTTP endpoints, managing database connection pools, and orchestrating dependency injection—allowing developers to focus strictly on domain-specific business logic. 
+
+However, while their end goals are identical, they take fundamentally different approaches to their internal programming models and data access paradigms. 
+
+From an API and dependency injection perspective, Spring Boot relies heavily on its own proprietary, highly mature ecosystem. Developers utilize Spring-specific annotations (such as \texttt{@RestController}, \texttt{@Autowired}, and \texttt{@Service}) to wire the application together. Conversely, Quarkus was designed to leverage existing industry standards. It relies on MicroProfile and Jakarta EE specifications, utilizing CDI (Contexts and Dependency Injection) with \texttt{@Inject} for bean management and JAX-RS (Java API for RESTful Web Services) with annotations like \texttt{@Path} and \texttt{@GET} for defining network endpoints. 
+
+The most striking architectural difference, however, lies in how the two frameworks handle data access and domain modeling:
+
+\begin{itemize}
+    \item \textbf{Spring Data and the Repository Pattern:} Spring Boot strictly encourages the \textit{Repository Pattern}. In this model, the domain entity (the class representing a database document or row) is kept as a pure \gls{POJO} (Plain Old Java Object). Data access logic is strictly separated into a distinct interface (e.g., \texttt{ReactiveMongoRepository}), which Spring automatically implements at runtime. This provides a clean separation of concerns but requires creating multiple files and interfaces even for simple CRUD operations \cite{spring_data_overview}.
+    
+    \item \textbf{Quarkus Panache and the Active Record Pattern:} To drastically reduce boilerplate code, Quarkus introduces a layer called \textit{Panache} (available for both Hibernate ORM and MongoDB). While Panache supports the traditional Repository pattern, its standout feature is its implementation of the \textit{Active Record Pattern}. In this paradigm, the domain entity itself extends a base class (such as \texttt{PanacheMongoEntity}) and directly inherits static data access methods. This allows developers to query or save data directly through the entity class (e.g., \texttt{Flight.findById(id)} or \texttt{flight.persist()}). This tight coupling of data and behavior significantly accelerates development for straightforward business domains, though it can become difficult to manage in highly complex relational schemas \cite{quarkus_panache_mongodb}.
+\end{itemize}
+
 \subsection{The Rationale for Comparison}
 
 The decision to utilize both Spring Boot and Quarkus within the Smart Travel platform was driven by the desire to evaluate the state of the art in Java microservices. Implementing identical business logic - such as reactive database queries and asynchronous RabbitMQ event publishing/consuming - using both frameworks provides a valuable lens through which to assess their respective developer experiences, syntactic clarity, and ease of configuration. While Spring Boot offers the safety and familiarity of a massive, mature ecosystem, Quarkus promises a leaner, faster, and easier approach to cloud-native development \cite{brilworks_framework_comparison}.
@@ -265,7 +281,7 @@ NoSQL databases are generally categorized into four primary models:
  
 \begin{figure}[H]
 	\centering
-    \includegraphics[width=0.6\textwidth]{images/ch2/2_5_nosql-dbs.png}
+    \includegraphics[width=0.5\textwidth]{images/ch2/2_5_nosql-dbs.png}
 	\caption[NoSQL Database Types]{NoSQL Database Types}
     \label{fig:nosql_types}
 \end{figure}
@@ -448,7 +464,7 @@ The technical engine that drives the DevOps philosophy is the \gls{CI/CD} pipeli
 
 \begin{figure}[H]
 	\centering
-    \includegraphics[width=\textwidth]{images/ch2/2_10_ci-cd.jpg}
+    \includegraphics[width=0.9\textwidth]{images/ch2/2_10_ci-cd.jpg}
 	\caption[CI/CD pipeline]{CI/CD pipeline}
     \label{fig:cicd}
 \end{figure}
