@@ -273,9 +273,30 @@ Instead, the \texttt{Order} document embeds a massive \texttt{OrderItems} object
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% 3.5 Communication Patterns %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Communication Patterns}
 \label{sec:communication_patterns}
 
-3.4.1 Synchronous communication (REST/GraphQL)
+In a distributed microservices architecture, the network replaces the in-memory method calls of a monolithic application. Consequently, the patterns chosen for inter-service communication fundamentally dictate the platform's latency, reliability, and scalability. To balance the need for immediate data retrieval with the necessity for fault-tolerant background processing, the Smart Travel platform implements a hybrid communication strategy, utilizing both synchronous and asynchronous paradigms.
 
-3.4.2 Asynchronous communication (RabbitMQ events, Debezium event streaming, Mailpit as fake SMTP server)
+\subsection{Synchronous Communication}
+
+Synchronous communication is utilized for operations where the client (or calling service) requires an immediate response to proceed. In this model, the thread remains blocked (or asynchronously suspended in a reactive context) until the HTTP response is received. The platform employs two distinct synchronous patterns depending on the network boundary:
+
+\begin{itemize}
+    \item \textbf{Frontend to BFF (GraphQL):} The external boundary between the Angular \gls{SPA} and the \gls{BFF} is governed by GraphQL over HTTP. As discussed in Section \ref{sec:api_paradigms}, GraphQL was explicitly chosen for its strictly typed query language and to eliminate over-fetching and ensures the \gls{UI} receives exactly the data it needs to render. By exposing a single endpoint, the BFF allows the frontend to request complex, deeply nested datasets — such as an agency package, its included flight details, and the associated user reviews — in a single network round-trip. 
+    
+    \item \textbf{BFF to Microservices (REST):} The internal boundary between the BFF and the downstream microservices (Travel Catalog, User, Order) relies on standard RESTful APIs. Because these services reside within the same secure, high-speed local network or OKD cluster, the overhead of multiple HTTP \texttt{GET} or \texttt{POST} requests is negligible. REST provides a universally understood, stateless, and highly cacheable standard that seamlessly bridges the Spring Boot and Quarkus ecosystems. The BFF acts as the REST client, orchestrating concurrent HTTP calls to the various domain APIs and stitching their JSON responses together before returning the GraphQL payload to the frontend.
+\end{itemize}
+
+\subsection{Asynchronous Communication}
+
+While synchronous APIs are excellent for reading data, they introduce dangerous temporal coupling when writing data or executing multi-step business transactions. If the Order API synchronously called the Notification API to send an email, a failure in the mail server would cause the entire checkout process to crash. To prevent this, Smart Travel delegates critical cross-service workflows to an asynchronous, Event-Driven Architecture (\gls{EDA}).
+
+\begin{itemize}
+    \item \textbf{Message Brokering with RabbitMQ:} RabbitMQ is deployed as the central message broker. Instead of direct service-to-service commands, microservices publish "events" (messages representing state changes) to specific queues (e.g., \texttt{notification\_events}). Consumer services listen to these queues and process the messages at their own pace. This decouples the producer from the consumer, ensuring that if the Notification API is temporarily offline, RabbitMQ will safely persist the messages until the service recovers.
+    
+    \item \textbf{Change Data Capture with Debezium:} To safely publish events to RabbitMQ without encountering the "dual-write problem" (the risk of successfully saving an order to MongoDB but failing to publish the event to the broker due to a network glitch), the platform implements the \textit{Transactional Outbox Pattern} powered by Debezium. Debezium is a \gls{CDC} platform that connects directly to MongoDB's replica set oplog (operations log). When the Order API writes an event to the database, Debezium detects the stream change at the database level and reliably forwards it to RabbitMQ. This guarantees at-least-once delivery of all critical business events.
+    
+    \item \textbf{SMTP Emulation with Mailpit:} As the final step in the asynchronous notification pipeline, the Quarkus Notification API consumes events from RabbitMQ and formats customer emails. To safely test this flow during development without spamming real email addresses or requiring paid external SMTP providers, the architecture incorporates \textbf{Mailpit}. Mailpit acts as a localized, fake SMTP server that catches all outbound emails and provides a web interface to inspect them, validating the end-to-end asynchronous workflow.
+\end{itemize}
