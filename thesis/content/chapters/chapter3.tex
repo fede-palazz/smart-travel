@@ -226,11 +226,49 @@ This sophisticated flow ensures that no data is lost even if a service temporari
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 %%% 3.4 Data Modeling %%%
-%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%% 
+
 \section{Data Modeling}
 \label{sec:data_modeling}
 
-3.3 Data Modeling: Designing the MongoDB collections and handling flexible schemas.
+For this project, MongoDB was selected as the underlying persistence layer across all services. 
+
+By utilizing MongoDB's document model, the application heavily leverages data denormalization and embedding. Instead of relying on foreign keys and computationally expensive joins across separate domains, objects frequently embed "summaries" or "snapshots" of related data. This guarantees that each microservice remains fully autonomous and resilient to network partitions.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/ch3/3_3_db.png}
+    \caption[Smart Travel Database Schema]{Smart Travel Database Schema}
+    \label{fig:db_schema}
+\end{figure}
+
+\subsection{Travel Catalog Database}
+
+The \texttt{travel-catalog} database represents the most complex domain of the platform, responsible for storing the diverse inventory of travel products. Managed by the Quarkus Travel Catalog microservice, it is divided into five primary collections:
+
+\begin{itemize}
+    \item \textbf{Destinations:} The foundational geographical entities where each document stores precise location data (city, region, country, coordinates) alongside descriptive metadata (pictures, tags and a popularity score).
+    \item \textbf{Flights:} The \texttt{flights} collection contains documents representing individual flight segments. They define the airline, capacity, departure/arrival timestamps, pricing, and strictly embed \texttt{FlightDestination} objects for the origin and destination to avoid referencing the external Destinations collection during rapid searches.
+    \item \textbf{Accommodations:} The \texttt{accommodations} collection stores highly detailed hierarchical documents. Because of MongoDB's flexible schema, an accommodation document embeds not only basic scalar fields (address, distance to center, check-in times) but also complex nested arrays representing the available \texttt{rooms}, provided \texttt{services} and \texttt{policies}. It also embeds a \texttt{DestinationSummary} to map its location.
+    \item \textbf{Activities:} Similar to accommodations, the \texttt{activities} collection stores scheduled local experiences (e.g., guided tours, museums), embedding pricing, schedules, and location summaries.
+    \item \textbf{Agency Packages:} The \texttt{agency\_packages} collection represents curated, pre-assembled bundles created by travel agents. A package document embeds the \texttt{FlightOrder}, \texttt{AccommodationOrder}, and a set of \texttt{ActivityOrder} objects that comprise the package. It also embeds a \texttt{UserSummary} (\texttt{agentInfo}) representing the agent who created it.
+\end{itemize}
+
+\subsection{User Database}
+
+The \texttt{user} database is deliberately kept lightweight and strictly focused on identity and access management. Managed by the Spring Boot User API microservice, it consists of a single \texttt{users} collection. 
+
+The \texttt{User} document schema stores the primary authentication credentials (\texttt{email}, \texttt{password}), personal details (\texttt{firstname}, \texttt{lastname}), and the user \texttt{role} (\texttt{CUSTOMER}, \texttt{TRAVEL\_AGENT}, \texttt{ADMIN}). This field is heavily utilized by the BFF to generate JWTs and enforce (\gls{RBAC}) across the entire platform.
+
+\subsection{Order Database}
+
+The \texttt{order} database encapsulates the transactional history and payment states of the platform. Managed by the Spring Boot Order API, its design perfectly illustrates the concept of \textit{Eventual Consistency and Data Snapshotting} in microservices.
+
+When an order is created and stored in the \texttt{orders} collection, it categorizes the transaction via an \texttt{OrderType} (\texttt{SINGLE}, \texttt{AGENCY}, or \texttt{CUSTOM}) and embeds the exact state of the payment (\texttt{PaymentStatus}, timestamps, and hidden provider tokens). 
+
+The \texttt{Order} document does not simply store a list of MongoDB \texttt{ObjectId} references pointing back to the flights or accommodations in the Catalog database. Doing so would tightly couple the two microservices and risk data corruption: if a hotel later changed its name or raised its price in the Catalog, historic orders would incorrectly reflect the new data.
+
+Instead, the \texttt{Order} document embeds a massive \texttt{OrderItems} object containing concrete representations of the purchased goods (e.g., \texttt{FlightOrder}, \texttt{ActivityOrder}). These embedded objects take a hard, immutable \textit{snapshot} of the product at the exact moment of purchase. For example, a \texttt{FlightOrder} duplicates the airline name, flight code, departure times, and the precise \texttt{Price} paid. This denormalization guarantees that historical order receipts remain completely independent from future catalog modifications, ensuring absolute transactional integrity.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% 3.5 Communication Patterns %%%
