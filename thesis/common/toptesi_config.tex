@@ -75,3 +75,41 @@
    showtabs=false,
    captionpos=b
 }
+
+\lstdefinelanguage{JavaExtended}{
+  language=Java, % Inherit base Java keywords (public, class, if, return, etc.)
+  alsoletter={@}, % Tell LaTeX that @ is part of the keyword
+  morekeywords={var, record, yield}, % Add modern Java keywords
+  ndkeywords={ % Define your Spring, Quarkus, and Lombok annotations here
+    @RestController, @RequestMapping, @GetMapping, @PostMapping, @PutMapping, @DeleteMapping,
+    @Service, @Repository, @Component, @Autowired, @Bean, @Transactional, @CrossOrigin,
+    @ModelAttribute, @RequestParam, @PathVariable, @RequestBody,
+    @Path, @GET, @POST, @PUT, @DELETE, @ApplicationScoped, @RestPath, @RestQuery, @DefaultValue, @BeanParam,
+    @Data, @Builder, @SuperBuilder, @NoArgsConstructor, @AllArgsConstructor, @RequiredArgsConstructor, @Slf4j,
+    @MongoEntity, @Document, @Id, @Query,
+    @Valid, @NotNull, @NotBlank, @Positive, @Pattern,
+    @Override, @SuppressWarnings, @JsonIgnore, @JsonSerialize, @JsonDeserialize
+  },
+  % Define colors and styles
+  keywordstyle=\color{blue}\bfseries,         % Standard Java keywords in blue
+  ndkeywordstyle=\color{teal}\bfseries,       % Annotations in teal (or use purple/darkgreen)
+  commentstyle=\color{gray}\itshape,          % Comments in gray italics
+  stringstyle=\color{red}                     % Strings in red
+}
+
+\lstset{
+   language=JavaExtended, % Use our newly defined language by default
+   extendedchars=true,
+   basicstyle=\footnotesize\ttfamily,
+   showstringspaces=false,
+   showspaces=false,
+   numbers=left,
+   numberstyle=\footnotesize\color{gray},
+   numbersep=9pt,
+   tabsize=2,
+   breaklines=true,
+   showtabs=false,
+   captionpos=b,
+   frame=single, % Adds a neat border around your code blocks
+   rulecolor=\color{lightgray}
+}

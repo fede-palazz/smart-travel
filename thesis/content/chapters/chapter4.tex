@@ -1,16 +1,229 @@
 \chapter{Application Design and Implementation}
 \label{sec:implementation}
 
-4.1 Backend Development: * 4.1.1 Implementing the reactive services with Spring Boot
+With the architectural foundation and data models established previously, this chapter focuses on the concrete technical implementation of the Smart Travel platform. It details the transition from conceptual design to executable code, highlighting how the chosen frameworks, libraries, and paradigms were applied to solve specific challenges.
 
-4.1.2 Implementing the reactive services with Quarkus
+The chapter is divided into five primary areas. First, it dives into the backend microservices, contrasting the reactive data-access implementations of Spring Boot and Quarkus. Second, it explores the implementation of the (\gls{BFF}) layer, detailing how a centralized GraphQL API was constructed to aggregate downstream data. Third, it examines the frontend development, focusing on how Angular and RxJS manage the complex asynchronous state of the SPA.
 
-4.2 Frontend Development: Building the user interface, state management with RxJS, and connecting to the backend.
+Fourth, the chapter details the end-to-end authentication and authorization flow, bridging the Angular frontend's token management with the Spring Security perimeter at the BFF. Finally, it provides a deep dive into the implementation of the platform's core business workflows, demonstrating how these isolated layers collaborate to execute the catalog search mechanisms, the secure payment integration utilizing the Transactional Outbox pattern, and the asynchronous event-driven notification pipeline.
 
-4.3 Core Workflows:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 4.1  %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-4.3.1 The catalog search and filtering mechanism
+\section{Backend Microservices Development}
+\label{sec:backend_microservices}
 
-4.3.2 The payment integration flow
+The backend of the Smart Travel platform was deliberately constructed using a heterogeneous technology stack. By developing the Orders microservice in Spring Boot and the Travel Catalog microservice in Quarkus, the project serves as a practical comparative study of the two leading Java enterprise frameworks. 
 
-4.3.3 The event-driven notification system
+Crucially, both stacks were implemented using a strictly non-blocking, reactive programming paradigm to maximize concurrency. However, their internal approaches to dependency injection, reactive streams, and database access differ significantly.
+
+\subsection{Implementing Reactive Services with Spring Boot}
+
+Let's take as example the Order API which was developed utilizing Spring Boot and Spring WebFlux. It strictly adheres to the traditional three-tier architecture (Controller, Service, Repository), promoting a high degree of separation of concerns.
+
+At the presentation layer, endpoints are defined using proprietary Spring annotations. The \texttt{OrderController} handles incoming HTTP requests and returns asynchronous data streams using Project Reactor's \texttt{Mono} (for 0-1 elements) or \texttt{Flux} (for 0-N elements) \cite{baeldung_flux_vs_mono}.
+
+\begin{lstlisting}[language=JavaExtended, caption={Spring Boot WebFlux Controller Snippet}, label={lst:spring_controller}]
+@RestController
+@RequestMapping("/api/orders")
+public class OrderController {
+  private final OrderService orderService;
+
+  @GetMapping("{id}")
+  public Mono<ResponseEntity<OrderResDTO>> getOrderById(@PathVariable String id) {
+    return orderService.getOrderById(id).map(ResponseEntity::ok);
+  }
+}
+\end{lstlisting}
+
+At the data access layer, Spring enforces the \textbf{Repository Pattern}. The domain entity (\texttt{Order}) is kept as a pure data object, while a separate interface extends \texttt{ReactiveMongoRepository}. For standard operations, Spring automatically generates the implementation at runtime. However, a major strength of Spring Data is its ability to map custom BSON queries directly to interface methods using the \texttt{@Query} annotation.
+
+As shown in the \texttt{OrderRepository}, custom queries can be effortlessly defined to check for specific nested fields (like \texttt{customerInfo.userId}) and arrays of statuses without requiring manual database driver configurations:
+
+\clearpage
+
+\begin{lstlisting}[language=JavaExtended, caption={Spring Boot Reactive Mongo Repository}, label={lst:spring_repository}]
+@Repository
+public interface OrderRepository extends ReactiveMongoRepository<Order, String> {
+
+  @Query(value = "{ 'customerInfo.userId': ?0, 'payment.status': { $in:  ['PENDING', 'PAID']} }", exists = true)
+  Mono<Boolean> hasPendingPayment(ObjectId userId);
+
+  @Query("{ 'customerInfo.userId': ?0, 'payment.status': { $in: ['PENDING', 'PAID'] } }")
+  Mono<Long> countPendingOrPaidOrders(ObjectId userId);
+
+  Mono<Order> findByPayment_Token(String paymentToken);
+}
+\end{lstlisting}
+
+For highly complex, dynamic queries — such as the advanced filtering required by the \texttt{getOrders} endpoint — the service layer bypasses the repository interface entirely and leverages the \texttt{ReactiveMongoTemplate}. This allows the programmatic construction of \texttt{Criteria} objects. A fundamental characteristic of this reactive paradigm is deferred execution: defining operations via \texttt{mongoTemplate.find()} or \texttt{mongoTemplate.count()} does not immediately trigger a database query. Instead, these methods merely assemble a data-processing pipeline. The actual execution against the database is strictly delayed until a consumer — in this architecture, the underlying Spring WebFlux framework handling the HTTP response — explicitly subscribes to the returned publisher. To maximize efficiency, Project Reactor's \texttt{Mono.zip()} is utilized to subscribe to both the content fetch and the document count \texttt{Mono}s simultaneously, executing them concurrently without blocking the underlying execution thread \cite{project_reactor}.
+
+\begin{lstlisting}[language=JavaExtended, caption={Spring Boot ReactiveMongoTemplate Dynamic Query}, label={lst:spring_dynamic_query}]
+@Service
+@RequiredArgsConstructor
+public class OrderServiceImpl implements OrderService {
+  private final OrderMapper orderMapper;
+  private final ReactiveMongoTemplate mongoTemplate;
+
+  @Override
+  public Mono<PagedResDTO<OrderResDTO>> getOrders(int page, int size, String sort, String order, OrderFilter filters) {
+    Sort.Direction direction = order.equalsIgnoreCase("desc") ?
+        Sort.Direction.DESC :
+        Sort.Direction.ASC;
+    Sort sortBy = Sort.by(direction, sort);
+    long skip = (long) page * size;
+
+    // Filter query
+    Query query = new Query().with(sortBy).skip(skip).limit(size);
+    Criteria criteria = new Criteria();
+    List<Criteria> criteriaList = new ArrayList<>();
+
+    // Compose criteria based on provided filters
+    if (filters.getOrderId() != null && !filters.getOrderId().isBlank()) {
+      try {
+        criteriaList.add(Criteria.where("id").is(
+            new ObjectId(filters.getOrderId())
+        ));
+      } catch (IllegalArgumentException e) {
+        // Invalid ObjectId for orderId, ignore this filter
+      }
+    }
+    // Other filters...
+
+    Mono<List<Order>> contentMono = mongoTemplate.find(query, Order.class).collectList();
+
+    // Total items count query
+    Query countQuery = new Query();
+    if (!criteriaList.isEmpty()) countQuery.addCriteria(criteria);
+    Mono<Long> totalCountMono = mongoTemplate.count(countQuery, Order.class);
+
+    return Mono.zip(contentMono, totalCountMono)
+        .map(tuple -> {
+          List<Order> orders = tuple.getT1();
+          long totalElements = tuple.getT2();
+          int totalPages = (int) Math.ceil(
+            (double) totalElements / size
+          );
+          int elementsInPage = orders.size();
+
+          return PagedResDTO.<OrderResDTO>builder()
+              .content(orders.stream().map(orderMapper::toDto)
+                .toList())
+              .totalElements(totalElements)
+              .totalPages(totalPages)
+              .currentPage(page)
+              .elementsInPage(elementsInPage)
+              .build();
+        });
+ }
+}
+\end{lstlisting}
+
+\subsection{Implementing Cloud-Native Services with Quarkus}
+
+In stark contrast to Spring Boot's proprietary ecosystem, the Travel Catalog API was developed using Quarkus, which leverages standard Jakarta EE and MicroProfile specifications. 
+
+Spring Boot, while open-source and massively popular, is fundamentally a proprietary ecosystem. It relies heavily on its own specific paradigms, interfaces, and annotations — such as \texttt{@RestController} for routing and \texttt{@Autowired} for dependency injection. Applications built with Spring are tightly coupled to the Spring framework and cannot be trivially migrated to other Java environments.
+
+Conversely, Quarkus was designed from the ground up to implement open, vendor-neutral industry standards, primarily \textbf{Jakarta EE} (the modern, community-driven successor to Java EE, hosted by the Eclipse Foundation) and \textbf{MicroProfile} (a set of specifications specifically optimized for cloud-native microservices). 
+
+Instead of forcing developers to learn a new proprietary API, Quarkus acts as an ultra-fast runtime for these established standards. For example, at the presentation layer, the \texttt{FlightController} utilizes standard \gls{JAX-RS} (Java API for RESTful Web Services) annotations (e.g., \texttt{@Path}, \texttt{@GET}, \texttt{@RestPath}) instead of Spring's Web annotations. For component management, it uses \gls{CDI} (Contexts and Dependency Injection). 
+
+While Quarkus strictly adheres to these standards for routing and injection, it modernizes the execution model. The reactive streams are managed by SmallRye Mutiny, substituting Reactor's \texttt{Mono}/\texttt{Flux} with \texttt{Uni}/\texttt{Multi}. Mutiny is designed with an explicitly event-driven API, focusing on reacting to events (e.g., \texttt{.onItem()}, \texttt{.onFailure()}) rather than data manipulation operators.
+
+Furthermore, the most profound architectural departure in Quarkus lies in its data access layer. Quarkus eliminates the traditional Repository interface by implementing the \textbf{Active Record Pattern} via MongoDB Panache. This paradigm drastically reduces boilerplate code. Unlike traditional Java beans, Panache encourages the use of public fields, eliminating the need for verbose getter and setter generation. Furthermore, business logic tightly coupled to the entity is kept directly within the model class.
+
+As an example, let's consider the \texttt{Flight} domain entity which directly extends \texttt{ReactivePanacheMongoEntity}:
+
+\begin{lstlisting}[language=JavaExtended, caption={Quarkus Panache Active Record Entity}, label={lst:quarkus_entity}]
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@MongoEntity(collection = "flights")
+public class Flight extends ReactivePanacheMongoEntity {
+
+  public String code;
+  public Integer capacity;
+  public String airline;
+  public String airlineLogo;
+  public FlightDestination from;
+  public FlightDestination to;
+  public Instant departureTime;
+  public Instant arrivalTime;
+  public Price price;
+}
+\end{lstlisting}
+
+Because the entity itself handles data access, there is no need to inject a separate repository into the Service layer. Database operations are invoked directly on the \texttt{Flight} class itself. For instance, creating a new flight or fetching one by its ID is accomplished natively:
+
+\begin{lstlisting}[language=JavaExtended, caption={Quarkus Mutiny and Panache Service Logic}, label={lst:quarkus_service}]
+// Inside FlightService.java
+public Uni<FlightResDTO> getFlightById(ObjectId id) {
+  return Flight.<Flight>findById(id)
+      .onItem().ifNull().failWith(() -> new FailureException(
+          ResponseEnum.NOT_FOUND, "Flight not found")
+      )
+      .map(flightMapper::toDto);
+}
+
+public Uni<FlightResDTO> addFlight(@Valid FlightReqDTO flightReqDTO) {
+  Flight flight = flightMapper.toEntity(flightReqDTO);
+  return flight.<Flight>persist().map(flightMapper::toDto);
+}
+\end{lstlisting}
+
+For complex dynamic queries, Panache provides a \texttt{ReactivePanacheQuery} object that natively integrates with BSON \texttt{Filters}, providing a highly expressive alternative to Spring's \texttt{Criteria} builder, while maintaining the same non-blocking execution profile.
+
+\begin{lstlisting}[language=JavaExtended, caption={Quarkus Panache Reactive Query with Dynamic Filters}, label={lst:quarkus_dynamic_query}]
+  // Inside FlightService.java
+  public Uni<PagedResDTO<FlightResDTO>> getFlights(int page, int size, String sort, String order, String timezone, @Valid FlightFilter filters) {
+    Bson sortExpr = order.equalsIgnoreCase("desc")
+        ? Sorts.descending(sort)
+        : Sorts.ascending(sort);
+
+    Bson filterQuery = Filters.and(
+        filters.getCode() != null ?
+            Filters.regex("code", Pattern.compile(filters.getCode(), Pattern.CASE_INSENSITIVE)) :
+            Filters.exists("code"),
+        filters.getAirline() != null ?
+            Filters.regex("airline",
+                Pattern.compile(filters.getAirline(), Pattern.CASE_INSENSITIVE)) :
+            Filters.exists("airline"),
+        // Other filters...
+    );
+
+    ReactivePanacheQuery<Flight> query = Flight
+        .find(filterQuery, sortExpr)
+        .page(Page.of(page, size));
+
+    return Uni.combine().all().unis(query.list(), query.count())
+        .asTuple()
+        .map(tuple -> {
+          List<Flight> flights = tuple.getItem1();
+          Long totalElements = tuple.getItem2();
+
+          int totalPages = (int) Math.ceil(
+            (double) totalElements / size
+        );
+          int elementsInPage = flights.size();
+
+          return PagedResDTO.<FlightResDTO>builder()
+              .content(flights.stream().map(flightMapper::toDto)
+                .toList())
+              .totalElements(totalElements)
+              .totalPages(totalPages)
+              .currentPage(page)
+              .elementsInPage(elementsInPage)
+              .build();
+        });
+  }
+\end{lstlisting}
+
+4.2 The Backend-For-Frontend (BFF) Layer: GraphQL schema, resolvers, and inter-service communication via reactive WebClient.
+
+4.3 Frontend Development: Building the Angular UI and managing asynchronous state with RxJS.
+
+4.4 End-to-End Authentication and Security: The complete JWT flow, from Angular interceptors to Spring Security validation at the BFF.
+
+4.5 Core Business Workflows: Catalog search, the payment Outbox pattern, and the event-driven notification pipeline.
