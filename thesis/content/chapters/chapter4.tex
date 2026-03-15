@@ -557,4 +557,150 @@ export class AuthService {
 
 On application startup, the frontend automatically queries the \texttt{profile} endpoint. If the Access Token has expired, the client invokes the \texttt{refresh} mutation to acquire new credentials. Furthermore, Angular Route Guards (e.g., \texttt{IsUnauthenticatedGuard}) observe the \texttt{user\$} stream, actively preventing unauthorized users from accessing protected views (like the Checkout page or the Travel Agent Dashboard) without requiring complex, synchronous permission checks.
 
-4.5 Core Business Workflows: Catalog search, the payment Outbox pattern, and the event-driven notification pipeline.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 4.5 Core Business Workflow %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Core Business Workflow}
+\label{sec:core_workflows}
+
+The checkout and payment process represents the most complex distributed workflow within the Smart Travel platform. It perfectly illustrates the integration of external APIs (PayPal), synchronous user redirects, and asynchronous event-driven backend processes. 
+
+Executing financial transactions across distributed microservices introduces the risk of partial failures (e.g., the "dual-write" problem). If a service successfully updates the database but fails to publish the subsequent event to the message broker due to network latency, the system enters an inconsistent state. To guarantee absolute data consistency and at-least-once message delivery, the platform implements the \textbf{Transactional Outbox Pattern} combined with \textit{Change Data Capture} (\gls{CDC}) via Debezium and RabbitMQ.
+ 
+The workflow is architected into three distinct chronological phases.
+
+\subsection{Phase 1: Order Creation and Outbox Pattern}
+
+The flow begins synchronously when a user confirms their cart. The Angular frontend dispatches an order creation request through the \gls{BFF} to the Order API. 
+
+The Order API initiates a server-to-server call to PayPal using the PayPal SDK, requesting the creation of a new payment session. It explicitly provides a \texttt{returnUrl} (where PayPal should redirect the user upon success) and a \texttt{cancelUrl}. Upon receiving the payment token from PayPal, the Order API persists the \texttt{Order} entity in the MongoDB database with an initial status of \texttt{PENDING}. Finally, it returns the generated PayPal checkout URL to the frontend, which performs a hard redirect to the external gateway.
+
+After the user successfully authorizes the payment on the external PayPal interface, they are redirected back to the BFF, which subsequently issues a \texttt{capture} request to the Order API. 
+
+At this juncture, the Order API must perform two critical actions: update the order status to \texttt{PAID} and trigger the background processes to officially capture the funds. To avoid the dual-write problem, the service employs the Transactional Outbox pattern. 
+
+Instead of directly communicating with RabbitMQ, the Order API writes a \texttt{PayPalOutboxEvent} document into a dedicated \texttt{orders\_outbox\_events} MongoDB collection. Because both the order update and the outbox insertion occur within the same reactive database transaction, they are guaranteed to either succeed or fail together.
+
+\clearpage
+
+\begin{lstlisting}[language=JavaExtended, caption={Transactional Outbox Event Model}, label={lst:outbox_event}]
+@Document(collection = "orders_outbox_events")
+public class PayPalOutboxEvent {
+  @Id
+  private String id;
+  private String orderId;
+  private String paypalToken;
+  private String payerId;
+  @JsonDeserialize(using = MongoTimestampDeserializer.class)
+  private Instant createdAt;
+}
+\end{lstlisting}
+
+Notably, the Order API implements a highly optimized variant of this pattern: log-tailing deletion. As seen in the service layer, immediately after the \texttt{outboxEvent} is saved, it is deleted. This keeps the outbox collection completely empty, saving storage space, while still forcing MongoDB to append the insert operation to its internal replica set oplog (Operations Log).
+
+\begin{lstlisting}[language=JavaExtended, caption={Transactional Outbox Implementation}, label={lst:outbox_impl}]
+// Inside OrderServiceImpl.java
+@Transactional
+public Mono<Void> captureOrder(@Valid CaptureOrderReqDTO captureReq) {
+    return getOrderEntityByToken(captureReq.getToken())
+        .flatMap(order -> {
+            // Update order status
+            order.getPayment().setStatus(PaymentStatus.PAID);
+            
+            var outboxEvent = PayPalOutboxEvent.builder()
+                .orderId(order.getId())
+                .paypalToken(captureReq.getToken())
+                .payerId(captureReq.getPayerId())
+                .build();
+
+            // Atomically save both, then immediately 
+            // delete the outbox record
+            return orderRepository.save(order)
+                .then(payPalOutboxRepository.save(outboxEvent))
+                .flatMap(payPalOutboxRepository::delete);
+        }).then();
+}
+\end{lstlisting}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/ch4/4_3_order-creation.png}
+    \caption[Order Creation Sequence]{Phase 1: Order Creation and external payment gateway redirect.}
+    \label{fig:seq_order_creation}
+\end{figure}
+
+\subsection{Phase 2: Asynchronous Capture via Debezium and RabbitMQ}
+
+A standalone Debezium service acts as a \gls{CDC} connector, continuously checking the MongoDB oplog. The instant it detects the `insert` operation for the \texttt{PayPalOutboxEvent}, it captures the payload and reliably publishes it to a RabbitMQ queue. 
+
+Simultaneously, the Order API acts as an asynchronous consumer using Project Reactor's \texttt{Receiver}. The \texttt{PayPalOutboxListener} strictly filters incoming Debezium payloads, ensuring it only reacts to "create" operations (\texttt{"op": "c"}). Once validated, it contacts PayPal to definitively capture the authorized funds. If successful, it updates the database status to \texttt{CONFIRMED}, dispatches a new event to the \texttt{notification\_events} queue, and acknowledges (\texttt{delivery.ack()}) the message. If a transient error occurs (e.g., PayPal API timeout), the message is negatively acknowledged (\texttt{delivery.nack(true)}), safely returning it to the queue for automatic retry processing.
+
+\begin{lstlisting}[language=JavaExtended, caption={Reactive RabbitMQ Outbox Listener}, label={lst:outbox_listener}]
+  // Inside PayPalOutboxListener.java
+  
+  @PostConstruct
+  public void listenAndForward() {
+    receiver.consumeManualAck("orders_outbox_events")
+      .flatMap(delivery -> {
+          // Extract Debezium payload and check operation type
+          JsonNode payload = root.path("payload");
+          if (!"c".equals(payload.path("op").asText())) {
+            delivery.ack();
+            return Mono.empty();
+          }
+          // Execute PayPal Capture
+          return Mono.just(payPalService
+            .captureOrder(token, payerId)).flatMap(order -> {
+              if (order.getStatus().equals(OrderStatus.COMPLETED))
+                  // Publish notification event and Ack
+                  return sender.send(Mono.just(notificationEvent))
+                      .doOnSuccess(ignored -> delivery.ack());
+              else
+                  // Schedule for retry
+                  return Mono.fromRunnable(
+                    () -> delivery.nack(true)
+                  );
+            });
+      }).subscribe();
+  }
+\end{lstlisting}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/ch4/4_4_order-capture.png}
+    \caption[Order Capture Sequence]{Phase 2: The Transactional Outbox pattern, CDC via Debezium, and asynchronous payment capture.}
+    \label{fig:seq_order_capture}
+\end{figure}
+
+\subsection{Phase 3: Event-Driven Email Notification}
+
+During the final step of the workflow, the Notification API Quarkus microservice listens to the \texttt{notification\_events} queue using MicroProfile Reactive Messaging.
+
+When the \texttt{OrderListener} receives the serialized \texttt{OrderNotificationDTO}, it dynamically compiles an HTML email template utilizing Quarkus Mailer. During development, these messages are routed to Mailpit, a local SMTP testing server. Because this entire phase is asynchronous and decoupled, any failure in the SMTP server will not impact the user's checkout experience or the financial integrity of the order; RabbitMQ will simply retain the notification event until the mail server recovers and the consumer successfully processes it.
+
+\begin{lstlisting}[language=JavaExtended, caption={Quarkus Reactive Messaging Notification Consumer}, label={lst:quarkus_mailer}]
+  // Inside OrderListener.java
+
+  @Incoming("notification_events")
+  public Uni<Void> consume(Message<byte[]> msg) {
+    OrderNotificationDTO order = deserialize(msg.getPayload());
+    String customerEmail = order.customerInfo().getEmail();
+
+    return MailingResource.Templates.orderConfirmation(order)
+        .to(customerEmail)
+        .subject("Order confirmation #" + order.id())
+        .send()
+        .onItem().transformToUni(x -> 
+            Uni.createFrom().completionStage(msg.ack()))
+        .onFailure().call(e -> 
+            Uni.createFrom().completionStage(() -> msg.nack(e)));
+  }
+\end{lstlisting}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/ch4/4_5_order-notification.png}
+    \caption[Order Notification Sequence]{Phase 3: Decoupled event consumption and SMTP dispatch.}
+    \label{fig:seq_order_notification}
+\end{figure}
