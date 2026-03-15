@@ -113,3 +113,44 @@
    frame=single, % Adds a neat border around your code blocks
    rulecolor=\color{lightgray}
 }
+
+\lstdefinelanguage{GraphQL}{
+  morekeywords={type, input, interface, fragment, mutaton, query, extend, scalar, enum, implements, union, directive},
+  keywordstyle=\color{blue}\bfseries,
+  morekeywords=[2]{String, Int, Float, Boolean, ID},
+  keywordstyle=[2]\color{violet}\bfseries,
+  sensitive=true,
+  morecomment=[l]{\#},
+  commentstyle=\color{gray}\itshape,
+  morestring=[b]",
+  stringstyle=\color{red}
+}
+
+\lstdefinelanguage{TypeScript}{
+  keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break, const, let, class, export, import, implements, extends, this, public, private, protected, constructor, readonly, inject},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywords={@Component, @Injectable, @NgModule, @Input, @Output, @ViewChild, @defer, @if, @else, @for},
+  ndkeywordstyle=\color{teal}\bfseries,
+  morekeywords=[2]{Observable, BehaviorSubject, Subject, map, tap, filter, switchMap, catchError, of},
+  keywordstyle=[2]\color{violet}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{gray}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstdefinelanguage{AngularHTML}{
+  language=HTML,
+  morekeywords={@if, @else, @for, as, async},
+  keywordstyle=\color{teal}\bfseries,
+  sensitive=true,
+  comment=[l]{},
+  commentstyle=\color{gray}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}

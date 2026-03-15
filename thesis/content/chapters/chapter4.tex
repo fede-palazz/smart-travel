@@ -7,9 +7,9 @@ The chapter is divided into five primary areas. First, it dives into the backend
 
 Fourth, the chapter details the end-to-end authentication and authorization flow, bridging the Angular frontend's token management with the Spring Security perimeter at the BFF. Finally, it provides a deep dive into the implementation of the platform's core business workflows, demonstrating how these isolated layers collaborate to execute the catalog search mechanisms, the secure payment integration utilizing the Transactional Outbox pattern, and the asynchronous event-driven notification pipeline.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% 4.1  %%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 4.1 Backend Microservices Development %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Backend Microservices Development}
 \label{sec:backend_microservices}
@@ -220,9 +220,233 @@ For complex dynamic queries, Panache provides a \texttt{ReactivePanacheQuery} ob
   }
 \end{lstlisting}
 
-4.2 The Backend-For-Frontend (BFF) Layer: GraphQL schema, resolvers, and inter-service communication via reactive WebClient.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 4.2 Backend Microservices Development %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-4.3 Frontend Development: Building the Angular UI and managing asynchronous state with RxJS.
+\section{The Backend-For-Frontend Layer}
+\label{sec:bff_implementation}
+
+In a distributed architecture, forcing a frontend application to orchestrate HTTP calls across dozens of distinct microservices introduces significant network latency and tightly couples the client to the backend topology. To resolve this, the Smart Travel platform implements a \textit{Backend-For-Frontend} (\gls{BFF}) built with Spring Boot. The BFF serves as a unified API Gateway, aggregating downstream data through a centralized GraphQL interface while simultaneously acting as the platform's primary security perimeter.
+
+\subsection{GraphQL Schema and Data Fetchers}
+
+Unlike REST, which exposes fixed data structures across multiple endpoints, GraphQL exposes a single endpoint that allows the client to explicitly request only the data it needs. The foundation of this contract is the schema definition. 
+
+As shown in the \texttt{agencyPackage.graphql} example, the schema defines strictly typed queries, mutations, and complex domain entities. Because GraphQL supports nested types, a single query for an \texttt{AgencyPackage} can aggregate the package metadata, its associated \texttt{DestinationSummary}, and the nested \texttt{FlightOrder} arrays, perfectly modeling the hierarchical nature of the travel domain.
+
+\begin{lstlisting}[language=GraphQL, caption={GraphQL Schema Definition Snippet}, label={lst:graphql_schema}]
+extend type Query {
+    getAgencyPackages(page: Int, size: Int, sort: String, order: String, filters: AgencyPackageFilter): AgencyPackagePage!
+}
+
+type AgencyPackage {
+    id: ID!
+    name: String!
+    status: String!
+    totalPrice: Price!
+    destination: DestinationSummary!
+    departureFlight: FlightOrder!
+    accommodation: AccommodationOrder!
+    activities: [ActivityOrder!]
+    agentInfo: UserSummary!
+}
+\end{lstlisting}
+
+To resolve these queries, the \texttt{AgencyPackageController} maps directly to the schema definitions using \texttt{@QueryMapping} and \texttt{@MutationMapping} annotations from the Spring for GraphQL library. 
+
+\subsection{Context-Aware Resolving and Security}
+
+A critical responsibility of the BFF is enforcing security before traffic reaches the internal microservices network. Because the BFF integrates with Spring Security, the GraphQL resolvers are inherently context-aware.
+
+Using the \texttt{@AuthenticationPrincipal} annotation, the controller intercepts the reactive security context to determine the user's role on the fly. This enables sophisticated, business-level filtering directly at the gateway. For example, if an unauthenticated Guest or a Customer queries the catalog, the resolver dynamically overrides the query filters to ensure they only retrieve packages with a \texttt{PUBLISHED} status, securely hiding drafts created by Travel Agents. Furthermore, destructive operations are strictly protected using \texttt{@PreAuthorize}.
+
+\begin{lstlisting}[language=JavaExtended, caption={Context-Aware GraphQL Controller}, label={lst:bff_controller}]
+@Controller
+@RequiredArgsConstructor
+public class AgencyPackageController {
+
+  private final AgencyPackageService agencyPackageService;
+
+  @QueryMapping("getAgencyPackages")
+  public Mono<PagedResDTO<AgencyPackageResDTO>> agencyPackages(
+      @Argument Integer page, @Argument Integer size, @Argument AgencyPackageFilter filters,
+      @AuthenticationPrincipal Mono<CustomUserDetails> userMono
+  ) {
+    final AgencyPackageFilter inputFilters = filters != null ? filters : new AgencyPackageFilter();
+
+    return userMono
+        .map(Optional::of)
+        .defaultIfEmpty(Optional.empty())
+        .flatMap(user -> {
+          // Prevent showing private/draft packages to unauthorized users
+          if (user.isEmpty() || user.get().hasRole(UserRoleEnum.CUSTOMER)) {
+            inputFilters.setStatus(PackageStatus.PUBLISHED);
+            inputFilters.setAuthorId(null);
+          }
+          return agencyPackageService.getAgencyPackages(page, size, sort, order, inputFilters);
+        });
+  }
+
+  @MutationMapping("deleteAgencyPackage")
+  @PreAuthorize("hasAnyRole('ADMIN', 'AGENT')")
+  public Mono<OkResDTO> deleteAgencyPackage(@Argument String id) {
+    return agencyPackageService.deleteAgencyPackage(id);
+  }
+}
+\end{lstlisting}
+
+\subsection{Inter-Service Communication via WebClient}
+
+Once the GraphQL query is authorized and parsed, the BFF must fetch the underlying data from the isolated microservices. To achieve this without stalling the event loop, the service layer utilizes Spring's reactive \texttt{WebClient}, a non-blocking HTTP client. In the \texttt{AgencyPackageServiceImpl}, incoming GraphQL arguments are mapped to standard REST query parameters. The WebClient then dispatches an asynchronous GET request to the downstream Quarkus Travel Catalog API. Moreover, it incorporates reactive error handling using \texttt{.onStatus()}. If the downstream microservice returns an HTTP error (e.g., a 404 Not Found or 400 Bad Request mapped to a \texttt{ProblemDetail} standard), the WebClient intercepts it and translates it into a \texttt{GraphqlFailureException}, ensuring that internal REST errors are elegantly propagated back to the Angular frontend as standardized GraphQL error objects.
+
+\begin{lstlisting}[language=JavaExtended, caption={Reactive Inter-Service Communication via WebClient}, label={lst:bff_webclient}]
+@Service
+public class AgencyPackageServiceImpl implements AgencyPackageService {
+
+  private final WebClient webClient;
+
+  @Override
+  public Mono<AgencyPackageResDTO> getAgencyPackageById(String id) {
+    return webClient.get()
+        .uri("/{id}", id)
+        .retrieve()
+        .onStatus(HttpStatusCode::isError, response ->
+            response.bodyToMono(ProblemDetail.class).flatMap(
+                    problem -> Mono.error(
+                        new GraphqlFailureException(problem)
+                    )
+            )
+        )
+        .bodyToMono(AgencyPackageResDTO.class);
+  }
+}
+\end{lstlisting}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 4.3 Frontend Development %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Frontend Development}
+\label{sec:frontend_development}
+
+While the backend microservices handle the complex domain logic and data persistence, the frontend application is responsible for delivering a fluid, highly interactive user experience. The Smart Travel client was developed as a (\gls{SPA}) using the modern Angular framework. 
+
+By leveraging Angular's opinionated architecture, the frontend is strictly organized into modules, services, and components. Furthermore, the frontend relies heavily on Apollo Client for GraphQL communications and \gls{RxJS} for asynchronous state management. This ensures that the user interface remains responsive and synchronized with the backend data streams without requiring full-page reloads.
+
+\subsection{Component-Based UI and Lazy Loading}
+
+The \gls{UI} is built using a strict component-based architecture. To accelerate development and maintain a cohesive, accessible design language, the application integrates \textbf{PrimeNG}, a comprehensive suite of pre-built Angular UI components. 
+
+These standardized elements (such as breadcrumbs, accordions, data tables, and dynamic dialogs) are seamlessly composed alongside custom, domain-specific building blocks (e.g., \texttt{FlightTabComponent}, \texttt{FlightViewComponent}) to construct complex views. For example, the flight search page (Figure \ref{fig:flight_search}) leverages PrimeNG structural components wrapped within isolated Angular components. This encapsulation ensures that styles and business logic do not bleed across the application, maximizing reusability and maintainability.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/ch4/4_1_flight-search.png}
+    \caption[Smart Travel Flight Search UI]{Smart Travel Flight Search UI}
+    \label{fig:flight_search}
+\end{figure}
+
+To guarantee fast initial load times, the application implements \textit{Route-Level Lazy Loading}. Instead of compiling the entire application into a single, massive JavaScript bundle, the \texttt{app.routes.ts} configuration dynamically loads feature components only when the user navigates to their respective paths using the \texttt{loadComponent} syntax. Additionally, access to these routes is strictly governed by Angular \textit{Guards} (e.g., \texttt{isCustomerGuard}), which actively interact with the authentication layer to prevent unauthorized access to sensitive views like the Checkout page.
+
+\clearpage
+
+\begin{lstlisting}[language=TypeScript, caption={Angular Route Configuration with Lazy Loading and Guards}, label={lst:angular_routing}]
+export const routes: Routes = [
+  {
+    path: 'flights',
+    loadComponent: () => import('./features/flight/flight.component').then((m) => m.FlightComponent),
+    canActivate: [isUnauthenticatedOrCustomerGuard],
+  },
+  {
+    path: 'checkout',
+    loadComponent: () => import('./features/checkout/checkout.component').then((m) => m.CheckoutComponent),
+    canActivate: [
+        redirectLoginGuard, isCustomerGuard, IsOrderPresentGuard
+    ],
+  }
+];
+\end{lstlisting}
+
+\subsection{Data Fetching with Apollo GraphQL}
+
+To consume the data aggregated by the Spring Boot \gls{BFF}, the Angular application utilizes the Apollo Client. Instead of relying on the standard \texttt{HttpClient} to make generic REST calls, services are strictly typed to the GraphQL schema.
+
+As demonstrated in the \texttt{FlightService}, GraphQL queries (\texttt{gql}) are dynamically constructed based on user input, pagination parameters, and the browser's local timezone. Crucially, the Apollo \texttt{watchQuery} method does not return a standard JavaScript \texttt{Promise}. Instead, it returns an \gls{RxJS} \texttt{Observable} (\texttt{valueChanges}). This allows the service to leverage powerful functional operators like \texttt{map()} to transform the raw GraphQL response into a standardized \texttt{QueryResult} interface before it ever reaches the \gls{UI} components.
+
+\begin{lstlisting}[language=TypeScript, caption={Apollo GraphQL Query via Angular Service}, label={lst:angular_apollo}]
+@Injectable({ providedIn: 'root' })
+export class FlightService {
+  constructor(private apollo: Apollo) {}
+
+  getFlightDetails(id: string): Observable<QueryResult<Flight>> {
+    const query = gql`
+      {
+        getFlightById(id: "${id}") {
+          id code capacity airline
+          price { value currency }
+          # ... nested fields
+        }
+      }`;
+
+    return this.apollo.watchQuery<{ getFlightById: Flight }>({ query })
+      .valueChanges.pipe(
+        map(({ data, loading, errors }) => ({
+          loading,
+          error: errors && errors[0] ? errors[0].message : null,
+          data: data?.getFlightById ?? null,
+        }))
+      );
+  }
+}
+\end{lstlisting}
+
+\subsection{Reactive State Management with RxJS}
+
+Managing state — such as tracking which step of the checkout process a user is on or reacting to changes in the URL search parameters — is notoriously difficult in complex \glspl{SPA}. To solve this, the application embraces a fully reactive paradigm using \gls{RxJS}.
+
+In the \texttt{FlightComponent}, standard variables are replaced with \texttt{BehaviorSubject}s and \texttt{Observable}s. When the user modifies the URL search filters, the component does not manually trigger a data reload. Instead, it subscribes to the \texttt{ActivatedRoute.queryParamMap} Observable. Any change to the URL is automatically piped and mapped into a new state object.
+
+\begin{lstlisting}[language=TypeScript, caption={Reactive Component State Management}, label={lst:angular_component}]
+export class FlightComponent implements OnInit {
+  private route = inject(ActivatedRoute);
+  stepSubject = new BehaviorSubject<PackageStep>(PackageStep.FLIGHT_DEPARTURE);
+  step$ = this.stepSubject.asObservable();
+  
+  flightParams$!: Observable<{ searchParams: FlightQueryParams, filterParams: FlightFilter }>;
+
+  ngOnInit() {
+    // Automatically extract query params on every route change
+    this.flightParams$ = this.route.queryParamMap.pipe(
+      map((params) => ({
+        searchParams: this.extractSearchParams(params),
+        filterParams: this.extractFilterParams(params),
+      }))
+    );
+  }
+}
+\end{lstlisting}
+
+To bridge this reactive TypeScript logic with the HTML view, the application leverages Angular's modern control flow syntax (\texttt{@if}) combined with the \texttt{async} pipe. The \texttt{async} pipe automatically subscribes to the \texttt{step\$} Observable when the component renders, extracts the current value (\texttt{as currentStep}), and automatically unsubscribes when the component is destroyed, completely eliminating the risk of memory leaks.
+
+\begin{lstlisting}[language=AngularHTML, caption={Angular Modern Control Flow and Async Pipe}, label={lst:angular_html}]
+@if (step$ | async; as currentStep) {
+  <p-breadcrumb 
+    [model]="currentStep === step.FLIGHT_DEPARTURE ? items.slice(0, 2) : items"
+    (onItemClick)="handleChangeStep($event.item['index'])" />
+}
+<flight-view [step$]="step$" [params$]="flightParams$">
+  <flight-tab [params]="(flightParams$ | async)?.searchParams" />
+</flight-view>
+\end{lstlisting}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/ch4/4_2_checkout.png}
+    \caption[Smart Travel Checkout]{The Checkout interface, displaying the state aggregated through the reactive workflow prior to payment gateway redirection.}
+    \label{fig:checkout}
+\end{figure}
+
 
 4.4 End-to-End Authentication and Security: The complete JWT flow, from Angular interceptors to Spring Security validation at the BFF.
 
