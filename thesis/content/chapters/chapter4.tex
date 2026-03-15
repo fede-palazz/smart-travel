@@ -448,6 +448,113 @@ To bridge this reactive TypeScript logic with the HTML view, the application lev
 \end{figure}
 
 
-4.4 End-to-End Authentication and Security: The complete JWT flow, from Angular interceptors to Spring Security validation at the BFF.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 4.4 End-to-End Authentication and Security %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{End-to-End Authentication and Security}
+\label{sec:authentication_security}
+
+Securing a distributed microservices platform requires a robust, stateless authentication mechanism. The Smart Travel application implements a \textit{JSON Web Token} (\gls{JWT}) architecture, establishing a secure chain of trust from the Angular \gls{SPA} to the Spring Boot \gls{BFF}. Because the platform relies on strict \textit{Role-Based Access Control} (\gls{RBAC}) to differentiate between Guests, Customers, Travel Agents, and Administrators, this security context must be propagated and validated without blocking the reactive event loops.
+
+\subsection{The Reactive Spring Security Perimeter}
+
+The \gls{BFF} acts as the primary security perimeter for the entire application. Because the BFF is built on Spring WebFlux, traditional blocking Servlet filters (such as \texttt{OncePerRequestFilter}) cannot be used. Instead, the application configures a reactive \texttt{SecurityWebFilterChain}.
+
+As demonstrated in the \texttt{SecurityConfig}, the application explicitly disables stateful sessions and CSRF protection (which is unnecessary for stateless JWTs). Furthermore, because GraphQL typically returns a \texttt{200 OK} HTTP status even when errors occur, standard Spring Security 401 Unauthorized responses can break GraphQL clients. To prevent this, a custom \texttt{ServerAuthenticationEntryPoint} was implemented to intercept unauthorized access attempts and format them into a strictly compliant GraphQL error JSON structure.
+
+\begin{lstlisting}[language=JavaExtended, caption={Reactive Spring Security Configuration}, label={lst:spring_security_config}]
+@Configuration
+@EnableWebFluxSecurity
+@EnableReactiveMethodSecurity
+class SecurityConfig {
+
+  @Bean
+  SecurityWebFilterChain springSecurityFilterChain(
+      ServerHttpSecurity http,
+      ReactiveAuthenticationManager authenticationManager,
+      ServerAuthenticationConverter authenticationConverter,
+      ServerAuthenticationEntryPoint authenticationEntryPoint) {
+
+    var authenticationWebFilter = new AuthenticationWebFilter(authenticationManager);
+    authenticationWebFilter.setServerAuthenticationConverter(authenticationConverter);
+
+    return http.authorizeExchange(exchanges -> exchanges
+            .pathMatchers(HttpMethod.OPTIONS).permitAll()
+            .pathMatchers(HttpMethod.POST, "/graphql").permitAll()
+            .anyExchange().authenticated())
+        .addFilterAt(authenticationWebFilter, 
+            SecurityWebFiltersOrder.AUTHENTICATION)
+        .exceptionHandling(exceptionHandlingSpec ->
+            exceptionHandlingSpec.authenticationEntryPoint(authenticationEntryPoint)
+        )
+        .csrf(ServerHttpSecurity.CsrfSpec::disable)
+        .build();
+  }
+}
+\end{lstlisting}
+
+When a request enters the filter chain, the \texttt{JwtServerAuthenticationConverter} reactively intercepts the \texttt{Authorization} HTTP header. If a \texttt{Bearer} token is present, it extracts the payload and converts it into a custom \texttt{JwtToken} object, allowing the \texttt{ReactiveAuthenticationManager} to validate the cryptographic signature and populate the \texttt{ReactiveSecurityContext} with the user's \texttt{CustomUserDetails} (containing their ID, email, and roles).
+
+\subsection{Role-Based Access Control (RBAC)}
+
+With the reactive security context established at the gateway, the application can securely enforce \gls{RBAC} at the GraphQL resolver level using the \texttt{@PreAuthorize} annotation. The \texttt{AuthController} relies on this mechanism to ensure that only properly authenticated users can query sensitive profile information.
+
+\begin{lstlisting}[language=JavaExtended, caption={GraphQL Authentication Controller}, label={lst:auth_controller}]
+@Controller
+@RequiredArgsConstructor
+public class AuthController {
+  private final AuthService authService;
+  private final UserService userService;
+
+  @MutationMapping("login")
+  public Mono<LoginResDTO> login(@Argument LoginReqDTO loginReq) {
+    return authService.login(loginReq.getEmail(), loginReq.getPassword());
+  }
+
+  @QueryMapping("profile")
+  @PreAuthorize("isAuthenticated()")
+  public Mono<UserNoPwdResDTO> profile(@AuthenticationPrincipal CustomUserDetails user) {
+    return userService.getUserById(user.getId());
+  }
+}
+\end{lstlisting}
+
+\subsection{Frontend Security State Management}
+
+On the Angular client side, security is managed reactively via the \texttt{AuthService}. When the user successfully authenticates via the \texttt{login} GraphQL mutation, the \gls{BFF} returns a short-lived Access Token and a long-lived Refresh Token. These tokens are persisted in the browser's local storage via the \texttt{TokenService}.
+
+To ensure the \gls{UI} instantly reflects the user's authentication state across all active components, the \texttt{AuthService} encapsulates the user data within an \gls{RxJS} \texttt{BehaviorSubject}. 
+
+\begin{lstlisting}[language=TypeScript, caption={Angular Reactive Authentication Service}, label={lst:angular_auth_service}]
+@Injectable({ providedIn: 'root' })
+export class AuthService {
+  private userSubject = new BehaviorSubject<User | null>(null);
+  user$: Observable<User | null>;
+  
+  // Expose roles for route guards and UI rendering
+  isCustomer(): boolean {
+    return this.isLoggedIn() && this.getUser()!.role === UserRole.CUSTOMER;
+  }
+
+  login(email: string, password: string): Observable<QueryResult<LoginRes>> {
+    return this.apollo.mutate<{ login: LoginRes }>({
+        mutation: LOGIN_MUTATION,
+        variables: { loginReq: { email, password } },
+      })
+      .pipe(
+        tap(({ data }) => {
+          if (data) {
+            this.tokenService.setAccessToken(data.accessToken);
+            this.tokenService.setRefreshToken(data.refreshToken);
+            this.userSubject.next(data.user); // Reactively update the UI state
+          }
+        })
+      );
+  }
+}
+\end{lstlisting}
+
+On application startup, the frontend automatically queries the \texttt{profile} endpoint. If the Access Token has expired, the client invokes the \texttt{refresh} mutation to acquire new credentials. Furthermore, Angular Route Guards (e.g., \texttt{IsUnauthenticatedGuard}) observe the \texttt{user\$} stream, actively preventing unauthorized users from accessing protected views (like the Checkout page or the Travel Agent Dashboard) without requiring complex, synchronous permission checks.
 
 4.5 Core Business Workflows: Catalog search, the payment Outbox pattern, and the event-driven notification pipeline.
