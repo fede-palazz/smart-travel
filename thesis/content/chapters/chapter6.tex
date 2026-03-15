@@ -1,8 +1,43 @@
-\chapter{Conclusion}
-\label{sec:conclusion}
+\chapter{Conclusions}
+\label{ch:conclusions}
 
-6.1 Technology Evaluation: Spring Boot vs. Quarkus: Comparing developer experience, startup times, resource consumption, and reactive capabilities.
+\section{Project Summary}
 
-6.2 Architectural Evaluation: Assessing the scalability, resilience, and maintainability of the implemented microservices and event-driven patterns.
+The objective of this thesis was to design, implement, and deploy \textit{Smart Travel}, a comprehensive, cloud-native platform tailored for the modern tourism industry. Moving away from traditional, rigid monolithic architectures, the project successfully embraced a distributed microservices paradigm. By decoupling the application into independent, domain-specific bounded contexts — such as the Travel Catalog, Orders, User Management, and Notifications — the platform achieved the high scalability, fault tolerance, and independent deployability required by contemporary enterprise software.
 
-6.3 Testing and Validation: Ensuring the functional requirements of the Smart Travel application were met.
+Throughout the development lifecycle, strict adherence to modern software engineering principles was maintained. The architecture successfully integrated a heterogeneous technology stack, leveraging the reactive capabilities of both Spring Boot and Quarkus to handle highly concurrent workloads without blocking system threads. Furthermore, the frontend was developed as a dynamic Single Page Application using Angular and RxJS, providing a seamless and highly responsive user experience across complex workflows like custom package creation and order checkout.
+
+\section{Architectural and Technical Achievements}
+
+The implementation of the Smart Travel platform served as a rigorous practical application of advanced cloud-native design patterns. Several key architectural achievements define the success of this project:
+
+\begin{itemize}
+    \item \textbf{Heterogeneous Reactive Microservices:} The project successfully demonstrated the viability of mixing enterprise Java frameworks. By utilizing Spring WebFlux for the Orders API and Quarkus Panache for the Travel Catalog, the system capitalized on the respective strengths of each ecosystem while unifying them under a fully non-blocking, reactive execution model.
+    \item \textbf{Optimized Client-Server Communication:} The introduction of a Spring for GraphQL BFF successfully mitigated the common microservice pitfalls of over-fetching and under-fetching. The BFF acted as a secure API Gateway, intelligently aggregating downstream REST data and enforcing Role-Based Access Control via stateless JWTs before traffic could reach the internal cluster network.
+    \item \textbf{Distributed Data Consistency:} The implementation of the Transactional Outbox Pattern, combined with Change Data Capture via Debezium and RabbitMQ, resolved the critical "dual-write" problem during the financial checkout phase. This guaranteed absolute data consistency between the local MongoDB databases and the asynchronous notification services.
+    \item \textbf{DevOps and Infrastructure Automation:} The transition from raw code to a live cloud environment was completely automated. Jenkins CI/CD pipelines successfully managed the dynamic versioning, isolated compilation, and containerization of the artifacts. Furthermore, the deployment onto an OKD cluster demonstrated advanced networking, utilizing Nginx as a reverse proxy to shield internal services from the public internet.
+\end{itemize}
+
+\section{Challenges and Lessons Learned}
+
+Building a distributed, reactive system from the ground up presented significant engineering challenges. 
+
+The most profound challenge was the paradigm shift required to adopt \textit{Reactive Programming}. Transitioning from traditional imperative Java (where operations execute sequentially on a single thread) to declarative reactive streams (using Project Reactor's \texttt{Mono}/\texttt{Flux} and Mutiny's \texttt{Uni}/\texttt{Multi}) required a fundamentally different mental model. Debugging asynchronous streams, managing backpressure, and ensuring that no blocking calls were accidentally introduced into the event loop demanded rigorous attention to detail.
+
+Additionally, orchestrating the system within the strict security constraints of OKD proved challenging. Unlike standard Docker environments, OKD's Security Context Constraints (SCC) explicitly forbid containers from running as the root user. This required refactoring Dockerfiles and deployment manifests to ensure that services like Nginx possessed the appropriate internal directory permissions without escalating privileges. 
+
+\section{Future Enhancements}
+
+While the Smart Travel platform currently possesses a robust and scalable foundation, the microservices architecture naturally lends itself to continuous iteration and enhancement. Several enhancements for future work have been identified to further improe both the technical architecture and the user experience:
+
+\begin{itemize}
+    \item \textbf{Advanced Notification System:} Expanding the current asynchronous RabbitMQ notification architecture to support real-time push notifications (e.g., via WebSockets or Server-Sent Events) in addition to a broader range of email alerts, such as itinerary reminders and booking status changes.
+    
+    \item \textbf{User Reviews and Ratings:} To foster community trust and improve package quality, a dedicated review microservice could be introduced. This would allow verified customers to rate and review specific accommodations and activities after completing their trips.
+    
+    \item \textbf{Geolocation and Mapping Services:} Integrating external geolocation APIs (such as Google Maps or Mapbox) into the frontend to provide users with interactive visual representations of flight routes, hotel locations, and activity venues.
+    
+    \item \textbf{Internationalization (i18n) and Localization:} To support a broader demographic and global market reach, the platform could be enhanced with multi-language support and dynamic, real-time currency conversion, orchestrated directly through the BFF layer.
+    
+    \item \textbf{Artificial Intelligence Integration:} To further enhance the user experience, the platform could integrate an AI-driven recommendation engine. By analyzing a user's past order history and search queries, a dedicated microservice could suggest highly personalized travel packages and activities.
+\end{itemize}

@@ -161,3 +161,46 @@
   morestring=[b]',
   morestring=[b]"
 }
+
+\lstdefinelanguage{Dockerfile}{
+  morekeywords={FROM, RUN, CMD, LABEL, MAINTAINER, EXPOSE, ENV, ADD, COPY, ENTRYPOINT, VOLUME, USER, WORKDIR, ARG, ONBUILD, STOPSIGNAL, HEALTHCHECK, SHELL},
+  keywordstyle=\color{blue}\bfseries,
+  comment=[l]{\#},
+  commentstyle=\color{gray}\ttfamily,
+  stringstyle=\color{red},
+  morestring=[b]",
+  morestring=[b]'
+}
+
+\lstdefinelanguage{Groovy}{
+  keywords={pipeline, agent, docker, image, args, environment, stages, stage, steps, script, sh, echo, dir, git, withCredentials, usernamePassword},
+  keywordstyle=\color{teal}\bfseries,
+  ndkeywords={def, returnStdout, trim, true, false, null},
+  ndkeywordstyle=\color{blue}\bfseries,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{gray}\itshape,
+  stringstyle=\color{red},
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstdefinelanguage{YAML}{
+  keywords={true,false,null,y,n},
+  keywordstyle=\color{darkgray}\bfseries,
+  basicstyle=\footnotesize\ttfamily,
+  comment=[l]{\#},
+  morestring=[b]',
+  morestring=[b]",
+  stringstyle=\color{blue},
+  moredelim=[l][\color{teal}\bfseries]{:}
+}
+
+\lstdefinelanguage{Nginx}{
+  keywords={server, listen, server_name, root, index, location, set, resolver, proxy_pass, proxy_http_version, proxy_set_header, proxy_cache_bypass, proxy_pass_request_headers, return, add_header, expires, try_files},
+  keywordstyle=\color{blue}\bfseries,
+  comment=[l]{\#},
+  stringstyle=\color{red},
+  morestring=[b]',
+  morestring=[b]"
+}
