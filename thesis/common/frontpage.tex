@@ -1,0 +1,54 @@
+% EDIT THE thesis_info.tex FILE, NOT THIS ONE!
+\newgeometry{top=4cm,left=3cm,right=3cm,bottom=4cm,heightrounded}
+\begin{titlepage}
+\centering
+%
+\includegraphics[width=110mm]{\thesisuniversitylogo}\\
+%
+\vspace{\stretch{2}}
+%
+{\institutionfont \textbf{\thesisuniversity} \par}
+%
+\vspace{\stretch{1}} % changing this number and the others changes the proportion
+%
+{\divisionfont \thesiscourse \par}
+{\divisionfont \academicYear \par}
+\iflanguage{english}{
+    {\divisionfont Graduation Session \thesisdate \par}
+}{\divisionfont Sessione di laurea \thesisdate \par}
+%
+
+\vspace{\stretch{4}}
+%
+{\customtitlefont \textbf{\thesistitle} \par}
+{\customsubtitlefont \textbf{\thesissubtitle} \par}
+%
+\vspace{\stretch{4}}
+%
+\makebox[\textwidth]{\hfill\def\arraystretch{1.5} % to change the spacing change this number
+\begin{minipage}[t]{.4\textwidth}
+    \centering
+    \begin{tabular}[t]{@{}l@{}}
+        \fixednamesfont \textbf{\thesissupervisortext} \\
+         \namesfont \thesissupervisoronename~\thesissupervisoronesurname \\
+         \namesfont \thesissupervisortwoname~\thesissupervisortwosurname %\\
+         % uncomment if you need a third supervisor
+         % \namesfont \thesissupervisorthreename~\thesissupervisorthreesurname
+    \end{tabular}
+\end{minipage}
+%
+\hspace{5cm} % Add more space between Supervisor and Candidate sections
+%
+\begin{minipage}[t]{.4\textwidth}
+    \centering
+    \begin{tabular}[t]{@{}r@{}}
+        \fixednamesfont \textbf{\thesiscandidatetext} \\
+         \namesfont \thesiscandidatename~\thesiscandidatesurname
+    \end{tabular}
+\end{minipage}\hfill}\\
+%
+\vspace{\stretch{1}}
+%
+\end{titlepage}
+
+\restoregeometry

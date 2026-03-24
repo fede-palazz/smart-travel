@@ -1,0 +1,476 @@
+\chapter{Background and Technologies}
+\label{sec:background}
+
+This chapter provides a comprehensive overview of the core concepts and technologies underpinning the project. It begins by exploring the architectural shift from traditional monolithic systems to decentralized microservices, then moving to the main differences between imperative and reactive programming models, highlighting how the latter addresses the high-concurrency demands of modern cloud infrastructure.
+
+Furthermore, it examines the specific technological stack selected for the application, including the frontend framework, backend environments, and NoSQL database management. It details the different communication paradigms adopted — spanning from synchronous REST and GraphQL APIs to asynchronous Event-Driven Architectures — to allow the system's isolated components to seamlessly interact with each other.
+
+Finally, it introduces the core principles of DevOps and Continuous Integration/Continuous Deployment pipelines, establishing the necessity of automated infrastructure for managing and deploying modern microservices at scale.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 2.1 Microservices Architecture %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Microservices Architecture}
+\label{sec:microservices}
+
+The evolution of cloud computing has fundamentally altered how enterprise applications are designed, developed, and maintained. While monolithic architectures served as the industry standard for decades, they present significant scaling and maintenance limitations as systems grow in complexity. To address these bottlenecks, the software industry has increasingly adopted the microservices architecture, a paradigm that decomposes large, rigid applications into a suite of smaller, independent services \cite{aws_microservices}.
+
+\subsection{Principles of Microservices}
+
+Unlike a monolithic application that shares a single massive codebase and a centralized database, a microservices architecture is built upon the principle of decentralization and loose coupling. Each microservice is designed around a specific business capability or "bounded context" \cite{microsoft_microservices}. For example, in an e-commerce platform like Smart Travel, the catalog management and the order processing capabilities are handled by distinct autonomous services.
+
+The foundational principles of this architecture include:
+\begin{itemize}
+    \item \textbf{Autonomy and Independent Deployment:} Each service is a self-contained unit. It encapsulates its own code, dependencies, and typically its own data store. This allows teams to update, deploy, and scale a single service without needing to recompile or redeploy the entire system.
+    \item \textbf{Lightweight Communication:} Because microservices operate as independent processes, they must communicate over a network to fulfill complex business transactions. This is achieved using well-defined \textit{Application Programming Interfaces} (\gls{API}s), typically relying on synchronous protocols like HTTP or asynchronous message delivery mechanisms.
+    \item \textbf{Decentralized Data Management:} Rather than relying on a single shared database schema, each microservice manages its own database, choosing the \gls{DBMS} technology best suited to its specific data access patterns.
+\end{itemize}
+ 
+\begin{figure}[H]
+	\centering
+    \includegraphics[width=0.8\textwidth]{images/ch1/1_monolith-vs-microservices.png}
+	\caption[Monolithic vs. Microservices architecture]{Monolithic vs. Microservices architecture. \textit{Source: \cite{coderco_monoliths_vs_microservices}}}
+    \label{fig:monolith_vs_microservices}
+\end{figure}
+
+\subsection{Benefits}
+
+The shift from monolithic to microservices architecture provides several advantages \cite{tayoolaigbe_microservices}:
+
+\begin{itemize}
+    \item \textbf{Targeted Scalability:} In a monolithic system, an unexpected spike in traffic for one specific feature (e.g., the payment gateway) requires scaling the entire application, leading to resource wastage. Microservices allow infrastructure teams to scale only the specific services experiencing high demand, optimizing cloud resource consumption and costs.
+    \item \textbf{Fault Isolation and Resilience:} Because microservices are loosely coupled, a critical bug, memory leak, or crash in one service does not inherently cascade and bring down the entire platform. The application can handle partial failures gracefully, degrading functionality while keeping core operations online.
+    \item \textbf{Technological Freedom:} Teams are not locked into a single technology stack. Since microservices communicate via standardized network protocols, developers can select the most appropriate programming language, framework, and database for each specific task. This flexibility allowed the Smart Travel project to implement and compare different Java frameworks (Spring Boot and Quarkus) within the same ecosystem.
+    \item \textbf{Agility and CI/CD:} Smaller codebases are easier to understand, test, and deploy. This structure naturally complements DevOps practices, enabling \gls{CI/CD} pipelines to push frequent updates to production.
+\end{itemize}
+
+\subsection{Challenges and Limitations}
+
+Despite its significant advantages, adopting a microservices architecture introduces a high degree of distributed system complexity. Some of the key challenges include:
+
+\begin{itemize}
+    \item \textbf{Operational Overhead and Monitoring:} Managing dozens of independently running services is inherently more complex than managing a single monolith. It requires sophisticated container orchestration platforms (such as Kubernetes or OKD) and centralized observability tools for distributed tracing, log aggregation, and metric monitoring to identify where a failure occurred across the network.
+    \item \textbf{Network Latency and Congestion:} Replacing in-memory function calls with remote network requests introduces latency. If a single user action requires a long chain of inter-service API calls, the accumulated network overhead can severely degrade system performance.
+    \item \textbf{Data Consistency:} Because each service maintains its own database, achieving data consistency across the system becomes a major challenge. Traditional \texttt{\gls{ACID}} transactions that span multiple tables are no longer feasible. Instead, developers must rely on complex distributed transaction patterns and embrace \textit{eventual consistency}.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 2.2 Programming Paradigms %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Imperative vs. Reactive paradigm}
+\label{sec:programming_paradigms}
+
+The choice of programming paradigm fundamentally dictates how an application manages system resources, handles concurrency, and scales under load. In the context of modern Java microservices, understanding the underlying thread management of both approaches is crucial for evaluating their suitability for high-concurrency, I/O-bound applications.
+
+\subsection{The Imperative Model}
+
+Traditional applications use blocking I/O and an imperative (sequential) execution model. In a web application context - such as a traditional Spring MVC application - this paradigm relies on the \textit{Thread-per-Request} concurrency model \cite{devglan_reactive}.
+
+When a new HTTP request arrives, the server allocates a dedicated thread from a pre-configured thread pool to handle the entire lifecycle of that request. If the application needs to interact with an external resource, such as querying a database or calling a third-party API, the thread initiates the I/O operation and then completely halts execution (blocks) until it receives a response.
+
+While this model is straightforward to write, debug, and reason about, it is highly inefficient for I/O-bound microservices. During the waiting period, the blocked thread consumes valuable memory and CPU cycles via context switching, doing absolutely no useful work. Under sudden spikes in traffic, the thread pool can quickly become exhausted. Once all threads are blocked waiting for slow external services, the application becomes unresponsive to new user requests, severely limiting scalability.
+
+\begin{figure}[H]
+	\centering
+    \includegraphics[width=0.6\textwidth]{images/ch2/2_1_blocking-threads.png}
+	\caption[Thread-per-Request model in an imperative application.]{Thread-per-Request model in an imperative application. \textit{Source: \cite{quarkus_reactive_architecture}}}
+    \label{fig:blocking-threads}
+\end{figure}
+
+\subsection{The Reactive Model}
+
+The reactive model was designed to build non-blocking applications that are highly responsive, resilient, and resource-efficient. Instead of the Thread-per-Request model, reactive frameworks utilize an \textit{Event Loop} architecture. In this model, a very small number of threads known as \texttt{event loop threads} continuously loop to process incoming requests. 
+
+When an I/O operation is required, the thread does not block. Instead, it delegates the task to a non-blocking I/O handler, registers a callback, and immediately returns to the event queue to process the next incoming HTTP request. Once the external database or \gls{API} finishes its processing, it pushes an event back to the event loop, which then resumes the original request and sends the response to the client \cite{quarkus_reactive_architecture}.
+
+\begin{figure}[H]
+	\centering
+    \includegraphics[width=0.6\textwidth]{images/ch2/2_2_reactive-thread.png}
+	\caption[Reactive model in a non-blocking application.]{Reactive model in a non-blocking application. \textit{Source: \cite{quarkus_reactive_architecture}}}
+    \label{fig:reactive-threads}
+\end{figure}
+
+The key advantages of the reactive model include:
+\begin{itemize}
+    \item \textbf{Resource Efficiency:} By eliminating blocked threads, the system can handle thousands of concurrent connections using a fraction of the memory and CPU.
+    \item \textbf{Data as Streams:} Data is not pulled sequentially but pushed asynchronously. Frameworks like Spring WebFlux and Quarkus Mutiny provide rich APIs to compose and transform these data streams without blocking the main execution flow.
+\end{itemize}
+
+The primary advantage of the reactive concurrency model is its resource efficiency and scalability. By ensuring that threads are never blocked waiting for external I/O operations, the system can sustain thousands of concurrent connections using a fraction of the memory and CPU required by a traditional imperative system. This architectural shift makes the reactive model particularly well-suited for I/O-bound microservices, allowing them to remain highly responsive and maintain stable performance even under massive, sudden surges in network traffic.
+
+However, this model introduces significant complexities regarding development and operational debugging. The most critical is the inclusion of a blocking operation — such as a legacy JDBC database query, a synchronous HTTP call, or a heavy CPU-bound computation — directly on the event loop. Because the system relies on a small pool of threads, blocking even a single one can immediately bottleneck the application. Furthermore, the non-linear execution flow fragments traditional stack traces. When an exception occurs, the stack trace often only reflects the point of failure within the asynchronous callback, losing the historical context of the original user request and making root-cause analysis considerably more difficult than in the linear imperative model.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 2.3 Event-Driven Architectures %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Event-Driven Architectures}
+\label{sec:event_driven_architectures}
+
+As microservices ecosystems expand, the method by which these independent services communicate becomes a critical architectural decision. While traditional web architectures rely heavily on synchronous, point-to-point interactions, the inherent limitations of this approach at scale have led to the widespread adoption of \textit{Event-Driven Architectures} (\gls{EDA}) \cite{ibm_eda_2024}. 
+
+In a tightly coupled microservices environment, relying solely on direct HTTP/REST calls can quickly result in a fragile "distributed monolith." As the number of services grows, point-to-point communication creates a complex, tangled web of dependencies. If a single core service experiences downtime or network latency, the effects can cascade throughout the dependency chain, potentially bringing down the entire platform. Furthermore, this approach introduces strict \textit{temporal coupling}: both the calling service and the receiving service must be online, available, and responsive at the exact same moment for a transaction to succeed.
+
+To mitigate these risks, \gls{EDA} introduces a fundamental paradigm shift. Instead of services directly commanding one another to perform actions, they broadcast "events" — immutable records indicating that a significant change in state or a specific business action has already occurred (for example, a \texttt{PaymentProcessed} or \texttt{UserRegistered} event). Other autonomous services within the ecosystem can then asynchronously listen for and react to these events at their own pace. This decoupling transforms the architecture from a rigid, command-driven model into a highly reactive system, vastly improving overall resilience and allowing individual components to scale independently based on event volume.
+
+\subsection{Synchronous vs. Asynchronous Communication}
+
+In a synchronous communication model, typically implemented via HTTP and REST APIs, a service sends a request to another service and blocks its own execution until it receives a direct response. While conceptually simple and easy to trace, this tightly coupled approach creates cascading bottlenecks. If the receiving service is slow, overwhelmed, or offline, the calling service is forced to wait, consuming resources and potentially causing system-wide performance degradation \cite{microsoft_async_messaging}.
+
+On the other hand, asynchronous communication decouples the sender from the receiver. In an Event-Driven Architecture, services communicate by producing and consuming \textit{events} - lightweight messages that represent a significant change in state or a specific occurrence within the business domain (e.g., "user registered" or "order placed"). The service producing the event simply broadcasts it and immediately resumes its own operations, entirely unaware of who will consume the event or when it will be processed \cite{ibm_eda_2024}.
+
+\begin{figure}[H]
+	\centering
+    \includegraphics[width=0.8\textwidth]{images/ch2/2_8_http-vs-event-driven.jpg}
+	\caption[Synchronous vs. Asynchronous communication]{Synchronous vs. Asynchronous communication. \textit{Source: \cite{synchronous_vs_asynchronous}}}
+    \label{fig:http_vs_event_driven}
+\end{figure}
+
+\subsection{The Role of Message Brokers}
+
+To facilitate this asynchronous exchange without requiring services to know each other's network locations or IP addresses, \gls{EDA} relies on a centralized intermediary known as a message broker \cite{redhat_eda_essentials}. 
+
+This architecture generally relies on three primary components:
+\begin{itemize}
+    \item \textbf{Producers (Publishers):} The microservices that generate events when a specific business action occurs. Their only responsibility is to format the event data and safely push it to the broker.
+    \item \textbf{Message Brokers:} The middleware infrastructure that receives, stores, and routes the events. The broker ensures reliable message delivery, managing queues or topics so that events are safely held even if the intended downstream recipients are currently offline or busy.
+    \item \textbf{Consumers (Subscribers):} The microservices that continuously listen to the broker for specific types of events. Upon receiving an event, the consumer processes the data and executes its own independent business logic.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+    \includegraphics[width=0.6\textwidth]{images/ch2/2_3_event-driven-architecture.png}
+	\caption[Event-Driven Architecture]{Event-Driven Architecture}
+    \label{fig:eda}
+\end{figure}
+
+This publish/subscribe (\gls{Pub/Sub}) model allows multiple different consumers to react to a single event simultaneously and independently.
+
+\subsection{Benefits and Challenges}
+
+Implementing an Event-Driven Architecture provides different advantages. The decoupling of services enables exceptional scalability, as individual components can be scaled up or down based on their specific event processing loads. Furthermore, it significantly enhances overall system resilience: if a consumer service crashes, the message broker simply retains the pending events in a queue until the service is restored, guaranteeing no data loss during the outage \cite{microsoft_async_messaging}.
+
+However, this paradigm introduces unique complexities regarding distributed data. Because communication is fundamentally asynchronous, achieving immediate transactional data consistency across the entire platform is impossible. Instead, developers must design applications around the concept of \textit{eventual consistency}, where the system state reconciles over time. Additionally, tracking the flow of a single user action across multiple asynchronously triggered microservices requires sophisticated distributed tracing mechanisms and centralized logging \cite{redhat_eda_essentials}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 2.4 Backend Technologies %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Backend Technologies}
+\label{sec:backend_technologies}
+
+Java has been the cornerstone of enterprise backend development for decades, favored for its robustness, mature ecosystem, and platform independence. However, as the industry transitioned from monolithic architectures running on heavy application servers to containerized microservices orchestrated by Kubernetes, traditional Java frameworks faced significant challenges. They often suffered from slow startup times and high memory footprints, characteristics misaligned with the rapid scaling and high-density deployment needs of cloud-native environments \cite{redhat_quarkus_kubernetes}.
+
+To address these challenges, the Java ecosystem has evolved significantly. During the development of this thesis' project, two distinct frameworks were selected to build the backend microservices: the established Spring Boot and the modern cloud-native Quarkus.
+
+\subsection{Spring Boot: The Industry Standard}
+
+Introduced by Pivotal Software (now VMware Tanzu) in 2014, Spring Boot revolutionized Java enterprise development. It was designed to simplify the bootstrapping and development of new Spring applications by adhering to the \textit{convention over configuration} principle. Before Spring Boot, developers spent hours configuring XML files and managing complex application server deployments. Spring Boot eliminated this friction by providing auto-configuration, opinionated dependency management, and embedded web servers (such as Tomcat or Netty), allowing developers to package an entire microservice into a single, easily deployable \texttt{fat JAR} \cite{spring_microservices_official}.
+
+Today, Spring Boot is the de facto standard for building Java microservices. It can count on an enormous ecosystem, with out-of-the-box integrations for almost every conceivable database, message broker, and cloud provider. While its traditional roots lie in the synchronous, imperative programming model (\textit{Spring MVC}), the framework has actively modernized. With the introduction of \textit{Spring WebFlux}, it now fully supports the reactive, event-loop programming paradigm discussed in Section \ref{sec:programming_paradigms}, enabling high concurrency without the overhead of thread-per-request blocking.
+
+\subsection{Quarkus: The Cloud-Native Framework}
+
+While Spring Boot adapted to the cloud era, Quarkus was born entirely within it. Created by Red Hat and released in 2019, Quarkus describes itself as a "Kubernetes Native Java framework tailored for GraalVM and HotSpot". Its primary mission is to optimize Java for containerized and serverless environments, where fast startup times (measured in milliseconds) and minimal memory consumption are critical for reducing cloud infrastructure costs and enabling rapid auto-scaling \cite{redhat_quarkus_kubernetes}.
+
+Quarkus achieves this extreme efficiency by fundamentally changing the Java build process. Traditional frameworks like Spring heavily rely on reflection, dynamic class loading, and classpath scanning at runtime (processes that consume significant memory and slow down the boot time). Quarkus, instead, utilizes a \textit{compile-time boot} technique. It shifts the vast majority of framework initialization and configuration parsing to the build phase (\textit{Ahead-Of-Time} processing). 
+
+Furthermore, Quarkus is built from the ground up on a reactive core powered by Eclipse Vert.x \cite{vertx}. This unified architecture allows developers to seamlessly blend standard imperative code and non-blocking reactive code within the exact same application, dynamically optimizing the underlying execution thread model without requiring the developer to switch between entirely different API stacks.
+
+\subsection{Programming Models and Data Access Paradigms}
+
+At their core, both Spring Boot and Quarkus serve the exact same fundamental purpose: they are comprehensive Java frameworks designed to build robust, production-ready backend web applications and microservices. They abstract away the complex infrastructure required for enterprise software — such as exposing HTTP endpoints, managing database connection pools, and orchestrating dependency injection—allowing developers to focus strictly on domain-specific business logic. 
+
+However, while their end goals are identical, they take fundamentally different approaches to their internal programming models and data access paradigms. 
+
+From an API and dependency injection perspective, Spring Boot relies heavily on its own proprietary, highly mature ecosystem. Developers utilize Spring-specific annotations (such as \texttt{@RestController}, \texttt{@Autowired}, and \texttt{@Service}) to wire the application together. Conversely, Quarkus was designed to leverage existing industry standards. It relies on MicroProfile and Jakarta EE specifications, utilizing CDI (Contexts and Dependency Injection) with \texttt{@Inject} for bean management and JAX-RS (Java API for RESTful Web Services) with annotations like \texttt{@Path} and \texttt{@GET} for defining network endpoints.
+
+The most striking architectural difference, however, lies in how the two frameworks handle data access and domain modeling:
+
+\begin{itemize}
+    \item \textbf{Spring Data and the Repository Pattern:} Spring Boot strictly encourages the \textit{Repository Pattern}. In this model, the domain entity (the class representing a database document or row) is kept as a pure \gls{POJO} (Plain Old Java Object). Data access logic is strictly separated into a distinct interface (e.g., \texttt{ReactiveMongoRepository}), which Spring automatically implements at runtime. This provides a clean separation of concerns but requires creating multiple files and interfaces even for simple CRUD operations \cite{spring_data_overview}.
+    
+    \item \textbf{Quarkus Panache and the Active Record Pattern:} To drastically reduce boilerplate code, Quarkus introduces a layer called \textit{Panache} (available for both Hibernate ORM and MongoDB). While Panache supports the traditional Repository pattern, its standout feature is its implementation of the \textit{Active Record Pattern}. In this paradigm, the domain entity itself extends a base class (such as \texttt{PanacheMongoEntity}) and directly inherits static data access methods. This allows developers to query or save data directly through the entity class (e.g., \texttt{Flight.findById(id)} or \texttt{flight.persist()}). This tight coupling of data and behavior significantly accelerates development for straightforward business domains, though it can become difficult to manage in highly complex relational schemas \cite{quarkus_panache_mongodb}.
+\end{itemize}
+
+\subsection{The Rationale for Comparison}
+
+The decision to utilize both Spring Boot and Quarkus within the Smart Travel platform was driven by the desire to evaluate the state of the art in Java microservices. Implementing identical business logic - such as reactive database queries and asynchronous RabbitMQ event publishing/consuming - using both frameworks provides a valuable lens through which to assess their respective developer experiences, syntactic clarity, and ease of configuration. While Spring Boot offers the safety and familiarity of a massive, mature ecosystem, Quarkus promises a leaner, faster, and easier approach to cloud-native development \cite{brilworks_framework_comparison}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 2.5 Frontend Technologies %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Frontend Technologies}
+\label{sec:frontend_technologies}
+
+Just as backend architectures have evolved to handle greater scale and complexity, frontend development has undergone a massive transformation. The traditional web paradigm, where the server renders and delivers completely new HTML pages for every user interaction, has largely been superseded by the \textit{Single Page Application} (\gls{SPA}) model. This shift was driven by the need for more dynamic, responsive, and app-like user experiences that could not be achieved with full-page reloads. To implement this modern frontend architecture, the \textit{Angular} framework was selected for the project, leveraging its powerful component-based structure and native support for reactive programming with the \textit{RxJS} library.
+ 
+\subsection{Single Page Application Architecture}
+
+Historically, web applications were built as Multi-Page Applications (\gls{MPA}s). In an \gls{MPA}, every time a user clicks a link or submits a form, the browser discards the current page, sends a request to the server, waits for the server to process the logic, and then downloads an entirely new HTML document to render. While this approach is straightforward and naturally optimized for \textit{Search Engine Optimization} (\gls{SEO}), it is highly inefficient for complex interactive applications. The constant full-page reloads lead to latency, wasted bandwidth, and a disjointed user experience \cite{adobe_spa_benefits}.
+
+A Single Page Application flips this paradigm. As the name suggests, an \gls{SPA} loads only a single foundational HTML web page upon the user's initial visit. This initial payload includes all the necessary static assets - such as HTML scaffolding, CSS stylesheets, and the core JavaScript application bundle. 
+
+Once the application is loaded into the browser, the page is never reloaded again during the user's session. Instead, when the user interacts with the application (e.g., searching for a flight or filtering hotel results), JavaScript intercepts the action and dynamically rewrites the current \gls{DOM} (\textit{Document Object Model}). If new data is required, the SPA makes asynchronous requests (via \texttt{\gls{AJAX}} or the \texttt{Fetch API}) to backend APIs. The server responds with lightweight \gls{JSON} data rather than heavy HTML markup. The frontend then processes this data and injects it directly into the existing page structure \cite{adobe_spa_benefits}.
+
+This architecture provides several significant advantages:
+\begin{itemize}
+    \item \textbf{Fluid User Experience:} By eliminating the disruptive "white flash" of page reloads, \gls{SPA}s provide a continuous, fluid experience that closely mimics a native desktop or mobile application.
+    \item \textbf{High Performance and Speed:} After the initial load, subsequent interactions are nearly instantaneous because only raw data is transmitted over the network, drastically reducing bandwidth consumption and server load.
+    \item \textbf{Clear Separation of Concerns:} The \gls{SPA} architecture perfectly complements a microservices backend. The frontend becomes a completely independent application that only cares about consuming data via standardized APIs, allowing frontend and backend teams to develop, deploy, and scale their codebases independently.
+\end{itemize}
+
+Despite its benefits, the \gls{SPA} model introduces challenges, particularly regarding the initial loading time - since the browser must download a large JavaScript bundle upfront - and the complexity of managing client-side routing and browser history. To address these complexities, robust frontend frameworks are required.
+
+\subsection{The Angular Framework}
+
+To implement the \gls{SPA} architecture for the Smart Travel platform, Angular was selected. Maintained by Google, Angular is a comprehensive, enterprise-grade framework specifically designed for building scalable single-page applications \cite{angular_dev_overview}. 
+
+Unlike lightweight libraries that focus solely on rendering views (such as React), Angular provides a highly opinionated, all-encompassing toolset. It enforces a strict architectural pattern, requiring developers to write code using TypeScript — a statically typed superset of JavaScript that introduces interfaces, classes, and advanced object-oriented features. This ensures greater code reliability, earlier error detection during compilation, and improved maintainability in large-scale projects.
+
+At its core, the Angular framework is built upon several fundamental concepts that work together to create a cohesive architecture:
+
+\begin{itemize}
+    \item \textbf{Modules:} Angular applications are inherently modular. An \texttt{NgModule} is a container that groups related components, directives, pipes, and services into cohesive blocks of functionality. Every application has at least one root module (typically \texttt{AppModule}) that bootstraps the application. Enterprise applications often utilize numerous "feature modules" that allow for \textit{lazy-loading} — loading specific parts of the application only when the user navigates to them, thereby significantly reducing the initial JavaScript payload.
+
+    \item \textbf{Components and Templates:} The \gls{UI} is divided into encapsulated, reusable building blocks called components. Each component strictly separates its concerns: a TypeScript class manages the state and behavior, an HTML template defines the view, and a CSS/SCSS file scopes styling exclusively to that component. The connection between the class and the template is managed through powerful \textit{data binding} mechanisms (such as string interpolation, property binding, and event binding), which automatically synchronize the \gls{UI} with the underlying application state.
+
+    \item \textbf{Directives:} While components define custom \gls{DOM} elements, directives are classes that add additional behavior to elements in the Angular application. They are primarily divided into \textit{structural directives}, which alter the layout of the \gls{DOM} by adding, replacing, or removing elements (such as \texttt{*ngIf} for conditional rendering and \texttt{*ngFor} for list iteration), and \textit{attribute directives}, which alter the appearance or behavior of an existing element (such as dynamically applying CSS classes with \texttt{ngClass}).
+    
+    \item \textbf{Services and Dependency Injection (DI):} To ensure components remain lean and focused solely on presenting data, business logic and data fetching are delegated to \textit{Services}. Angular features a robust, hierarchical \textit{Dependency Injection} (\gls{DI}) system. Instead of a component manually instantiating a class to fetch data, it declares a dependency in its constructor. The \gls{DI} framework then automatically provides a singleton instance of the requested service—such as an HTTP client used to query the catalog microservice. This pattern promotes loosely coupled, highly modular, and easily testable code \cite{angular_dev_overview}.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{images/ch2/2_4_angular_architecture.jpg}
+    \caption[Angular Architecture]{Angular Architecture. \textit{Source: \cite{angular_besant}}}
+    \label{fig:angular_architecture}
+\end{figure}
+
+\subsection{Frontend Reactive Programming}
+
+Because SPAs heavily rely on asynchronous events — such as user inputs, delayed API responses, and routing changes — managing this complex flow of data is a major challenge. To handle this, Angular natively integrates the RxJS library.
+
+RxJS brings the reactive programming paradigm (discussed in Section \ref{sec:programming_paradigms}) directly into the browser. It introduces the concept of \textit{Observables}, which represent continuous streams of asynchronous data or events over time \cite{reactivex_intro}. 
+
+Instead of relying on traditional JavaScript \texttt{Promises}, which can only handle a single future value and cannot be cancelled, Observables can emit multiple values over time and can be closed or cancelled at any moment. For example, when performing a search query, the Angular HTTP client returns an Observable. Using RxJS operators (like \texttt{map}, \texttt{filter}, or \texttt{debounceTime}), the frontend can gracefully transform the incoming data, ignore rapid repeated clicks from the user, and seamlessly update the \gls{UI} state without resorting to convoluted, heavily nested callback functions \cite{reactivex_intro}. By leveraging RxJS, the frontend achieves the same non-blocking, event-driven resilience as the reactive backend microservices.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 2.6 Database Technologies %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Database Technologies}
+\label{sec:database_technologies}
+
+As modern applications demand greater flexibility, performance, and the ability to handle massive volumes of unstructured or semi-structured data, traditional \textit{Relational Database Management Systems} (\gls{RDBMS}) often face significant limitations. The rigid, tabular schema of SQL databases requires careful upfront planning and costly migrations when data requirements change. Furthermore, scaling a relational database is typically restricted to vertical scaling (adding more CPU or RAM to a single server), which eventually hits a hardware ceiling \cite{datacamp_nosql_2023}. To address these challenges, \textit{\gls{NoSQL}} databases emerged as a powerful alternative, offering distributed architectures and highly adaptable data models.
+
+\subsection{NoSQL Concepts and Classifications}
+
+NoSQL databases depart from the fixed table-and-row model, prioritizing horizontal scalability, high availability, and agility over strict \gls{ACID} compliance. Instead of forcing data into rigid relational structures, NoSQL systems allow data to be stored in formats that more closely align with the objects used in modern application code \cite{medium_mongodb_architecture}.
+
+NoSQL databases are generally categorized into four primary models:
+\begin{itemize}
+    \item \textbf{Key-Value Stores:} The simplest NoSQL model, where data is stored as a collection of unique keys and associated values (e.g., Redis). They are highly optimized for fast lookups and caching.
+    \item \textbf{Wide-Column Stores:} Data is organized into tables, rows, and dynamic columns, allowing each row to have different columns. They excel at handling massive, predictable query workloads (e.g., Cassandra).
+    \item \textbf{Graph Databases:} Designed to store and traverse relationships between entities using nodes and edges (e.g., Neo4j). They are ideal for social networks, fraud detection, or recommendation engines.
+    \item \textbf{Document Databases:} Data is stored in flexible, JSON-like documents. Each document contains pairs of fields and values, which can include nested arrays and objects. This is the category to which MongoDB belongs \cite{datacamp_nosql_2023}.
+\end{itemize}
+ 
+\begin{figure}[H]
+	\centering
+    \includegraphics[width=0.5\textwidth]{images/ch2/2_5_nosql-dbs.png}
+	\caption[NoSQL Database Types]{NoSQL Database Types}
+    \label{fig:nosql_types}
+\end{figure}
+
+\subsection{MongoDB Architecture: Collections vs. Tables}
+
+The Smart Travel application leverages MongoDB as its primary data store. MongoDB is the leading NoSQL document database, natively designed to handle modern application data with superior flexibility and scalability. Its fundamental departure from traditional relational databases lies in how it structures and stores records.
+
+In a traditional \gls{RDBMS}, data is structured into \textit{tables} consisting of \textit{columns} (attributes) and \textit{rows} (records). Every row in a table must adhere strictly to the predefined columns. Representing complex, hierarchical data — such as a travel order containing multiple passengers, nested payment details, and a list of booked activities — requires "normalizing" the data. This means splitting the information across multiple distinct tables and reassembling it at query time using computationally expensive \texttt{JOIN} operations.
+
+On the other hand, MongoDB organizes data into \textit{Collections} (the conceptual equivalent of tables) and \textit{Documents} (the equivalent of rows). 
+
+\begin{itemize}
+    \item \textbf{Documents:} A document is a self-contained unit of data. Under the hood, MongoDB stores these documents in a binary format called \texttt{\gls{BSON}} (Binary JSON), which extends standard JSON with additional data types like dates, decimals, and raw binary data. Unlike a flat SQL row, a BSON document can store rich, hierarchical data structures, including nested sub-documents and arrays. This means an entire "Order" can be retrieved in a single, highly efficient database read operation. Furthermore, this document-oriented architecture natively maps to the object-oriented structures used in Java or TypeScript, largely eliminating the need for complex \textit{Object-Relational Mapping} (\gls{ORM}) layers \cite{medium_mongodb_architecture}.
+    
+    \item \textbf{Collections:} Documents are grouped together into Collections. However, unlike SQL tables, collections enforce a \textit{flexible schema} (or dynamic schema). In a relational database, adding a new feature — such as introducing a "discount\_code" or "dietary\_requirements" field to only a subset of travel packages — requires an expensive \texttt{ALTER TABLE} migration that can temporarily lock the database and force null values upon all existing rows. In MongoDB, documents within the same collection do not need to have identical structures. A new field can simply be appended to a new document without affecting existing records.
+\end{itemize} 
+
+\begin{figure}[H]
+	\centering
+    \includegraphics[width=0.6\textwidth]{images/ch2/2_7_sql-vs-mongodb.png}
+	\caption[SQL vs. MongoDB concepts]{SQL vs. MongoDB concepts. \textit{Source: \cite{sql_vs_nosql}}}
+    \label{fig:sql_vs_mongodb}
+\end{figure}
+
+This schema flexibility significantly accelerates the development lifecycle and perfectly accommodates the diverse, constantly evolving attributes of different travel products within the Smart Travel catalog.
+
+\subsection{Data Processing and Advanced Features}
+
+MongoDB provides a highly capable and expressive query ecosystem to manipulate and retrieve data efficiently:
+
+\begin{itemize}
+    \item \textbf{Aggregation Framework:} To perform complex data processing operations — such as filtering, sorting, grouping, and calculating totals — MongoDB utilizes the Aggregation Pipeline. Modeled on the concept of data processing pipelines in Unix, documents enter a multi-stage pipeline where each stage transforms the data as it passes through. Stages like \texttt{\$match} (filtering), \texttt{\$group} (aggregating data), and \texttt{\$project} (reshaping the output document) allow developers to perform advanced analytics directly within the database engine without needing to transfer massive datasets to the application layer \cite{mongodb_aggregation}.
+     
+    \item \textbf{Indexing Capabilities:} Despite its flexible schema, MongoDB relies heavily on indexes to ensure high query performance. Like traditional RDBMS, it uses \texttt{B-tree} structures to prevent the database from performing full collection scans. It supports secondary indexes, compound indexes, and highly specialized index types such as geospatial indexes (crucial for location-based travel searches) and text-search indexes.
+    
+    \item \textbf{ACID Transactions:} Historically, a major criticism of NoSQL databases was their lack of transactional guarantees across multiple records. However, since version 4.0, MongoDB has introduced full support for multi-document \gls{ACID} transactions across replica sets and sharded clusters. This allows developers to execute complex, multi-step operations (such as processing a payment and simultaneously updating an order status) with the guarantee that either all changes are applied successfully, or none are, bridging the reliability gap between relational and document databases \cite{mongodb_transactions}.
+\end{itemize}
+
+\subsection{Scalability and High Availability}
+
+Beyond its data model, MongoDB's architecture is built for distributed environments:
+\begin{itemize}
+    \item \textbf{Replica Sets:} To ensure high availability, MongoDB uses Replica Sets — a cluster of nodes (typically one Primary and multiple Secondaries) that maintain identical copies of the data. If the Primary node fails, the system automatically elects a new Primary, providing seamless failover and redundancy \cite{medium_mongodb_architecture}.
+    \item \textbf{Sharding:} When the data volume exceeds the capacity of a single machine, MongoDB handles horizontal scaling through Sharding. The data is partitioned across multiple servers based on a designated "Shard Key," allowing the database to manage massive datasets without degrading query performance.
+\end{itemize}
+
+While MongoDB offers immense freedom, it still requires careful data modeling. Developers must strategically choose between \textit{embedding} related data (storing it within the same document for faster read operations) and \textit{referencing} it (linking separate documents via IDs to avoid duplicating large amounts of data). This decision is crucial for optimizing query performance and ensuring data integrity, especially in a complex domain like travel where entities such as flights, hotels, and user profiles have intricate relationships.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 2.7 API Paradigms: REST vs. GraphQL %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{API Paradigms: REST vs. GraphQL}
+\label{sec:api_paradigms}
+
+In a decoupled architecture where the frontend is separated from the backend microservices, the API serves as the fundamental communication bridge. The design of these APIs dictates how efficiently data is transferred over the network. For the "Smart Travel" platform, evaluating the right API paradigm was essential for optimizing the interaction between the Angular frontend and the Java backend. The two dominant paradigms in modern web development are \textit{REST} and \textit{GraphQL}.
+
+\subsection{REST (Representational State Transfer)}
+
+REST has been the undisputed standard for web APIs for over a decade. Introduced by Roy Fielding in 2000, it is an architectural style rather than a strict protocol. RESTful APIs are built around the concept of "resources" (e.g., users, flights, orders), which are identified by standard URLs. Clients interact with these resources using standard HTTP methods such as \texttt{GET} (to retrieve data), \texttt{POST} (to create data), \texttt{PUT} (to update), and \texttt{DELETE} to remove data \cite{aws_rest_api}.
+
+\subsubsection{Core Principles of REST}
+
+To be considered truly RESTful, an application's API must adhere to several guiding architectural constraints:
+\begin{itemize}
+    \item \textbf{Client-Server Separation:} The user interface concerns (the client) are strictly separated from the data storage and business logic concerns (the server). This decoupling allows the frontend (e.g., the Angular SPA) and the backend microservices to evolve and scale independently.
+    \item \textbf{Statelessness:} Each client request to the server must contain all the information necessary to understand and process it. The server does not store any client context or session state between requests. This stateless nature makes REST highly scalable, as any server replica within a cluster can handle any incoming request without needing to synchronize session data.
+    \item \textbf{Cacheability:} Responses must explicitly define themselves as cacheable or non-cacheable. If a response is cacheable, the client or a network intermediary can reuse the data for equivalent later requests, significantly improving network efficiency and reducing server load.
+    \item \textbf{Layered System:} A client cannot ordinarily tell whether it is connected directly to the end server or to an intermediary (like a load balancer, an API Gateway, or a proxy). This enables load balancing and shared caches without altering the client's behavior.
+    \item \textbf{Uniform Interface:} This is the fundamental feature that distinguishes a REST API. It simplifies the architecture by enforcing a standard, uniform way to interact with the system, relying heavily on standard HTTP specifications.
+\end{itemize}
+
+\subsubsection{Resources and Representations}
+
+In REST, the primary abstraction of information is a \textit{resource}. A resource can be any concept, entity, or collection within the business domain — such as a user, a flight, or an order. Resources are uniquely identified by standard \gls{URL}s, often referred to as endpoints \cite{aws_rest_api}. For example, the endpoint \texttt{/flights} might represent the collection of all flight resources, while \texttt{/flights/123} would represent a specific flight with the ID of \texttt{123}.
+
+It is important to note that when a client requests a resource, the server does not send the actual internal database record; instead, it sends a \textit{representation} of the resource's state at that specific moment. In modern web development, this representation is almost exclusively formatted in lightweight \gls{JSON} objects.
+
+Clients manipulate these resources using standard HTTP verbs, which map directly to traditional database CRUD (Create, Read, Update, Delete) operations:
+\begin{itemize}
+    \item \texttt{GET} (Read): Retrieves a representation of the resource. It is a safe and idempotent operation, meaning it does not alter the state of the server.
+    \item \texttt{POST} (Create): Submits a new payload to the server to create a new subordinate resource.
+    \item \texttt{PUT} (Update): Updates an entire existing resource with a new representation, or creates it if it does not exist.
+    \item \texttt{DELETE} (Delete): Removes the specified resource from the server.
+\end{itemize}
+
+\subsubsection{Limitations of REST in Modern SPAs}
+
+While REST's statelessness and uniform interface make it the default choice for general-purpose microservice-to-microservice communication, it has revealed significant limitations regarding data fetching as frontend applications have grown more complex:
+\begin{itemize}
+    \item \textbf{Over-fetching:} A REST endpoint typically returns a fixed data structure. If the Smart Travel frontend only needs the names and prices of available flights to display a simple list, a \texttt{GET /flights} request might still return massive JSON objects containing seating charts, airline details, and baggage rules that the client must download over the network but ultimately discard \cite{ibm_rest_vs_graphql}.
+    \item \textbf{Under-fetching (the N+1 problem):} If a view requires data from multiple related resources—such as a user's profile and their past order history—the client is often forced to make multiple sequential HTTP requests to different endpoints (e.g., \texttt{GET /users/123} followed by \texttt{GET /users/123/orders}). This significantly increases network latency and degrades the overall user experience.
+\end{itemize}
+
+\subsection{GraphQL: The Client-Driven Alternative}
+
+To solve the inefficiencies of over-fetching and under-fetching, Facebook developed GraphQL, open-sourcing it in 2015. Unlike REST, which exposes multiple URLs for different resources, a GraphQL API typically exposes only a single endpoint (e.g., \texttt{/graphql}) \cite{apollo_graphql_basics}.
+
+Instead of the server dictating the structure of the response, GraphQL transfers control to the client. It is a strictly typed query language that allows the frontend to explicitly ask for exactly the data it needs, and nothing more. The client sends a specific query document in the body of an HTTP \texttt{POST} request, and the server responds with a JSON object that exactly mirrors the shape of the requested query.
+
+For example, a single GraphQL query can simultaneously fetch a user's name, their last three orders, and the specific hotel names associated with those orders. The backend GraphQL engine acts as an orchestrator, resolving the disparate data points from various underlying databases or microservices and assembling them into a single, highly optimized response \cite{ibm_rest_vs_graphql}.
+
+\begin{figure}[H]
+	\centering
+    \includegraphics[width=\textwidth]{images/ch2/2_6_rest_vs_graphql.jpg}
+	\caption[REST vs. GraphQL]{REST vs. GraphQL}
+    \label{fig:rest_vs_graphql}
+\end{figure}
+
+\subsubsection{Schema and Type System}
+
+At the core of every GraphQL server is a strictly defined contract known as the \textit{Schema}, written in the \textit{Schema Definition Language} (\gls{SDL}). The schema defines every piece of data that can be queried or modified, explicitly declaring the types of objects, their fields, and the relationships between them \cite{apollo_graphql_basics}.
+
+At the foundational level of this type system are the primitive data types, known in GraphQL as \textit{Scalars}. Scalars represent the leaves of any query — they are the concrete data values that resolve to a single point and cannot be queried any further. GraphQL provides five default scalar types out of the box:
+\begin{itemize}
+    \item \texttt{Int}: A signed 32-bit integer.
+    \item \texttt{Float}: A signed double-precision floating-point value.
+    \item \texttt{String}: A UTF-8 character sequence.
+    \item \texttt{Boolean}: A standard \texttt{true} or \texttt{false} value.
+    \item \texttt{ID}: A unique identifier, typically used to refetch an object or as a key for a cache. While it is serialized as a String, defining a field as an \texttt{ID} signifies that it is not intended to be human-readable.
+\end{itemize}
+
+Beyond these defaults, the GraphQL specification allows developers to define \textit{Custom Scalars}. This is particularly helpful for platforms like Smart Travel, where domain-specific data types such as "Flight", "Accommodation", or "Activity" can be represented as custom scalars with their own validation rules and serialization logic.
+
+Because GraphQL is strongly typed, the server validates every incoming client request against this schema before attempting to execute it. This guarantees that the client only asks for data that actually exists and provides a massive boost to the developer experience, as frontend tooling can automatically generate code and provide real-time auto-completion based on the schema's exact structure.
+
+\subsubsection{Core Operations: Queries, Mutations, and Subscriptions}
+
+While REST relies on HTTP methods to define the intent of an operation, GraphQL handles all requests via \texttt{HTTP POST} and defines intent using three distinct operation types:
+
+\begin{itemize}
+    \item \textbf{Query:} The equivalent of a REST \texttt{GET} request. Queries are used by the client to fetch data without causing any side effects on the server. A major feature of a Query is that the structure of the returned JSON data perfectly mirrors the nested structure of the requested query. For example, a single Query can simultaneously fetch a user's name, their last three orders, and the specific hotel names associated with those orders, entirely avoiding the N+1 request problem.
+
+    \item \textbf{Mutation:} The equivalent of REST \texttt{POST}, \texttt{PUT}, and \texttt{DELETE} requests. Mutations are used to write data to the server — such as creating a new user, booking a flight, or cancelling an order. In GraphQL, a Mutation not only performs the intended write operation but can also return the newly modified object in the exact same request, allowing the frontend application to instantly update its local state.
+    
+    \item \textbf{Subscription:} While Queries and Mutations follow a standard request-response cycle, Subscriptions establish a persistent, long-lasting connection between the client and the server, typically using WebSockets. Subscriptions are used to push real-time updates from the server to the client whenever a specific event occurs (e.g., pushing a notification when a flight's price suddenly drops).
+\end{itemize}
+
+By relying on a single endpoint, a strongly typed schema, and flexible operations, GraphQL provides a highly efficient and declarative data-fetching paradigm perfectly suited for modern Single Page Applications.
+
+\subsection{Choosing the Right Paradigm}
+
+While GraphQL offers unparalleled efficiency for frontend data fetching, it introduces significant complexity on the backend. Developing a GraphQL server requires defining a rigorous schema, implementing complex resolver functions, and carefully managing database queries to prevent malicious or overly deep queries from exhausting server resources. Furthermore, traditional HTTP caching mechanisms are much harder to implement with GraphQL than with REST \cite{apollo_graphql_basics}.
+
+In the context of modern platforms like Smart Travel, the two paradigms are often not mutually exclusive. REST remains highly effective for server-to-server microservice communication and simple CRUD (Create, Read, Update, Delete) operations, while GraphQL is increasingly favored as an API Gateway layer to serve perfectly tailored data payloads to frontend applications.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 2.8 DevOps and CI/CD Pipelines %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{DevOps and CI/CD Pipelines}
+\label{sec:devops_cicd}
+
+The architectural transition from monolithic applications to distributed microservices fundamentally changes not only how software is written but also how it is delivered. Managing, testing, and deploying dozens of independent services manually is highly prone to human error and operationally unsustainable. To address this bottleneck, the software industry has widely adopted DevOps practices and automated deployment pipelines \cite{aws_devops_what_is}.
+
+\subsection{The DevOps Philosophy}
+
+Traditionally, software development and IT operations functioned in isolated silos. Developers wrote the code and pass it to operations teams, who were then responsible for deploying and maintaining it. This often led to misaligned incentives: developers wanted to push new features rapidly, while operations teams prioritized system stability, naturally resisting frequent changes \cite{atlassian_devops}.
+
+DevOps is a cultural and technical movement that merges these two disciplines (Development and Operations). It promotes a collaborative environment where cross-functional teams take full ownership of the entire application lifecycle — from initial planning and writing code to deploying it into production and monitoring its live performance. The core objective of DevOps is to shorten the development lifecycle, increase deployment frequency, and achieve highly dependable releases \cite{aws_devops_what_is}.
+
+\begin{figure}[H]
+	\centering
+    \includegraphics[width=0.6\textwidth]{images/ch2/2_9_devops.png}
+	\caption[DevOps]{DevOps}
+    \label{fig:devops}
+\end{figure}
+
+\subsection{Continuous Integration and Continuous Deployment}
+
+The technical engine that drives the DevOps philosophy is the \gls{CI/CD} pipeline. A pipeline is a sequence of automated steps that source code must pass through before it reaches the end user. It enforces strict quality gates and removes manual intervention from the software release process \cite{redhat_cicd_explained}.
+
+\begin{itemize}
+    \item \textbf{Continuous Integration (CI):} In a microservices environment, multiple developers frequently commit code changes to a shared version control repository (such as Git). CI is the practice of automatically triggering a build process every time a new commit is pushed. The CI server automatically compiles the code and runs a suite of unit and integration tests. This rapid feedback loop ensures that new code seamlessly integrates with the existing codebase and that bugs are caught immediately, rather than during a massive release at the end of the month.
+    
+    \item \textbf{Continuous Delivery and Deployment (CD):} Once the code passes the CI phase, the CD phase automates the release process. In \textit{Continuous Delivery}, the built artifact (such as a Docker container image) is automatically prepared and pushed to a staging environment, awaiting a manual trigger for final production release. In \textit{Continuous Deployment}, even this manual trigger is removed: every change that passes all automated tests is deployed directly to production without human intervention \cite{gitlab_cicd_concepts}.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+    \includegraphics[width=0.9\textwidth]{images/ch2/2_10_ci-cd.jpg}
+	\caption[CI/CD pipeline]{CI/CD pipeline}
+    \label{fig:cicd}
+\end{figure}
+
+\subsection{The Necessity of Automation at Scale}
+
+Implementing robust CI/CD pipelines is not merely a convenience for cloud-native applications, but a structural necessity. Because a platform like Smart Travel is composed of multiple independent services (e.g., Users, Travel Catalog, Orders, Notification) built with varying technologies (Angular, Spring Boot, Quarkus), each service requires its own distinct lifecycle and pipeline. 
+
+Automation guarantees repeatability. By defining the infrastructure and deployment steps as code, a pipeline ensures that a microservice will be compiled, tested, packaged into a container, and deployed in the exact same manner every single time. This eliminates configuration drift, drastically reduces the downtime associated with manual deployments, and provides the agility required to roll back seamlessly if a critical defect is detected in production \cite{redhat_cicd_explained}.

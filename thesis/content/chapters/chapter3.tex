@@ -1,0 +1,302 @@
+\chapter{System Architecture}
+\label{sec:architecture}
+
+This chapter begins by establishing the business context and user roles of the Smart Travel domain, followed by an analysis of its functional and non-functional requirements. It then explores the high-level architecture, detailing the decomposition of the monolithic domain into bounded, autonomous microservices (Users, Travel Catalog, Orders, and Notifications). 
+
+It proceeds to examine the data modeling strategy, highlighting how MongoDB's flexible schema accommodates the diverse structures of travel products. 
+
+Finally, the chapter outlines the communication patterns employed to orchestrate these services, contrasting synchronous API gateways with the asynchronous event-driven mechanisms powered by RabbitMQ and Debezium.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 3.1 Application Domain Overview %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Application Domain Overview}
+\label{sec:domain_overview}
+
+Before diving into the technical requirements and the architectural topology of the system, it is essential to establish the business context and the primary objectives of the application. 
+
+Smart Travel was conceived as a full-stack e-commerce application dedicated to the tourism sector. Its primary business goal is to provide a centralized hub where users can search, compose, and purchase complete travel experiences — spanning flights, accommodations, local activities, and travel packages. From a software engineering perspective, the platform serves as a \gls{PoC} to validate the implementation of cloud-native microservices, reactive programming paradigms, and event-driven communication.
+
+To achieve these goals, the application was designed around a specific set of core business requirements and user-facing functionalities:
+
+\begin{itemize}
+    \item \textbf{Public Catalog Exploration:} The platform provides public access to the travel catalog, allowing users to explore available offerings using advanced search and filtering mechanisms to find specific flights, hotels, or activities.
+    \item \textbf{Flexible Purchasing and Cart Management:} The system supports a highly flexible shopping experience. Users can purchase individual travel services standalone or aggregate them into complete and customized packages, with the ability to review and modify their cart selections prior to checkout.
+    \item \textbf{End-to-End Order Management:} The platform handles the complete purchasing lifecycle, providing authenticated customers with a dedicated personal area to track and monitor their past and upcoming orders.
+    \item \textbf{External Service Integration:} To facilitate real-world e-commerce capabilities, the application securely integrates with external third-party services, such as online payment gateways (e.g., PayPal) to process financial transactions.
+    \item \textbf{Automated Notifications:} To ensure a responsive user experience, the system implements an automated notification pipeline, dispatching immediate email confirmations upon the successful completion of an order.
+\end{itemize}
+
+\subsection{User Roles and Objectives}
+
+To satisfy diverse business needs, the platform was designed to support multiple distinct user profiles, each with specific permissions, workflows, and end goals. The system identifies four primary actors:
+
+\begin{itemize}
+    \item \textbf{Guest (Unregistered User):} Guests can freely navigate the platform to explore the catalog of travel packages and search for flights, accommodation and activities on specific dates. However, they are restricted from executing financial transactions or composing custom packages until they authenticate.
+    
+    \item \textbf{Customer (Registered User):} Once authenticated, a Customer aims to plan and purchase their travel itinerary. Beyond the capabilities of a Guest, Customers can compose personalized travel packages by aggregating distinct catalog components, proceed to secure checkout and manage a personal dashboard containing their order history.
+    
+    \item \textbf{Travel Agent:} A business-oriented user responsible for enriching the platform's catalog. The Travel Agent's primary goal is to curate and compose new travel packages. They have access to dedicated interfaces where they can bundle flights, hotels, and activities into fixed "Agency Packages," manage their publication status (draft, published, or archived), and view historical data on the packages they have created.
+    
+    \item \textbf{Administrator:} The Administrator possess the highest level of authorization, granting them access to the user management system and the ability to oversee all travel packages (including those created by Travel Agents). The Administrator's role is to maintain the integrity of the platform by managing users' accounts and permissions.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 3.2 Requirements Analysis %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Requirements Analysis}
+\label{sec:requirements_analysis}
+
+Before defining the technical architecture, a requirements analysis was conducted to establish the scope and expected behavior of the application. The requirements were divided into functional, detailing what the system must do, and non-functional, dictating how the system should perform under various conditions.
+
+\subsection{Functional Requirements}
+
+The functional requirements were categorized by business domain and mapped to specific user roles (Guest, Customer, Travel Agent, and Administrator). The following table outlines the comprehensive list of functional features expected from the platform.
+
+\begin{longtable}{@{} p{0.15\textwidth} p{0.80\textwidth} @{}}
+\caption{Smart Travel Functional Requirements} \label{tab:functional_requirements} \\
+\toprule
+\textbf{ID} & \textbf{Description} \\
+\midrule
+\endfirsthead
+
+\multicolumn{2}{c}%
+{{\bfseries \tablename\ \thetable{} -- continued from previous page}} \\
+\toprule
+\textbf{ID} & \textbf{Description} \\
+\midrule
+\endhead
+
+\midrule
+\multicolumn{2}{r}{{Continued on next page}} \\
+\endfoot
+
+\bottomrule
+\endlastfoot
+
+\textbf{FR1} & \textbf{Authentication and Authorization} \\
+FR1.1 & User login and logout \\
+FR1.2 & Account creation (Sign up) \\
+FR1.3 & Account management (Edit details, Delete account) \\
+\midrule
+
+\textbf{FR2} & \textbf{Flights} \\
+FR2.1 & Search flights by destination and date range \\
+FR2.2 & Filter search results \\
+FR2.3 & View flight details (e.g., layovers, airlines) \\
+FR2.4 & Flight payment processing (Summary, Total calculation) \\
+\midrule
+
+\textbf{FR3} & \textbf{Accommodations} \\
+FR3.1 & Search accommodations by destination and date range \\
+FR3.2 & Filter search results \\
+FR3.3 & View accommodation details (e.g., available rooms, amenities) \\
+FR3.4 & Accommodation payment processing (Summary, Total calculation) \\
+
+\midrule
+
+\textbf{FR4} & \textbf{Activities} \\
+FR4.1 & Search activities by destination and date range \\
+FR4.2 & Filter search results \\
+FR4.3 & View activity details (e.g., location, schedule) \\
+FR4.4 & Activity payment processing (Summary, Total calculation) \\
+\midrule
+
+\textbf{FR5} & \textbf{Travel Packages (Agency Created)} \\
+FR5.1 & Search existing agency packages by destination and date range \\
+FR5.2 & Filter search results \\
+FR5.3 & View package details (Flights, Accommodation, Activities) \\
+FR5.4 & Package payment processing \\
+FR5.5 & View recommended travel packages on the homepage \\
+\midrule
+
+\textbf{FR6} & \textbf{Custom Travel Packages (Customer Created)} \\
+FR6.1 & Search individual components to build a custom package \\
+FR6.2 & Select components and compose the custom package \\
+FR6.3 & Custom package payment processing \\
+\midrule
+
+\textbf{FR7} & \textbf{Customer Personal Area} \\
+FR7.1 & View order history and specific order details \\
+FR7.2 & View and manage account details \\
+\midrule
+
+\textbf{FR8} & \textbf{Notifications} \\
+FR8.1 & Send an automated summary email to the customer for every purchase \\
+\midrule
+
+\textbf{FR9} & \textbf{Package Management (Travel Agent)} \\
+FR9.1 & Add a new travel package (Draft / Unpublished) \\
+FR9.2 & Publish a previously created draft package \\
+FR9.3 & Archive a published travel package \\
+FR9.4 & Delete an unpublished travel package \\
+FR9.5 & View history of created travel packages \\
+\midrule
+
+\textbf{FR10} & \textbf{User Management (Administrator)} \\
+FR10.1 & View all user accounts \\
+FR10.2 & Edit user accounts details \\
+FR10.3 & Delete user accounts \\
+
+\end{longtable}
+
+\clearpage
+\subsection{Non-Functional Requirements}
+
+While the functional requirements dictate the platform's features, the non-functional requirements (\gls{NFR}) establish the systemic qualities necessary for the application to succeed in a cloud-native production environment. Based on the project goals, the following constraints were prioritized:
+
+\begin{itemize}
+    \item \textbf{Scalability:} The system must gracefully handle varying loads. By adopting a microservices architecture, individual domains (such as the Travel Catalog service during heavy search traffic) must be able to scale horizontally and independently without requiring the entire platform to be duplicated.
+    \item \textbf{Performance and Responsiveness:} To provide a fluid user experience, the frontend \gls{SPA} must minimize full-page reloads. On the backend, services should leverage reactive programming (via Spring WebFlux and Quarkus Reactive) to ensure high throughput and minimize blocking operations, keeping API response times consistently low even under concurrent load.
+    \item \textbf{Resilience and Fault Tolerance:} The failure of a single component must not trigger a system-wide outage. The architecture must employ asynchronous communication (Event-Driven messaging via RabbitMQ) to decouple critical write operations — such as processing an order and sending a confirmation email — ensuring that temporary downstream unavailability does not result in data loss.
+    \item \textbf{Maintainability and Automation:} The codebase must be highly modular, allowing separate development teams to work on the frontend, catalog, and order services simultaneously. Furthermore, the deployment lifecycle must be entirely automated via CI/CD pipelines to ensure consistent, repeatable, and testable releases into the target OKD cluster.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 3.3 High-Level Architecture %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{High-Level Architecture}
+\label{sec:high_level_architecture}
+
+To satisfy the scalability, maintainability, and functional requirements described in the previous section, the application was designed utilizing a distributed microservices architecture. The system is composed of several independent backend services, a centralized API gateway, an event broker, and a dedicated frontend application.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/ch3/3_1_architecture-diagram.png}
+    \caption[Smart Travel High-Level Architecture]{Smart Travel High-Level Architecture}
+    \label{fig:architecture}
+\end{figure}
+
+\subsection{The Backend-For-Frontend Pattern}
+
+Instead of allowing the Angular frontend to communicate directly with the underlying microservices, the architecture implements the \textit{Backend-For-Frontend} (\gls{BFF}) pattern.
+
+In a distributed microservices ecosystem, a frontend client often needs to fetch data from multiple independent services to render a single view. Allowing the client to communicate directly with these backend services introduces several critical issues: it creates lots of network traffic with high latency, tightly couples the frontend to the backend schema, and exposes internal network architectures to the public internet \cite{microsoft_bff_pattern}. 
+
+While a traditional API Gateway solves the exposure problem by acting as a single entry point, a single, general-purpose gateway serving all types of clients (e.g., web browsers, mobile apps, third-party consumers) quickly becomes a bloated, monolithic bottleneck \cite{newman_bff_2015}. 
+
+Introduced to solve this exact problem, the BFF pattern advocates for creating a dedicated backend service tailored specifically for the needs of a single frontend interface. In this way, the BFF can implement client-specific logic, such as aggregating data from multiple microservices into a single response, transforming data formats, and enforcing security policies without affecting other clients or services.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{images/ch3/3_2_bff.png}
+    \caption[Backend-For-Frontend pattern]{Backend-For-Frontend pattern. \textit{Source: \cite{medium_bff_pattern}}}
+    \label{fig:bff_pattern}
+\end{figure}
+
+\subsubsection{Implementation in Smart Travel}
+
+For the Smart Travel platform, the BFF is tailored to the requirements of the Angular \gls{SPA}. It fulfills two primary architectural responsibilities:
+
+\begin{itemize}
+    \item \textbf{Data Aggregation and GraphQL Translation:} When the frontend sends a GraphQL query, the BFF acts as an orchestrator. Its internal resolvers parse the query, execute the necessary downstream HTTP/JSON requests to the Travel Catalog, User, and Order microservices, aggregate the responses in memory and return a single JSON payload to the client. This translation layer completely eliminates the N+1 request problem and prevents both over-fetching and under-fetching on the client side.
+    
+    \item \textbf{Centralized Security Boundary:} The BFF acts as the strict security perimeter for the platform. It handles all authentication and authorization checks using \textbf{Spring Security} and \textbf{JSON Web Tokens (JWT)}. Because the BFF validates the JWTs and enforces \textit{Role-Based Access Control} (\gls{RBAC}) before routing any request downstream, the individual microservices do not need to implement complex or redundant security checks. They operate within a trusted internal network, safely assuming that any request forwarded by the BFF has already been authenticated.
+\end{itemize}
+
+\subsection{The Microservices Ecosystem}
+
+The core business logic is divided into four autonomous microservices. Adhering to the "Database-per-Service" pattern, each data-persisting microservice manages its own isolated MongoDB instance hosted on MongoDB Atlas, ensuring true loose coupling. To evaluate the state-of-the-art Java frameworks, these services were developed using a mix of Spring Boot and Quarkus:
+
+\begin{itemize}
+    \item \textbf{Travel Catalog API (Quarkus):} Manages the core product domain. It handles searches, filtering, and retrieval of flights, accommodations, activities, and travel packages. It connects to the dedicated \texttt{travel-catalog DB}.
+    \item \textbf{User API (Spring Boot):} Manages user profiles, account details and system roles. It connects to the \texttt{user DB}.
+    \item \textbf{Order API (Spring Boot):} Orchestrates the checkout process, order history, and payment validation. It connects to the \texttt{order DB}.
+    \item \textbf{Notification API (Quarkus):} A purely asynchronous, event-driven service responsible for dispatching communications to the user which does not require a database. Instead, it listens to the message broker and interacts with Mailpit, a fake SMTP server, to send emails.
+\end{itemize}
+
+\subsection{Event-Driven Payment and Notification Flow}
+
+One of the most complex architectural flows in the Smart Travel platform is the payment process, which leverages the \textit{Outbox Pattern} alongside \textit{Change Data Capture} (\gls{CDC}) to guarantee data consistency across distributed services.
+
+While the granular implementation of this flow will be detailed in subsequent chapters, the high-level orchestration follows these strict steps:
+
+\begin{enumerate}
+    \item \textbf{Checkout Initiation:} The frontend requests an order creation via the \gls{BFF}. The Order API creates a \texttt{PENDING} order in MongoDB, retrieves a payment URL from PayPal, and the user is redirected to authorize the transaction.
+    \item \textbf{Payment Authorization:} After the user authorizes the payment, they are redirected back to the application. The Order API updates the order status to \texttt{PAID} and, crucially, writes an event to a database outbox collection within the exact same transaction.
+    \item \textbf{Change Data Capture (CDC):} A \textbf{Debezium Server} continuously monitors the MongoDB change streams. Upon detecting the new outbox insert, Debezium captures the change and publishes it to the \texttt{orders\_outbox\_events} queue in \textbf{RabbitMQ}.
+    \item \textbf{Asynchronous Capture:} The Order API, acting as a consumer, reads the outbox event from RabbitMQ. It officially captures the funds via PayPal, updates the database status to \texttt{COMPLETED}, and publishes a new event to the \texttt{notification\_events} queue.
+    \item \textbf{Notification Dispatch:} The Notification API consumes the event from the \texttt{notification\_events} queue and triggers an SMTP server (Mailpit) to send a finalized order confirmation email to the customer.
+\end{enumerate}
+
+This sophisticated flow ensures that no data is lost even if a service temporarily fails. If the Notification API is down, RabbitMQ simply holds the event in the queue until the service recovers, perfectly demonstrating the resilience of Event-Driven Architecture discussed in Section \ref{sec:event_driven_architectures}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 3.4 Data Modeling %%%
+%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\section{Data Modeling}
+\label{sec:data_modeling}
+
+For this project, MongoDB was selected as the underlying persistence layer across all services. 
+
+By utilizing MongoDB's document model, the application heavily leverages data denormalization and embedding. Instead of relying on foreign keys and computationally expensive joins across separate domains, objects frequently embed "summaries" or "snapshots" of related data. This guarantees that each microservice remains fully autonomous and resilient to network partitions.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/ch3/3_3_db.png}
+    \caption[Smart Travel Database Schema]{Smart Travel Database Schema}
+    \label{fig:db_schema}
+\end{figure}
+
+\subsection{Travel Catalog Database}
+
+The \texttt{travel-catalog} database represents the most complex domain of the platform, responsible for storing the diverse inventory of travel products. Managed by the Quarkus Travel Catalog microservice, it is divided into five primary collections:
+
+\begin{itemize}
+    \item \textbf{Destinations:} The foundational geographical entities where each document stores precise location data (city, region, country, coordinates) alongside descriptive metadata (pictures, tags and a popularity score).
+    \item \textbf{Flights:} The \texttt{flights} collection contains documents representing individual flight segments. They define the airline, capacity, departure/arrival timestamps, pricing, and strictly embed \texttt{FlightDestination} objects for the origin and destination to avoid referencing the external Destinations collection during rapid searches.
+    \item \textbf{Accommodations:} The \texttt{accommodations} collection stores highly detailed hierarchical documents. Because of MongoDB's flexible schema, an accommodation document embeds not only basic scalar fields (address, distance to center, check-in times) but also complex nested arrays representing the available \texttt{rooms}, provided \texttt{services} and \texttt{policies}. It also embeds a \texttt{DestinationSummary} to map its location.
+    \item \textbf{Activities:} Similar to accommodations, the \texttt{activities} collection stores scheduled local experiences (e.g., guided tours, museums), embedding pricing, schedules, and location summaries.
+    \item \textbf{Agency Packages:} The \texttt{agency\_packages} collection represents curated, pre-assembled bundles created by travel agents. A package document embeds the \texttt{FlightOrder}, \texttt{AccommodationOrder}, and a set of \texttt{ActivityOrder} objects that comprise the package. It also embeds a \texttt{UserSummary} (\texttt{agentInfo}) representing the agent who created it.
+\end{itemize}
+
+\subsection{User Database}
+
+The \texttt{user} database is deliberately kept lightweight and strictly focused on identity and access management. Managed by the Spring Boot User API microservice, it consists of a single \texttt{users} collection. 
+
+The \texttt{User} document schema stores the primary authentication credentials (\texttt{email}, \texttt{password}), personal details (\texttt{firstname}, \texttt{lastname}), and the user \texttt{role} (\texttt{CUSTOMER}, \texttt{TRAVEL\_AGENT}, \texttt{ADMIN}). This field is heavily utilized by the BFF to generate JWTs and enforce (\gls{RBAC}) across the entire platform.
+
+\subsection{Order Database}
+
+The \texttt{order} database encapsulates the transactional history and payment states of the platform. Managed by the Spring Boot Order API, its design perfectly illustrates the concept of \textit{Eventual Consistency and Data Snapshotting} in microservices.
+
+When an order is created and stored in the \texttt{orders} collection, it categorizes the transaction via an \texttt{OrderType} (\texttt{SINGLE}, \texttt{AGENCY}, or \texttt{CUSTOM}) and embeds the exact state of the payment (\texttt{PaymentStatus}, timestamps, and hidden provider tokens). 
+
+The \texttt{Order} document does not simply store a list of MongoDB \texttt{ObjectId} references pointing back to the flights or accommodations in the Catalog database. Doing so would tightly couple the two microservices and risk data corruption: if a hotel later changed its name or raised its price in the Catalog, historic orders would incorrectly reflect the new data.
+
+Instead, the \texttt{Order} document embeds a massive \texttt{OrderItems} object containing concrete representations of the purchased goods (e.g., \texttt{FlightOrder}, \texttt{ActivityOrder}). These embedded objects take a hard, immutable \textit{snapshot} of the product at the exact moment of purchase. For example, a \texttt{FlightOrder} duplicates the airline name, flight code, departure times, and the precise \texttt{Price} paid. This denormalization guarantees that historical order receipts remain completely independent from future catalog modifications, ensuring absolute transactional integrity.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% 3.5 Communication Patterns %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Communication Patterns}
+\label{sec:communication_patterns}
+
+In a distributed microservices architecture, the network replaces the in-memory method calls of a monolithic application. Consequently, the patterns chosen for inter-service communication fundamentally dictate the platform's latency, reliability, and scalability. To balance the need for immediate data retrieval with the necessity for fault-tolerant background processing, the Smart Travel platform implements a hybrid communication strategy, utilizing both synchronous and asynchronous paradigms.
+
+\subsection{Synchronous Communication}
+
+Synchronous communication is utilized for operations where the client (or calling service) requires an immediate response to proceed. In this model, the thread remains blocked (or asynchronously suspended in a reactive context) until the HTTP response is received. The platform employs two distinct synchronous patterns depending on the network boundary:
+
+\begin{itemize}
+    \item \textbf{Frontend to BFF (GraphQL):} The external boundary between the Angular \gls{SPA} and the \gls{BFF} is governed by GraphQL over HTTP. As discussed in Section \ref{sec:api_paradigms}, GraphQL was explicitly chosen for its strictly typed query language and to eliminate over-fetching and ensures the \gls{UI} receives exactly the data it needs to render. By exposing a single endpoint, the BFF allows the frontend to request complex, deeply nested datasets — such as an agency package, its included flight details, and the associated user reviews — in a single network round-trip. 
+    
+    \item \textbf{BFF to Microservices (REST):} The internal boundary between the BFF and the downstream microservices (Travel Catalog, User, Order) relies on standard RESTful APIs. Because these services reside within the same secure, high-speed local network or OKD cluster, the overhead of multiple HTTP \texttt{GET} or \texttt{POST} requests is negligible. REST provides a universally understood, stateless, and highly cacheable standard that seamlessly bridges the Spring Boot and Quarkus ecosystems. The BFF acts as the REST client, orchestrating concurrent HTTP calls to the various domain APIs and stitching their JSON responses together before returning the GraphQL payload to the frontend.
+\end{itemize}
+
+\subsection{Asynchronous Communication}
+
+While synchronous APIs are excellent for reading data, they introduce dangerous temporal coupling when writing data or executing multi-step business transactions. If the Order API synchronously called the Notification API to send an email, a failure in the mail server would cause the entire checkout process to crash. To prevent this, Smart Travel delegates critical cross-service workflows to an asynchronous, Event-Driven Architecture (\gls{EDA}).
+
+\begin{itemize}
+    \item \textbf{Message Brokering with RabbitMQ:} RabbitMQ is deployed as the central message broker. Instead of direct service-to-service commands, microservices publish "events" (messages representing state changes) to specific queues (e.g., \texttt{notification\_events}). Consumer services listen to these queues and process the messages at their own pace. This decouples the producer from the consumer, ensuring that if the Notification API is temporarily offline, RabbitMQ will safely persist the messages until the service recovers.
+    
+    \item \textbf{Change Data Capture with Debezium:} To safely publish events to RabbitMQ without encountering the "dual-write problem" (the risk of successfully saving an order to MongoDB but failing to publish the event to the broker due to a network glitch), the platform implements the \textit{Transactional Outbox Pattern} powered by Debezium. Debezium is a \gls{CDC} platform that connects directly to MongoDB's replica set oplog (operations log). When the Order API writes an event to the database, Debezium detects the stream change at the database level and reliably forwards it to RabbitMQ. This guarantees at-least-once delivery of all critical business events.
+    
+    \item \textbf{SMTP Emulation with Mailpit:} As the final step in the asynchronous notification pipeline, the Quarkus Notification API consumes events from RabbitMQ and formats customer emails. To safely test this flow during development without spamming real email addresses or requiring paid external SMTP providers, the architecture incorporates \textbf{Mailpit}. Mailpit acts as a localized, fake SMTP server that catches all outbound emails and provides a web interface to inspect them, validating the end-to-end asynchronous workflow.
+\end{itemize}

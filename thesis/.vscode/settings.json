@@ -1,0 +1,86 @@
+{
+  "latex-workshop.latex.tools": [
+    {
+      "name": "docker_pdflatex",
+      "command": "docker",
+      "args": [
+        "run",
+        "--rm",
+        "-v",
+        "%DIR%:/workdir",
+        "-w",
+        "/workdir",
+        "texlive/texlive",
+        "pdflatex",
+        "-synctex=1",
+        "-interaction=nonstopmode",
+        "-file-line-error",
+        "%DOCFILE%"
+      ],
+      "env": {}
+    },
+    {
+      "name": "docker_biber",
+      "command": "docker",
+      "args": [
+        "run",
+        "--rm",
+        "-v",
+        "%DIR%:/workdir",
+        "-w",
+        "/workdir",
+        "texlive/texlive",
+        "biber",
+        "%DOCFILE%"
+      ],
+      "env": {}
+    },
+    {
+      "name": "docker_makeglossaries",
+      "command": "docker",
+      "args": [
+        "run",
+        "--rm",
+        "-v",
+        "%DIR%:/workdir",
+        "-w",
+        "/workdir",
+        "texlive/texlive",
+        "makeglossaries",
+        "%DOCFILE%"
+      ],
+      "env": {}
+    }
+  ],
+  "latex-workshop.latex.recipes": [
+    {
+      "name": "Docker Compile",
+      "tools": ["docker_pdflatex"] //, "docker_biber", "docker_pdflatex", "docker_pdflatex"]
+    }
+  ],
+  "latex-workshop.latex.recipe.default": "Docker Compile",
+  "[latex]": {
+    "editor.formatOnSave": false
+  },
+  "files.exclude": {
+    "**/*.aux": true,
+    "**/*.log": true,
+    "**/*.out": true,
+    "**/*.toc": true,
+    "**/*.synctex.gz": true,
+    "**/*.fls": true,
+    "**/*.bcf": true,
+    "**/*.glo*": true,
+    "**/*.fdb_latexmk": true,
+    "**/*.xml": true,
+    "**/*.ist": true,
+    "**/*.bbl": true,
+    "**/*.blg": true,
+    "**/*.lof": true,
+    "**/*.lot": true,
+    "**/*.dvi": true,
+    "**/*.nav": true, // Se usi Beamer
+    "**/*.snm": true, // Se usi Beamer
+    "**/*.vrb": true // Se usi Beamer
+  }
+}
